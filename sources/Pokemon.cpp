@@ -2,7 +2,7 @@
 #include <iostream>
 
 int main() {
-    DrawMenuScreen(1500, 800, BLACK);
+    DrawMenuScreen(WinWdith, WinHeight, BLACK);
     
     
     return 0;

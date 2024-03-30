@@ -1,3 +1,3 @@
-#include "LeaderBoard.h"
+#include "ScoreBoard.h"
 
-void DrawGameScreen (const int& WindowWidth, const int& WindowHeight, Color ColorBackground);
+void DrawGameScreen (const int& WindowWidth, const int& WindowHeight, bool& exit, const Texture2D& BackgroundPic, bool& isSigned);
