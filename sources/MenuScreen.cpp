@@ -4,9 +4,6 @@
 
 using namespace std;
 
-bool isSigned = 0;
-
-
 void changeStatus (bool& isSigned, char*& content1, char*& content2) {
     //Not Signed to Signed
     if (!isSigned) {
@@ -38,7 +35,13 @@ void changeStatus (bool& isSigned, char*& content1, char*& content2) {
 }
 
 void DrawMenuScreen(const int& WindowWidth, const int& WindowHeight, Color ColorBackground) {
+    //At first, player is not signed in yet!
+    bool isSigned = 0;
+    //At first, the screen is showing the menu screen
+    bool stayMenu = 1;
+
     InitWindow (WindowWidth, WindowHeight, GameName);
+    ToggleFullscreen();
     SetTargetFPS (GameFPS);
 
     //Create icon
@@ -146,7 +149,7 @@ void DrawMenuScreen(const int& WindowWidth, const int& WindowHeight, Color Color
         if (selector.y > 1) selector.y = 0;
 
         if (IsKeyPressed (KEY_ENTER)) {
-            // Sign up / Sign in / Sign out / Account
+            //Column: Sign up / Sign in / Sign out / Account
             if (selector.x == 0) {
                 if (!(selector.y == 0 && isSigned)) {
                     changeStatus (isSigned, buttons[0][0].content, buttons[1][0].content);
@@ -173,17 +176,29 @@ void DrawMenuScreen(const int& WindowWidth, const int& WindowHeight, Color Color
 
             }
 
-            //PlayGame
-            if (selector.x == 1 && selector.y == 0)
-                DrawGameScreen(WindowWidth, WindowHeight, ColorBackground);
+            //Column: PlayGame and LeaderBoard
+            if (selector.x == 1) {
+                stayMenu = 0;
+                if (selector.y == 0) {
+                    DrawGameScreen(WindowWidth, WindowHeight, stayMenu, BackgroundTexture, isSigned);
+                }
+                if (selector.y == 1)
+                    stayMenu = 0;
+            }
 
-            //Exit
-            if (selector.x == 2 && selector.y == 1) {
-                CloseWindow();
-                return;
+            //Column: Setting and Exit
+            if (selector.x == 2) {
+                stayMenu = 0;
+                if (selector.y == 0) {
+
+                }
+                if (selector.y == 1) {
+                    cout << 1 << endl;
+                    CloseWindow();
+                    return;
+                }
             }
         }
-
         //Draw Buttons
         for (i = 0; i < 2; i ++)
             for (j = 0; j < 3; j ++) {
