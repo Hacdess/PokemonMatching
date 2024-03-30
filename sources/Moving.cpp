@@ -1,6 +1,6 @@
 #include "../headers/Moving.h"
 
-void moveSelector1D (Selctor1D& selector) {
+void moveSelector1D (Selector1D& selector) {
     if (IsKeyPressed(KEY_LEFT)) selector.x --;
     if (IsKeyPressed(KEY_RIGHT)) selector.x ++;
 }

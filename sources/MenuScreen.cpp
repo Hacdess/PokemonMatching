@@ -41,7 +41,7 @@ void DrawMenuScreen(const int& WindowWidth, const int& WindowHeight, Color Color
     bool stayMenu = 1;
 
     InitWindow (WindowWidth, WindowHeight, GameName);
-    ToggleFullscreen();
+    //ToggleFullscreen();
     SetTargetFPS (GameFPS);
 
     //Create icon
@@ -53,19 +53,16 @@ void DrawMenuScreen(const int& WindowWidth, const int& WindowHeight, Color Color
     //ImageBlurGaussian (&BackgroundImg, 1); //Blur Image to set Background;
     Texture2D BackgroundTexture = LoadTextureFromImage(BackgroundImg);
 
-    //font
-    Font font = LoadFont ("resources/font/alpha_beta.png");
-
     //Game title
     float TitleSize = float (WindowHeight / 8);
     float TitleSpacing = TitleSize / 5;
 
     //Determine the position of "POKEMON" word by its length
-    Vector2 LengthWord = MeasureTextEx (font, "POKEMON", TitleSize, TitleSpacing);
+    Vector2 LengthWord = MeasureTextEx (GameFont, "POKEMON", TitleSize, TitleSpacing);
     Vector2 posTitle_POKEMON = {float ((WindowWidth - LengthWord.x) / 2 ), float (WindowHeight / 4)};
 
     //Determine the position of "MATCHING" word by its length
-    LengthWord = MeasureTextEx (font, "MATCHING", TitleSize, TitleSpacing);
+    LengthWord = MeasureTextEx (GameFont, "MATCHING", TitleSize, TitleSpacing);
     Vector2 posTitle_MATCHING = {float ((WindowWidth - LengthWord.x) / 2 ), posTitle_POKEMON.y + LengthWord.y};
 
     //The border contains the title "POKEMON MATCHING"
@@ -108,10 +105,10 @@ void DrawMenuScreen(const int& WindowWidth, const int& WindowHeight, Color Color
     float ButtonsWidth =  ButtonSpaceX - 2 * paddingX;
     float ButtonsHeight = WindowHeight / 10;
 
-    //Get Middle and set position
+    //Get buttons' parameter
     for (j = 0; j < 3; j ++)
         for (i = 0; i < 2; i ++) {
-            buttons[i][j].SizeContent = MeasureTextEx(font, buttons[i][j].content, ButFontSize, ButtonTextSpacing);
+            buttons[i][j].SizeContent = MeasureTextEx(GameFont, buttons[i][j].content, ButFontSize, ButtonTextSpacing);
             buttons[i][j].BorderColor = ButtonsColor;
             buttons[i][j].FontColor = WHITE;
             buttons[i][j].border = {buttonsX + paddingX, buttonsY, ButtonsWidth, ButtonsHeight};
@@ -138,8 +135,8 @@ void DrawMenuScreen(const int& WindowWidth, const int& WindowHeight, Color Color
         
         //Write Game Title
         DrawRectangleRec (title, {0, 0, 0, 100});
-        DrawTextEx (font, "POKEMON", posTitle_POKEMON, TitleSize, TitleSpacing, RED);
-        DrawTextEx (font, "MATCHING", posTitle_MATCHING, TitleSize, TitleSpacing, YELLOW);
+        DrawTextEx (GameFont, "POKEMON", posTitle_POKEMON, TitleSize, TitleSpacing, RED);
+        DrawTextEx (GameFont, "MATCHING", posTitle_MATCHING, TitleSize, TitleSpacing, YELLOW);
 
         //Handlde Selector
         moveSelector2D (selector);
@@ -156,7 +153,7 @@ void DrawMenuScreen(const int& WindowWidth, const int& WindowHeight, Color Color
                     buttonsX = 0;
 
                     for (i = 0; i < 2; i ++) {
-                        buttons[i][0].SizeContent = MeasureTextEx(font, buttons[i][0].content, ButFontSize, ButtonTextSpacing);
+                        buttons[i][0].SizeContent = MeasureTextEx(GameFont, buttons[i][0].content, ButFontSize, ButtonTextSpacing);
                         buttons[i][0].border = {buttonsX + paddingX, buttonsY, ButtonsWidth, ButtonsHeight};
                         buttons[i][0].pos = {buttonsX + (ButtonSpaceX - buttons[i][0].SizeContent.x) / 2, buttonsY + (ButtonsHeight - buttons[i][0].SizeContent.y) / 2};
                         if (i == 1) {
@@ -195,6 +192,13 @@ void DrawMenuScreen(const int& WindowWidth, const int& WindowHeight, Color Color
                 if (selector.y == 1) {
                     cout << 1 << endl;
                     CloseWindow();
+                    DeallocateButtons2D (buttons, 2, 3);
+
+                    //Unload items
+                    UnloadImage(icon);
+                    UnloadImage(BackgroundImg);
+                    UnloadTexture (BackgroundTexture);
+
                     return;
                 }
             }
@@ -215,26 +219,11 @@ void DrawMenuScreen(const int& WindowWidth, const int& WindowHeight, Color Color
             }
 
             DrawRectangleRec (buttons[i][j].border, buttons[i][j].BorderColor);
-            DrawTextEx (font, buttons[i][j].content, buttons[i][j].pos, ButFontSize, ButtonTextSpacing, buttons[i][j].FontColor);
+            DrawTextEx (GameFont, buttons[i][j].content, buttons[i][j].pos, ButFontSize, ButtonTextSpacing, buttons[i][j].FontColor);
             }
 
         //
 
         EndDrawing();
     }
-
-    cout << buttons[0][0].content << ' ' << buttons[1][0].content;
-
-    //Deallocate
-    for (i = 0; i < 2; i ++) {
-        for (j = 0; j < 3; j ++)
-            delete[] buttons[i][j].content;
-        delete[] buttons[i];
-    }
-    delete[] buttons;
-
-    //Unload items
-    UnloadImage(icon);
-    UnloadImage(BackgroundImg);
-    UnloadTexture (BackgroundTexture);
 }
