@@ -2,30 +2,37 @@
 #include "raylib.h"
 #include <cstring>
 #include <string>
+#include <iostream>
 
 const char GameName[] = "Pokemon Matching";
 
-//define GameFPS
+//Define GameFPS
 #define GameFPS 60
 
-//define Game Font
+//Define Game Font
 #define GameFont (Font) LoadFont ("resources/font/alpha_beta.png")
 
-//Define numbers
+//Define Window size
 #define WinWdith 1920
 #define WinHeight 1080
 
-//define colors
+//Define colors
 #define ButtonsColor (Color)  {0, 190, 190, 150}
+#define BlackTrans (Color) {0, 0, 0, 100}
+
+//Game Level
+enum Status {MENU, SIGNUP, SIGNIN, PLAY, SETTING, RANK, EXIT};
+enum Level {EASY, MEDIUM, HARD, CUSTOM};
 
 //Structs
-struct Button {
-    Vector2 pos; //position of words
-    Rectangle border;
+struct TextBox {
+    char* content;
+    float FontSize, spacing;
     Color FontColor;
     Color BorderColor;
-    char* content;
-    Vector2 SizeContent;
+    Vector2 ContentSize;
+    Vector2 pos; //position of words
+    Rectangle border;
 };
 
 struct Selector1D {
@@ -49,5 +56,5 @@ struct GameBoard {
 };
 
 //Functions
-void DeallocateButtons1D (Button* buttons, const int& size);
-void DeallocateButtons2D (Button** buttons, const int& rows, const int& col);
+void DeallocateButtons1D (TextBox* buttons, const int& size);
+void DeallocateButtons2D (TextBox** buttons, const int& rows, const int& col);
