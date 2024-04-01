@@ -36,15 +36,12 @@ int main() {
         }
         
         default:
-            status = Scene.MenuScreen.draw(isSigned);
+            status = Scene.AccountScreen.draw(isSigned);
             break;
         }
         //Scene.LevelScreen.draw();    
 
         EndDrawing();
     }
-    
-
-
     return 0;
 }

@@ -113,7 +113,7 @@ Status MenuScene::draw(bool& isSigned) {
     ClearBackground (BLACK);
     DrawTexturePro (background, {0, 0, 1792.0f, 1024.0f}, {0, 0, float(WinWdith), float(WinHeight)}, {0, 0}, 0.0f, WHITE);
 
-    unsigned int i, j;
+    unsigned int i, j; // Có thể đổi qua short
 
     //Draw Game Title
     for (i = 0; i < 2; i ++) {
@@ -145,6 +145,8 @@ Status MenuScene::draw(bool& isSigned) {
 
             //Column: PlayGame and LeaderBoard
             if (selector.x == 1) {
+
+                
 
             }
 
