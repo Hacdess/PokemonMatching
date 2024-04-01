@@ -3,6 +3,8 @@
 #include <cstring>
 #include <string>
 #include <iostream>
+#include "stdlib.h"
+#include "time.h"
 
 const char GameName[] = "Pokemon Matching";
 
@@ -17,12 +19,15 @@ const char GameName[] = "Pokemon Matching";
 #define WinHeight 1080
 
 //Define colors
-#define ButtonsColor (Color)  {0, 190, 190, 150}
+#define DarkCyanTrans (Color)  {0, 190, 190, 150}
+#define DarkCyan (Color) {0, 190, 190, 255}
+#define MoreDarkCyan (Color) {0, 125, 125, 0}
 #define BlackTrans (Color) {0, 0, 0, 100}
+#define SlightGray (Color) {204, 204, 204, 255}
 
 //Game Level
 enum Status {MENU, SIGNUP, SIGNIN, PLAY, SETTING, RANK, EXIT};
-enum Level {EASY, MEDIUM, HARD, CUSTOM};
+enum Level {EASY, MEDIUM, HARD, BACK};
 
 //Structs
 struct TextBox {
@@ -41,18 +46,6 @@ struct Selector1D {
 
 struct Selector2D {
     int x, y;
-};
-
-struct Pokemon {
-    unsigned int ID;
-    Texture2D img;
-    Rectangle border;
-};
-
-struct GameBoard {
-    Texture2D HiddenBackground;
-    Rectangle border;
-    Color BorderColor;
 };
 
 //Functions

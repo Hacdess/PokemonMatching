@@ -1,9 +1,10 @@
 #include "raylib.h"
-#include "../headers/MenuScreen/Menu.h"
+#include "../headers/SceneManager.h"
 #include <iostream>
 
-void init(MenuScene& MenuScreen) {
-    MenuScreen.setup();
+void init(SceneManager& Scene) {
+    Scene.MenuScreen.setup();
+    Scene.LevelScreen.setup();
 }
 
 int main() {
@@ -18,13 +19,14 @@ int main() {
     Image icon = LoadImage("resources/img/logo.png");
     SetWindowIcon (icon);
 
-    MenuScene MenuScreen;
-    init(MenuScreen);
+    SceneManager Scene;
+    init(Scene);
 
     while (!WindowShouldClose()) {
         BeginDrawing();
-        ClearBackground (BLACK);
+        std::cout << GetFPS() << std::endl;
 
+    /*
         switch (status) {
         case EXIT: {
             std::cout << "bye\n";
@@ -37,9 +39,11 @@ int main() {
         
         default:
             std::cout << "hi\n";
-            status = MenuScreen.draw(isSigned);
+            status = Scene.MenuScreen.draw(isSigned);
             break;
         }
+    */
+        Scene.LevelScreen.draw();    
 
         EndDrawing();
     }

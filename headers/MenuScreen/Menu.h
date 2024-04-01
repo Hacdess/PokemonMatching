@@ -1,8 +1,7 @@
 #pragma once
 #include "../items.h"
 #include "../Moving.h"
-
-void updateStatus(bool& isSigned, char*& content1, char*& content2);
+#include "../GamePlay/Level.h"
 
 struct MenuScene {
     Texture2D background;

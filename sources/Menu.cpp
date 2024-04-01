@@ -64,7 +64,7 @@ void MenuScene::setup() {
         for (i = 0; i < 2; i ++) {
             buttons[i][j].FontSize = FontSize;
             buttons[i][j].spacing = spacing;
-            buttons[i][j].BorderColor = ButtonsColor;
+            buttons[i][j].BorderColor = DarkCyanTrans;
             buttons[i][j].FontColor = WHITE;
 
             buttons[i][j].ContentSize = MeasureTextEx(GameFont, buttons[i][j].content, buttons[i][j].FontSize, buttons[i][j].spacing);
@@ -110,7 +110,9 @@ void updateStatus(bool& isSigned, char*& content1, char*& content2) {
 }
 
 Status MenuScene::draw(bool& isSigned) {
+
     //Draw Background image
+    ClearBackground (BLACK);
     DrawTexturePro (background, {0, 0, 1792.0f, 1024.0f}, {0, 0, float(WinWdith), float(WinHeight)}, {0, 0}, 0.0f, WHITE);
 
     unsigned int i, j;
@@ -173,11 +175,11 @@ Status MenuScene::draw(bool& isSigned) {
         //check which button does selector choose, it's okay to compare as below
         if (selector.x == j && selector.y == i) {
             buttons[i][j].BorderColor = WHITE;
-            buttons[i][j].FontColor = ButtonsColor;
+            buttons[i][j].FontColor = DarkCyanTrans;
         }
 
         else if (!(selector.x == j && selector.y == i)){
-            buttons[i][j].BorderColor = ButtonsColor;
+            buttons[i][j].BorderColor = DarkCyanTrans;
             buttons[i][j].FontColor = WHITE;
         }
 
