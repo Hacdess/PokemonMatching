@@ -26,10 +26,8 @@ int main() {
         BeginDrawing();
         std::cout << GetFPS() << std::endl;
 
-    /*
         switch (status) {
         case EXIT: {
-            std::cout << "bye\n";
             CloseWindow();
             UnloadImage(icon);
             UnloadFont(GameFont);
@@ -38,12 +36,10 @@ int main() {
         }
         
         default:
-            std::cout << "hi\n";
             status = Scene.MenuScreen.draw(isSigned);
             break;
         }
-    */
-        Scene.LevelScreen.draw();    
+        //Scene.LevelScreen.draw();    
 
         EndDrawing();
     }

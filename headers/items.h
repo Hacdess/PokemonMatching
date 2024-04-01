@@ -12,7 +12,7 @@ const char GameName[] = "Pokemon Matching";
 #define GameFPS 60
 
 //Define Game Font
-#define GameFont (Font) LoadFont ("resources/font/alpha_beta.png")
+const Font GameFont = GetFontDefault();
 
 //Define Window size
 #define WinWdith 1920
@@ -32,10 +32,10 @@ enum Level {EASY, MEDIUM, HARD, BACK};
 //Structs
 struct TextBox {
     char* content;
-    float FontSize, spacing;
+    float FontSize;
     Color FontColor;
     Color BorderColor;
-    Vector2 ContentSize;
+    float ContentLength;
     Vector2 pos; //position of words
     Rectangle border;
 };

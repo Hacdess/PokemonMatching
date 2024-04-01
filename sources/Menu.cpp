@@ -22,14 +22,13 @@ void MenuScene::setup() {
     
     for (int i = 0; i < 2; i ++) {
         title[i].FontSize = FontSize;
-        title[i].spacing = spacing;
         title[i].BorderColor = BlackTrans;
 
-        title[i].ContentSize = MeasureTextEx(GameFont, title[i].content, title[i].FontSize, title[i].spacing);
-        title[i].pos = {(float(WinWdith) - title[i].ContentSize.x) / 2, startY};
-        title[i].border = {startX, startY - spacing, startX * 3, title[i].ContentSize.y + spacing * 1.5f};
+        title[i].ContentLength = float(MeasureText(title[i].content, title[i].FontSize));
+        title[i].pos = {(float(WinWdith) - title[i].ContentLength) / 2, startY};
+        title[i].border = {startX, startY - spacing, startX * 3, title[i].FontSize + spacing * 1.5f};
 
-        startY = startY + title[i].ContentSize.y + spacing * 1.5f;
+        startY = startY + title[i].FontSize + spacing * 1.5f;
     }
 
     //Buttons
@@ -51,7 +50,7 @@ void MenuScene::setup() {
     buttons[1][2].content = new char[strlen("Exit") + 1];
     strcpy(buttons[1][2].content, "Exit");
 
-    startY = startY + title[1].ContentSize.y,
+    startY = startY + title[1].FontSize,
     startX = 0,
     FontSize = float(WinHeight) / 20,
     spacing = FontSize / 5;
@@ -63,13 +62,12 @@ void MenuScene::setup() {
     for (j = 0; j < 3; j ++)
         for (i = 0; i < 2; i ++) {
             buttons[i][j].FontSize = FontSize;
-            buttons[i][j].spacing = spacing;
             buttons[i][j].BorderColor = DarkCyanTrans;
             buttons[i][j].FontColor = WHITE;
 
-            buttons[i][j].ContentSize = MeasureTextEx(GameFont, buttons[i][j].content, buttons[i][j].FontSize, buttons[i][j].spacing);
+            buttons[i][j].ContentLength = float(MeasureText(buttons[i][j].content, buttons[i][j].FontSize));
             buttons[i][j].border = {startX + spacing * 2.0f, startY, ButtonWidth, ButtonHeight};
-            buttons[i][j].pos = {startX + (ButtonSpace - buttons[i][j].ContentSize.x) / 2, startY + (ButtonHeight - buttons[i][j].ContentSize.y) / 2};
+            buttons[i][j].pos = {startX + (ButtonSpace - buttons[i][j].ContentLength) / 2, startY + (ButtonHeight - buttons[i][j].FontSize) / 2};
             
             if (i == 1) {
                 buttons[i][j].border.y = buttons[i][j].border.y + ButtonHeight + spacing;
@@ -120,18 +118,18 @@ Status MenuScene::draw(bool& isSigned) {
     //Draw Game Title
     for (i = 0; i < 2; i ++) {
         DrawRectangleRec (title[i].border, title[i].BorderColor);
-        DrawTextEx (GameFont, title[i].content, title[i].pos, title[i].FontSize, title[i].spacing, title[i].FontColor);
+        DrawText (title[i].content, title[i].pos.x, title[i].pos.y, title[i].FontSize, title[i].FontColor);
     }
 
         if (IsKeyPressed (KEY_ENTER)) {
             //Column: Sign up / Sign in / Sign out / Account
             if (selector.x == 0) {
                 if (!(selector.y == 0 && isSigned)) {
-                    updateStatus (isSigned, buttons[0][0].content, buttons[1][0].content);
+                updateStatus (isSigned, buttons[0][0].content, buttons[1][0].content);
 
                     for (i = 0; i < 2; i ++) {
-                        buttons[i][0].ContentSize = MeasureTextEx (GameFont, buttons[i][0].content, buttons[i][0].FontSize, buttons[i][0].spacing);
-                        buttons[i][0].pos.x = (float(WinWdith) / 3 - buttons[i][0].ContentSize.x) / 2;
+                        buttons[i][0].ContentLength = float(MeasureText(buttons[i][0].content, buttons[i][0].FontSize));
+                        buttons[i][0].pos.x = (float(WinWdith) / 3 - buttons[i][0].ContentLength) / 2;
                     }
                 }
 
@@ -184,7 +182,7 @@ Status MenuScene::draw(bool& isSigned) {
         }
 
         DrawRectangleRec (buttons[i][j].border, buttons[i][j].BorderColor);
-        DrawTextEx (GameFont, buttons[i][j].content, buttons[i][j].pos, buttons[i][j].FontSize, buttons[i][j].spacing, buttons[i][j].FontColor);
+        DrawText (buttons[i][j].content, buttons[i][j].pos.x, buttons[i][j].pos.y, buttons[i][j].FontSize, buttons[i][j].FontColor);
         }
 
     return MENU;

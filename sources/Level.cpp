@@ -10,9 +10,8 @@ void LevelScene::setup() {
     strcpy (TextBoxs[0].content, "CHOOSE YOUR CHALLENGE");
     TextBoxs[0].FontColor = YELLOW;
     TextBoxs[0].FontSize = float(WinHeight) / 10;
-    TextBoxs[0].spacing = TextBoxs[0].FontSize / 5;
-    TextBoxs[0].ContentSize = MeasureTextEx (GameFont, "CHOOSE YOUR CHALLENGE", TextBoxs[0].FontSize, TextBoxs[0].spacing);
-    TextBoxs[0].pos = {(float(WinWdith) - TextBoxs[0].ContentSize.x) / 2, float(WinHeight) / 4};
+    TextBoxs[0].ContentLength = float(MeasureText ("CHOOSE YOUR CHALLENGE", TextBoxs[0].FontSize));
+    TextBoxs[0].pos = {(float(WinWdith) - TextBoxs[0].ContentLength) / 2, float(WinHeight) / 4};
 
     //Choose Level Textboxs
     TextBoxs[1].content = new char [strlen("EASY GAME") + 1];
@@ -29,7 +28,7 @@ void LevelScene::setup() {
 
     float   startY = float(WinHeight) / 2,
             height = TextBoxs[0].FontSize,
-            FontSize = float(WinWdith) / 20,
+            FontSize = float(WinWdith) / 25,
             spacing = FontSize / 5;
 
     unsigned int i;
@@ -37,10 +36,9 @@ void LevelScene::setup() {
         TextBoxs[i].FontColor = BLACK;
         TextBoxs[i].BorderColor = SlightGray;
         TextBoxs[i].FontSize = FontSize;
-        TextBoxs[i].spacing = spacing;
-        TextBoxs[i].ContentSize = MeasureTextEx (GameFont, TextBoxs[i].content, TextBoxs[i].FontSize, TextBoxs[i].spacing);
+        TextBoxs[i].ContentLength = float(MeasureText (TextBoxs[i].content, TextBoxs[i].FontSize));
         TextBoxs[i].border = {float(WinWdith)  / 4, startY, float(WinWdith) / 2, height};
-        TextBoxs[i].pos = {(float(WinWdith) - TextBoxs[i].ContentSize.x) / 2, TextBoxs[i].border.y + (height - TextBoxs[i].ContentSize.y) / 2};
+        TextBoxs[i].pos = {(float(WinWdith) - TextBoxs[i].ContentLength) / 2, TextBoxs[i].border.y + (height - TextBoxs[i].FontSize) / 2};
         
         startY = startY + height + spacing;
     }
@@ -89,7 +87,7 @@ Level LevelScene::draw() {
 
             DrawRectangleRec (TextBoxs[i].border, TextBoxs[i].BorderColor);
         }
-        DrawTextEx (GameFont, TextBoxs[i].content, TextBoxs[i].pos, TextBoxs[i].FontSize, TextBoxs[i].spacing, TextBoxs[i].FontColor);
+        DrawText (TextBoxs[i].content, TextBoxs[i].pos.x, TextBoxs[i].pos.y, TextBoxs[i].FontSize, TextBoxs[i].FontColor);
     }
 
     return BACK;
