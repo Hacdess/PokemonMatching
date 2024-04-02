@@ -13,6 +13,7 @@ int main() {
 
     //Init Window
     InitWindow (WinWdith, WinHeight, GameName);
+    ToggleFullscreen();
     SetTargetFPS(GameFPS);
 
     //Create icon
@@ -26,7 +27,6 @@ int main() {
         BeginDrawing();
         std::cout << GetFPS() << std::endl;
 
-        /*
         switch (status) {
         case EXIT: {
             CloseWindow();
@@ -40,8 +40,7 @@ int main() {
             status = scene.MenuScreen.draw(isSigned);
             break;
         }
-        */
-        scene.LevelScreen.draw();    
+        //scene.LevelScreen.draw();    
 
         EndDrawing();
     }

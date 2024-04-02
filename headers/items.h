@@ -26,6 +26,7 @@ const Font GameFont = GetFontDefault();
 #define MoreDarkCyan (Color) {0, 125, 125, 0}
 #define BlackTrans (Color) {0, 0, 0, 100}
 #define SlightGray (Color) {204, 204, 204, 255}
+#define SlightGrayTrans (Color) {204, 204, 204, 150}
 
 //Game Level
 enum Scene {MENU, SIGNUP, SIGNIN, PLAY, SETTING, RANK, EXIT};

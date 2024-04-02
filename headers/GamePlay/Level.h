@@ -1,3 +1,4 @@
+#pragma once
 #include "../Moving.h"
 
 struct LevelScene {

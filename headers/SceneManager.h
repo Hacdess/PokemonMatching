@@ -1,3 +1,4 @@
+#pragma once
 #include "MenuScreen/Menu.h"
 
 struct SceneManager {

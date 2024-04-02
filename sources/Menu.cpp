@@ -111,7 +111,7 @@ Scene MenuScene::draw(bool& isSigned) {
 
     //Draw Background image
     ClearBackground (BLACK);
-    DrawTexturePro (background, {0, 0, 1792.0f, 1024.0f}, {0, 0, float(WinWdith), float(WinHeight)}, {0, 0}, 0.0f, WHITE);
+    DrawTexturePro (background, {0, 0, background.width, background.height}, {0, 0, float(WinWdith), float(WinHeight)}, {0, 0}, 0.0f, WHITE);
 
     unsigned short int i, j;
 
