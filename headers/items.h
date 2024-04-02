@@ -6,6 +6,8 @@
 #include "stdlib.h"
 #include "time.h"
 
+using namespace std;
+
 const char GameName[] = "Pokemon Matching";
 
 //Define GameFPS
@@ -26,7 +28,7 @@ const Font GameFont = GetFontDefault();
 #define SlightGray (Color) {204, 204, 204, 255}
 
 //Game Level
-enum Status {MENU, SIGNUP, SIGNIN, PLAY, SETTING, RANK, EXIT};
+enum Scene {MENU, SIGNUP, SIGNIN, PLAY, SETTING, RANK, EXIT};
 enum Level {EASY, MEDIUM, HARD, BACK};
 
 //Structs
@@ -41,13 +43,14 @@ struct TextBox {
 };
 
 struct Selector1D {
-    int x;
+    short int x;
 };
 
 struct Selector2D {
-    int x, y;
+    short int x, y;
 };
 
 //Functions
 void DeallocateButtons1D (TextBox* buttons, const int& size);
 void DeallocateButtons2D (TextBox** buttons, const int& rows, const int& col);
+bool isSameColor (const Color& Color1, const Color& Color2);

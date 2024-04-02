@@ -44,16 +44,6 @@ void LevelScene::setup() {
     }
 }
 
-bool isSameColor (const Color& Color1, const Color& Color2) {
-    unsigned int i;
-    if (Color1.a != Color2.a) return 0;
-    if (Color1.r != Color2.r) return 0;
-    if (Color1.g != Color2.g) return 0;
-    if (Color1.b != Color2.b) return 0;
-
-    return 1;
-}
-
 Level LevelScene::draw() {
     ClearBackground(background);
 
@@ -72,7 +62,7 @@ Level LevelScene::draw() {
     if (selector.x > 4) selector.x = 1;
 
 
-    unsigned int i;
+    unsigned short int i;
     for (i = 0; i < 5; i ++) {
         if (i != 0) {
             if (selector.x == i) {

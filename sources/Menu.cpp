@@ -1,7 +1,7 @@
 #include "../headers/MenuScreen/Menu.h"
 
 void MenuScene::setup() {
-    //Get Back
+    //Get Background
     Image img = LoadImage("resources/img/background/background.png");
     background = LoadTextureFromImage(img);
     UnloadImage(img);
@@ -14,13 +14,13 @@ void MenuScene::setup() {
     title[1].FontColor = YELLOW;
     strcpy(title[1].content, "MATCHING");
 
-    unsigned int i, j;
+    unsigned short int i, j;
     float   startY = float(WinHeight) / 4,
             startX = float(WinWdith) / 5,
             FontSize = float(WinHeight) / 8,
             spacing = FontSize / 5;
     
-    for (int i = 0; i < 2; i ++) {
+    for (i = 0; i < 2; i ++) {
         title[i].FontSize = FontSize;
         title[i].BorderColor = BlackTrans;
 
@@ -107,13 +107,13 @@ void updateStatus(bool& isSigned, char*& content1, char*& content2) {
     isSigned = 1 - isSigned;
 }
 
-Status MenuScene::draw(bool& isSigned) {
+Scene MenuScene::draw(bool& isSigned) {
 
     //Draw Background image
     ClearBackground (BLACK);
     DrawTexturePro (background, {0, 0, 1792.0f, 1024.0f}, {0, 0, float(WinWdith), float(WinHeight)}, {0, 0}, 0.0f, WHITE);
 
-    unsigned int i, j;
+    unsigned short int i, j;
 
     //Draw Game Title
     for (i = 0; i < 2; i ++) {

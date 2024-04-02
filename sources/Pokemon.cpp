@@ -2,14 +2,14 @@
 #include "../headers/SceneManager.h"
 #include <iostream>
 
-void init(SceneManager& Scene) {
-    Scene.MenuScreen.setup();
-    Scene.LevelScreen.setup();
+void init(SceneManager& scene) {
+    scene.MenuScreen.setup();
+    scene.LevelScreen.setup();
 }
 
 int main() {
     bool isSigned = 0;
-    Status status = MENU;
+    Scene status = MENU;
 
     //Init Window
     InitWindow (WinWdith, WinHeight, GameName);
@@ -19,13 +19,14 @@ int main() {
     Image icon = LoadImage("resources/img/logo.png");
     SetWindowIcon (icon);
 
-    SceneManager Scene;
-    init(Scene);
+    SceneManager scene;
+    init(scene);
 
     while (!WindowShouldClose()) {
         BeginDrawing();
         std::cout << GetFPS() << std::endl;
 
+        /*
         switch (status) {
         case EXIT: {
             CloseWindow();
@@ -36,10 +37,11 @@ int main() {
         }
         
         default:
-            status = Scene.MenuScreen.draw(isSigned);
+            status = scene.MenuScreen.draw(isSigned);
             break;
         }
-        //Scene.LevelScreen.draw();    
+        */
+        scene.LevelScreen.draw();    
 
         EndDrawing();
     }

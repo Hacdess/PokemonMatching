@@ -10,5 +10,5 @@ struct MenuScene {
     Selector2D selector = {0, 0};
 
     void setup();
-    Status draw(bool& isSigned);
+    Scene draw(bool& isSigned);
 };

@@ -2,25 +2,28 @@
 #include "../Moving.h"
 
 struct Pokemon {
-    unsigned int ID;
+    unsigned short int ID;
     Texture2D img;
     Color cover = WHITE;
     Rectangle border;
 };
 
 struct GameBoard {
-    Texture2D HiddenBackground;
-    Pokemon** pokemons;
+    Texture2D HiddenBackground, *PokemonsImg;
     Rectangle border; //Viền
     Color BorderColor;
+    unsigned short int row, col;
+    Pokemon** pokemons;
+
+    void suffle();
 };
 
 struct GameScene {
-    unsigned int count;
     Texture2D background;
     GameBoard gameboard;
-    TextBox TextBoxs[5];
-    Selector2D selector = {0,0};
+    Selector2D selector = {1,1};
+
+    Texture2D* readImage(const unsigned short int& quantity);   
 
     void setup();
     void draw();
