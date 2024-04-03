@@ -10,10 +10,11 @@ void init(SceneManager& scene) {
 int main() {
     bool isSigned = 0;
     Scene status = MENU;
+    GameStatus GameState = ChooseLevel;
+    Level level;
 
     //Init Window
     InitWindow (WinWdith, WinHeight, GameName);
-    ToggleFullscreen();
     SetTargetFPS(GameFPS);
 
     //Create icon
@@ -35,13 +36,16 @@ int main() {
             return 0;
             break;
         }
+
+        case PLAY:
+            scene.GameScreen.draw(GameState, status, level, scene.LevelScreen);
+            break;
         
         default:
             status = scene.MenuScreen.draw(isSigned);
             break;
         }
-        //scene.LevelScreen.draw();    
-
+        
         EndDrawing();
     }
     

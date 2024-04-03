@@ -5,8 +5,8 @@ struct LevelScene {
     unsigned short int count;
     Color background;
     TextBox TextBoxs[5];
-    Selector1D selector = {1};
+    Selector1D selector;
 
     void setup();
-    Level draw();
+    Level draw(GameStatus& action);
 };

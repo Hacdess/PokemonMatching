@@ -44,7 +44,7 @@ void LevelScene::setup() {
     }
 }
 
-Level LevelScene::draw() {
+Level LevelScene::draw(GameStatus& action) {
     ClearBackground(background);
 
     count ++;
@@ -80,5 +80,21 @@ Level LevelScene::draw() {
         DrawText (TextBoxs[i].content, TextBoxs[i].pos.x, TextBoxs[i].pos.y, TextBoxs[i].FontSize, TextBoxs[i].FontColor);
     }
 
-    return BACK;
+    if (IsKeyPressed(KEY_ENTER)) {
+        if (selector.x == 1) {
+            action = LoadGame;
+            return EASY;
+        }
+        if (selector.x == 2) {
+            action = LoadGame;
+            return MEDIUM;
+        }
+        if (selector.x == 3) {
+            action = LoadGame;
+            return HARD;
+        }
+        if (selector.x == 4)
+            return BACK;
+    }
+    return CONTINUE;
 }

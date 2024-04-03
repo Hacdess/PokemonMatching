@@ -1,11 +1,9 @@
 #pragma once
 #include "../Moving.h"
 #include "Level.h"
-#include "../SceneManager.h"
-
-enum GameStatus {ChooseLevel, LoadGame, PlayGame};
 
 struct Pokemon {
+    bool shown = 0;
     unsigned short int ID;
     Texture2D img;
     Color cover;
@@ -21,8 +19,9 @@ struct GameBoard {
     Pokemon** pokemons;
 
     Texture2D* readImage(const unsigned short int& quantity);   
-    void suffle();
-    Pokemon **createTable(const unsigned short& row, const unsigned short& col, Texture2D* texture, const unsigned short& quantity);
+    void suffle1D(Pokemon* Po1D, const unsigned short& size);
+    void createTable(const unsigned short& row, const unsigned short& col, Texture2D* texture, const unsigned short& quantity);
+    void draw();
 };
 
 struct GameScene {
@@ -30,7 +29,6 @@ struct GameScene {
     GameBoard gameboard;
     Selector2D selector = {1,1};
 
-
     void setup();
-    void draw(GameStatus& action, SceneManager scene);
+    Scene draw(GameStatus& action, Scene scene, Level& level, LevelScene LEVEL);
 };

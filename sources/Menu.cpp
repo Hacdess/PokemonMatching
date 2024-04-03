@@ -111,7 +111,7 @@ Scene MenuScene::draw(bool& isSigned) {
 
     //Draw Background image
     ClearBackground (BLACK);
-    DrawTexturePro (background, {0, 0, background.width, background.height}, {0, 0, float(WinWdith), float(WinHeight)}, {0, 0}, 0.0f, WHITE);
+    DrawTexturePro (background, {0, 0, float(background.width), float(background.height)}, {0, 0, float(WinWdith), float(WinHeight)}, {0, 0}, 0.0f, WHITE);
 
     unsigned short int i, j;
 
@@ -145,7 +145,8 @@ Scene MenuScene::draw(bool& isSigned) {
 
             //Column: PlayGame and LeaderBoard
             if (selector.x == 1) {
-
+                if (selector.y == 0)
+                    return PLAY;
             }
 
             //Column: Setting and Exit

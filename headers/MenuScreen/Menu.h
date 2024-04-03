@@ -2,6 +2,7 @@
 #include "../items.h"
 #include "../Moving.h"
 #include "../GamePlay/Level.h"
+#include "../GamePlay/Game.h"
 
 struct MenuScene {
     Texture2D background;
