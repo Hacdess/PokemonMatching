@@ -77,6 +77,7 @@ void MenuScene::setup() {
         }
 }
 
+//Signed or not
 void updateStatus(bool& isSigned, char*& content1, char*& content2) {
     //Not Signed to Signed
     if (!isSigned) {
@@ -162,11 +163,7 @@ Scene MenuScene::draw(bool& isSigned) {
         }
 
     //Handlde Selector
-    moveSelector2D (selector);
-    if (selector.x < 0) selector.x = 2;
-    if (selector.x > 2) selector.x = 0;
-    if (selector.y < 0) selector.y = 1;
-    if (selector.y > 1) selector.y = 0;
+    moveSelector2D (selector, 0, 0, 2, 1);
 
     //Draw Buttons
     for (i = 0; i < 2; i ++)

@@ -42,12 +42,17 @@ void LevelScene::setup() {
         
         startY = startY + height + spacing;
     }
+
+    selector = 1;
+    cout << "Set up\n";
 }
 
-Level LevelScene::draw(GameStatus& action) {
+Level LevelScene::draw(GameAction& action) {
     ClearBackground(background);
 
+    std::cout << count << endl;
     count ++;
+    std::cout << count << endl;
     if (count == GameFPS / 2) {
         if (isSameColor(TextBoxs[0].FontColor, YELLOW))
             TextBoxs[0].FontColor = RED;
@@ -57,15 +62,12 @@ Level LevelScene::draw(GameStatus& action) {
         count = 0;
     }
 
-    moveSelector1D (selector);
-    if (selector.x < 1) selector.x = 4;
-    if (selector.x > 4) selector.x = 1;
-
+    moveSelector1D (selector, 1, 4);
 
     unsigned short int i;
     for (i = 0; i < 5; i ++) {
         if (i != 0) {
-            if (selector.x == i) {
+            if (selector == i) {
                 TextBoxs[i].BorderColor = WHITE;
                 TextBoxs[i].FontColor = DarkCyanTrans;
             }
@@ -81,20 +83,25 @@ Level LevelScene::draw(GameStatus& action) {
     }
 
     if (IsKeyPressed(KEY_ENTER)) {
-        if (selector.x == 1) {
+        if (selector == 1) {
             action = LoadGame;
+            selector = 1;
             return EASY;
         }
-        if (selector.x == 2) {
+        if (selector == 2) {
             action = LoadGame;
+            selector = 1;
             return MEDIUM;
         }
-        if (selector.x == 3) {
+        if (selector == 3) {
             action = LoadGame;
+            selector = 1;
             return HARD;
         }
-        if (selector.x == 4)
-            return BACK;
+        if (selector == 4) {
+            selector = 1;
+            action = End; 
+        }
     }
-    return CONTINUE;
+    return NOT_CHOSE;
 }

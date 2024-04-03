@@ -27,11 +27,12 @@ const Font GameFont = GetFontDefault();
 #define BlackTrans (Color) {0, 0, 0, 100}
 #define SlightGray (Color) {204, 204, 204, 255}
 #define SlightGrayTrans (Color) {204, 204, 204, 150}
+#define PokeBack (Color) {255, 205, 230, 255};
 
 //Game Level
 enum Scene {MENU, SIGNUP, SIGNIN, PLAY, SETTING, RANK, EXIT};
-enum Level {EASY, MEDIUM, HARD, BACK, CONTINUE};
-enum GameStatus {ChooseLevel, LoadGame, PlayGame, End};
+enum Level {EASY, MEDIUM, HARD, NOT_CHOSE};
+enum GameAction {ChooseLevel, LoadGame, PlayGame, End};
 
 //Structs
 struct TextBox {
@@ -42,10 +43,6 @@ struct TextBox {
     float ContentLength;
     Vector2 pos; //position of words
     Rectangle border;
-};
-
-struct Selector1D {
-    short int x;
 };
 
 struct Selector2D {
