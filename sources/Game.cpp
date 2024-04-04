@@ -1,5 +1,173 @@
 #include "../headers/GamePlay/Game.h"
 
+void copyPokemon (Pokemon& des, Pokemon source) {
+    des = source;
+}
+
+bool isRowEmpty (Pokemon** pokemons, const short& row, const short& col) {
+    short i;
+    for (i = 0; i < col; i ++)
+        if (pokemons[row][i].shown)
+            return 0;
+    return 1;
+}
+
+bool isColEmpty (Pokemon** pokemons, const short& row, const short& col) {
+    short i;
+    for (i = 0; i < row; i ++)
+        if (pokemons[i][col].shown)
+            return 0;
+    return 1;
+}
+
+void deletePokeRow (short pos, short col) {}
+
+//I, L, U, Z Matching
+bool checkImatching (Pokemon** a, const Selector2D& pokemon1, const Selector2D& pokemon2) {
+    if (pokemon1.x == pokemon2.x && pokemon1.y == pokemon2.y)
+        return 0;
+
+    short start, end, i;
+    // check vertically
+    if (pokemon1.y == pokemon2.y) {
+        start = pokemon1.x;
+        end = pokemon2.x;
+        if (start > end)
+            swap(start, end);
+        start++;
+        for (start; start < end; start ++)
+            if (a[pokemon1.y][start].shown)
+                return 0;
+
+        return 1;
+    }
+
+    // check horizontally
+    if (pokemon1.x == pokemon2.x)
+    {
+        start = pokemon1.y;
+        end = pokemon2.y;
+        if (start > end) 
+            swap(start, end);
+        start++;
+        for (start; start < end; start ++)
+            if (a[start][pokemon1.x].shown)
+                return 0;
+
+        return 1;
+    }
+
+    return 0;
+}
+
+bool checkLmatching (Pokemon** pokemons, const Selector2D& pokemon1, const Selector2D& pokemon2)
+{
+    Selector2D tempPokemon;
+    tempPokemon.x = pokemon1.x;
+    tempPokemon.y = pokemon2.y;
+    if (!pokemons[tempPokemon.y][tempPokemon.x].shown && 
+        checkImatching(pokemons, pokemon1, tempPokemon) && 
+        checkImatching(pokemons, pokemon2, tempPokemon)
+    )
+        return 1;
+
+    tempPokemon.x = pokemon2.x;
+    tempPokemon.y = pokemon1.y;
+    if (!pokemons[tempPokemon.y][tempPokemon.x].shown && 
+        checkImatching(pokemons, pokemon2, tempPokemon) && 
+        checkImatching(pokemons, pokemon1, tempPokemon)
+    )
+        return 1;
+
+    return 0;
+}
+
+int checking (Pokemon** pokemons, const Selector2D& pokemon1, const Selector2D& pokemon2, const short& row, const short& col) {
+    // 0: for no match; 1 for I matching, 2 for L matching, 3 for Z matching and 4 for U matching
+    if (checkImatching(pokemons, pokemon1, pokemon2))
+        return 1;
+
+    else if (checkLmatching(pokemons, pokemon1, pokemon2))
+        return 2;
+    
+    else {
+        Selector2D tempPokemom;
+        // Move right
+        tempPokemom.x = pokemon1.x;
+        tempPokemom.y = pokemon1.y;
+
+        if (tempPokemom.x != col - 1)
+            tempPokemom.x++;
+
+        while (!pokemons[tempPokemom.y][tempPokemom.x].shown && tempPokemom.x <= col) {
+            if (checkLmatching(pokemons, pokemon2, tempPokemom)) {
+                if (tempPokemom.x > pokemon2.x)
+                    return 4;
+                return 3;
+            }
+            
+            tempPokemom.x ++;
+            if (tempPokemom.x > col)
+                break;
+        }
+
+        // Move left
+        tempPokemom.x = pokemon1.x;
+        tempPokemom.y = pokemon1.y;
+
+        if (tempPokemom.x != 0)
+            tempPokemom.x --;
+
+        while (!pokemons[tempPokemom.y][tempPokemom.x].shown && tempPokemom.x > 0) {
+            if (checkLmatching(pokemon1, pokemon2, tempPokemom)) {
+                if (tempPokemom.x < pokemon2.x)
+                    return 4;
+                return 3;
+            }
+
+            tempPokemom.x--;
+            if (tempPokemom.x < 0)
+                break;
+        }
+
+        // Move up
+        tempPokemom.x = pokemon1.x;
+        tempPokemom.y = pokemon1.y;
+        if (tempPokemom.y != 0)
+            tempPokemom.y--;
+        while (!pokemons[tempPokemom.y][tempPokemom.x].shown && tempPokemom.y >= 0)
+        {
+            if (checkLmatching(a, b2, c) == 1)
+                if (c.y < b2.y)
+                    return 4;
+                else
+                    return 3;
+            c.y--;
+            if (c.y < 0)
+                break;
+        }
+
+        // Move down
+
+        c.x = b1.x;
+        c.y = b1.y;
+        if (c.y != length - 1)
+            c.y++;
+        while (a[c.y][c.x] == '0' && c.y <= length)
+        {
+            if (checkLmatching(a, b2, c) == 1)
+                if (c.y > b2.y)
+                    return 4;
+                else
+                    return 3;
+            c.y++;
+            if (c.y > length)
+                break;
+        }
+    }
+    return 0;
+}
+
 void swapPokemon (Pokemon& pokemon1, Pokemon& pokemon2) {
     Pokemon temp = pokemon1;
     pokemon1 = pokemon2;
@@ -9,6 +177,10 @@ void swapPokemon (Pokemon& pokemon1, Pokemon& pokemon2) {
 void Pokemon::draw() {
     DrawRectangleRec (border, back);
     DrawTexturePro (img, {0, 0, float(img.width), float(img.height)}, {pos.x, pos.y, size, size}, {0, 0}, 0, cover);
+}
+
+void Pokemon::unSeen() {
+    shown = 0;
 }
 
 Texture2D* readImage(const unsigned short int& quantity) {
@@ -92,7 +264,7 @@ void GameBoard::createTable (const unsigned short& quantity) {
                 pokemons[i][j].img = temp[pos].img;
                 pokemons[i][j].cover = temp[pos].cover;
                 pokemons[i][j].back = temp[pos++].back;
-                pokemons[i][j].shown = true;
+                pokemons[i][j].shown = 1;
             }
             
             pokemons[i][j].size = sizePokemon;
@@ -140,9 +312,6 @@ void GameScene::setup() {
     img = LoadImage("resources/img/logo.png");
     gameboard.HiddenBackground = LoadTextureFromImage(img);
     UnloadImage(img);
-
-    //Get img of pokemos
-    gameboard.PokemonsImg = readImage(60);
 
     //Get pokemons
     gameboard.createTable(60);
@@ -200,7 +369,7 @@ Scene GameScene::draw(GameAction& action, Scene scene, Level& level, LevelScene&
     moveSelector2D (gameboard.selector, 1, 1, gameboard.col - 2, gameboard.row - 2);
     //Selected Pokemons
     if (IsKeyPressed(KEY_ENTER)) {
-        gameboard.pokemons[gameboard.selector.y, gameboard.selector.x]->seleected = true;
+        gameboard.pokemons[gameboard.selector.y][gameboard.selector.x].seleected = 1;
     }
     
     //Draw Pokemons

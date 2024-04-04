@@ -5,6 +5,7 @@
 void init(SceneManager& game) {
     game.MenuScreen.setup();
     game.LevelScreen.setup();
+    game.GameScreen.gameboard.PokemonsImg = readImage(60);
 }
 
 int main() {

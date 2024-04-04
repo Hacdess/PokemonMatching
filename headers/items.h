@@ -17,8 +17,8 @@ const char GameName[] = "Pokemon Matching";
 const Font GameFont = GetFontDefault();
 
 //Define Window size
-#define WinWdith 1000
-#define WinHeight 500
+#define WinWdith 1920
+#define WinHeight 1080
 
 //Define colors
 #define DarkCyanTrans (Color)  {0, 190, 190, 150}

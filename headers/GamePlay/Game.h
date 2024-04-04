@@ -12,6 +12,7 @@ struct Pokemon {
     Vector2 pos;
     float size;
     void draw();
+    void unSeen();
 };
 
 Texture2D* readImage(const unsigned short int& quantity);
