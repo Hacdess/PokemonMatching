@@ -25,7 +25,7 @@ struct GameBoard {
     unsigned short int row, col;
     float width, height;
     Pokemon** pokemons;
-    Selector2D selector = {1,1};
+    Selector2D selector = {1,1}, selected = {0, 0};
 
     void createTable (const unsigned short& quantity);
     bool isEmpty();

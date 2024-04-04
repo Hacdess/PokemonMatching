@@ -1,5 +1,11 @@
 #include "../headers/GamePlay/Game.h"
 
+void swapPokemon (Pokemon& pokemon1, Pokemon& pokemon2) {
+    Pokemon temp = pokemon1;
+    pokemon1 = pokemon2;
+    pokemon2 = temp;
+}
+
 void copyPokemon (Pokemon& des, Pokemon source) {
     des = source;
 }
@@ -35,7 +41,7 @@ bool checkImatching (Pokemon** a, const Selector2D& pokemon1, const Selector2D& 
         if (start > end)
             swap(start, end);
         start++;
-        for (start; start < end; start ++)
+        for (; start < end; start ++)
             if (a[pokemon1.y][start].shown)
                 return 0;
 
@@ -50,7 +56,7 @@ bool checkImatching (Pokemon** a, const Selector2D& pokemon1, const Selector2D& 
         if (start > end) 
             swap(start, end);
         start++;
-        for (start; start < end; start ++)
+        for (; start < end; start ++)
             if (a[start][pokemon1.x].shown)
                 return 0;
 
@@ -91,87 +97,85 @@ int checking (Pokemon** pokemons, const Selector2D& pokemon1, const Selector2D& 
         return 2;
     
     else {
-        Selector2D tempPokemom;
+        Selector2D tempPokemon;
         // Move right
-        tempPokemom.x = pokemon1.x;
-        tempPokemom.y = pokemon1.y;
+        tempPokemon.x = pokemon1.x;
+        tempPokemon.y = pokemon1.y;
 
-        if (tempPokemom.x != col - 1)
-            tempPokemom.x++;
+        if (tempPokemon.x != col - 1)
+            tempPokemon.x++;
 
-        while (!pokemons[tempPokemom.y][tempPokemom.x].shown && tempPokemom.x <= col) {
-            if (checkLmatching(pokemons, pokemon2, tempPokemom)) {
-                if (tempPokemom.x > pokemon2.x)
+        while (!pokemons[tempPokemon.y][tempPokemon.x].shown && tempPokemon.x <= col) {
+            if (checkLmatching(pokemons, pokemon2, tempPokemon)) {
+                if (tempPokemon.x > pokemon2.x)
                     return 4;
                 return 3;
             }
             
-            tempPokemom.x ++;
-            if (tempPokemom.x > col)
+            tempPokemon.x ++;
+            if (tempPokemon.x > col)
                 break;
         }
 
         // Move left
-        tempPokemom.x = pokemon1.x;
-        tempPokemom.y = pokemon1.y;
+        tempPokemon.x = pokemon1.x;
+        tempPokemon.y = pokemon1.y;
 
-        if (tempPokemom.x != 0)
-            tempPokemom.x --;
+        if (tempPokemon.x != 0)
+            tempPokemon.x --;
 
-        while (!pokemons[tempPokemom.y][tempPokemom.x].shown && tempPokemom.x > 0) {
-            if (checkLmatching(pokemon1, pokemon2, tempPokemom)) {
-                if (tempPokemom.x < pokemon2.x)
+        while (!pokemons[tempPokemon.y][tempPokemon.x].shown && tempPokemon.x > 0) {
+            if (checkLmatching(pokemons, pokemon2, tempPokemon)) {
+                if (tempPokemon.x < pokemon2.x)
                     return 4;
                 return 3;
             }
 
-            tempPokemom.x--;
-            if (tempPokemom.x < 0)
+            tempPokemon.x--;
+            if (tempPokemon.x < 0)
                 break;
         }
 
         // Move up
-        tempPokemom.x = pokemon1.x;
-        tempPokemom.y = pokemon1.y;
-        if (tempPokemom.y != 0)
-            tempPokemom.y--;
-        while (!pokemons[tempPokemom.y][tempPokemom.x].shown && tempPokemom.y >= 0)
-        {
-            if (checkLmatching(a, b2, c) == 1)
-                if (c.y < b2.y)
+        tempPokemon.x = pokemon1.x;
+        tempPokemon.y = pokemon1.y;
+
+        if (tempPokemon.y != 0)
+            tempPokemon.y--;
+
+        while (!pokemons[tempPokemon.y][tempPokemon.x].shown && tempPokemon.y >= 0) {
+            if (checkLmatching(pokemons, pokemon2, tempPokemon)) {
+                if (tempPokemon.y < pokemon2.y)
                     return 4;
-                else
-                    return 3;
-            c.y--;
-            if (c.y < 0)
+                return 3;
+            }
+
+            tempPokemon.y--;
+            if (tempPokemon.y < 0)
                 break;
         }
 
         // Move down
+        tempPokemon.x = pokemon1.x;
+        tempPokemon.y = pokemon1.y;
 
-        c.x = b1.x;
-        c.y = b1.y;
-        if (c.y != length - 1)
-            c.y++;
-        while (a[c.y][c.x] == '0' && c.y <= length)
-        {
-            if (checkLmatching(a, b2, c) == 1)
-                if (c.y > b2.y)
+        if (tempPokemon.y != row - 1)
+            tempPokemon.y++;
+
+        while (!pokemons[tempPokemon.y][tempPokemon.x].shown && tempPokemon.y <= row) {
+            if (checkLmatching(pokemons, pokemon2, tempPokemon)) {
+                if (tempPokemon.y > pokemon2.y)
                     return 4;
-                else
-                    return 3;
-            c.y++;
-            if (c.y > length)
+                return 3;
+            }
+
+            tempPokemon.y++;
+            if (tempPokemon.y > row)
                 break;
         }
     }
-    return 0;
-}
 
-void swapPokemon (Pokemon& pokemon1, Pokemon& pokemon2) {
-    Pokemon temp = pokemon1;
-    pokemon1 = pokemon2;
-    pokemon2 = temp;
+    return 0;
 }
 
 void Pokemon::draw() {
@@ -286,8 +290,11 @@ void GameBoard::draw() {
     unsigned short i, j;
     for (i = 0; i < row; i ++)
         for (j = 0; j < col; j ++) {
-            if (selector.y == i && selector.x == j)
+            if (selector.y == i && selector.x == j) {
                 pokemons[i][j].back = WHITE;
+                if (!pokemons[i][j].shown)
+                    DrawRectangleRec (pokemons[i][j].border, SlightGrayTrans);
+            }
 
             else if (pokemons[i][j].seleected) {
                 pokemons[i][j].back = SlightGray;
@@ -296,7 +303,7 @@ void GameBoard::draw() {
 
             else
                 pokemons[i][j].back = PokeBack;
-            
+
             if (pokemons[i][j].shown)
                 pokemons[i][j].draw();
         }
@@ -370,7 +377,30 @@ Scene GameScene::draw(GameAction& action, Scene scene, Level& level, LevelScene&
     //Selected Pokemons
     if (IsKeyPressed(KEY_ENTER)) {
         gameboard.pokemons[gameboard.selector.y][gameboard.selector.x].seleected = 1;
+        
+        if (gameboard.selected. x != 0) {
+            if (gameboard.pokemons[gameboard.selector.y][gameboard.selector.x].ID == gameboard.pokemons[gameboard.selected.y][gameboard.selected.x].ID &&
+                checking(gameboard.pokemons, gameboard.selector, gameboard.selected, gameboard.row, gameboard.col) != 0
+            ) {
+                gameboard.pokemons[gameboard.selector.y][gameboard.selector.x].unSeen();
+                gameboard.pokemons[gameboard.selected.y][gameboard.selected.x].unSeen();
+            }
+            gameboard.pokemons[gameboard.selector.y][gameboard.selector.x].seleected = 0;
+            gameboard.pokemons[gameboard.selected.y][gameboard.selected.x].seleected = 0;
+            if (!IsKeyPressed(KEY_ENTER))
+                gameboard.pokemons[gameboard.selector.y][gameboard.selector.x].seleected = 0;
+            gameboard.selected.x = 0;
+        }
+
+        else {
+            gameboard.selected.x = gameboard.selector.x;
+            gameboard.selected.y = gameboard.selector.y;
+            gameboard.pokemons[gameboard.selected.y][gameboard.selected.x].seleected = 1;
+        }
+
     }
+
+
     
     //Draw Pokemons
     gameboard.draw();
