@@ -44,7 +44,6 @@ void LevelScene::setup() {
     }
 
     selector = 1;
-    cout << "Set up\n";
 }
 
 Level LevelScene::draw(GameAction& action) {

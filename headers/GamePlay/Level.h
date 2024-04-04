@@ -2,10 +2,10 @@
 #include "../Moving.h"
 
 struct LevelScene {
-    unsigned short int count;
+    short count;
     Color background;
     TextBox TextBoxs[5];
-    short int selector;
+    short selector;
 
     void setup();
     Level draw(GameAction& action);

@@ -33,6 +33,7 @@ const Font GameFont = GetFontDefault();
 enum Scene {MENU, SIGNUP, SIGNIN, PLAY, SETTING, RANK, EXIT};
 enum Level {EASY, MEDIUM, HARD, NOT_CHOSE};
 enum GameAction {ChooseLevel, LoadGame, PlayGame, End};
+enum MatchingType {None, I, L, U, Z};
 
 //Structs
 struct TextBox {
