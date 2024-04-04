@@ -27,7 +27,6 @@ int main() {
 
     while (!WindowShouldClose()) {
         BeginDrawing();
-        std::cout << GetFPS() << std::endl;
 
         switch (scene) {
         case EXIT: {

@@ -104,7 +104,7 @@ bool checkLmatching (Pokemon** pokemons, const Selector2D& pokemon1, const Selec
 }
 
 MatchingType checkMatching (Pokemon** pokemons, const Selector2D& pokemon1, const Selector2D& pokemon2, const short& row, const short& col, Node*& path) {
-    // 0: for no match; 1 for I matching, 2 for L matching, 3 for Z matching and 4 for U matching
+    //Check if they are the same
     if (pokemon1.x == pokemon2.x && pokemon1.y == pokemon2.y)
         return None;
 
@@ -314,7 +314,7 @@ void GameBoard::draw() {
                     DrawRectangleRec (pokemons[i][j].border, SlightGrayTrans);
             }
 
-            else if (pokemons[i][j].seleected) {
+            else if (pokemons[i][j].selected) {
                 pokemons[i][j].back = SlightGray;
                 pokemons[i][j].cover = SlightGray;
             }
@@ -406,9 +406,9 @@ Scene GameScene::draw(GameAction& action, Scene scene, Level& level, LevelScene&
     //Selector Dealing
     moveSelector2D (gameboard.selector, 1, 1, gameboard.col - 2, gameboard.row - 2);
 
-    //Selected Pokemons
+        //Selected Pokemons
     if (IsKeyPressed(KEY_ENTER)) {
-        gameboard.pokemons[gameboard.selector.y][gameboard.selector.x].seleected = 1;
+        gameboard.pokemons[gameboard.selector.y][gameboard.selector.x].selected = 1;
         
         //Nếu đã có 1 cái được chọn trước đó
         if (gameboard.selected.x != 0) {
@@ -418,12 +418,18 @@ Scene GameScene::draw(GameAction& action, Scene scene, Level& level, LevelScene&
             if (gameboard.pokemons[gameboard.selector.y][gameboard.selector.x].ID == gameboard.pokemons[gameboard.selected.y][gameboard.selected.x].ID &&
                 gameboard.MatchType != None
             ) {
+                //drawPath (gameboard.path, gameboard.pokemons[0][0]);
+
+                //WaitTime(0.5f);
+              
                 gameboard.pokemons[gameboard.selector.y][gameboard.selector.x].unSeen();
                 gameboard.pokemons[gameboard.selected.y][gameboard.selected.x].unSeen();
+                
+                removeAll (gameboard.path);
             }
 
-            gameboard.pokemons[gameboard.selector.y][gameboard.selector.x].seleected = 0;
-            gameboard.pokemons[gameboard.selected.y][gameboard.selected.y].seleected = 0;
+            gameboard.pokemons[gameboard.selector.y][gameboard.selector.x].selected = 0;
+            gameboard.pokemons[gameboard.selected.y][gameboard.selected.y].selected = 0;
 
             //Đưa cái Selection tạm về lại rìa (Đánh dấu chưa chọn)
             gameboard.selected.x = 0;
@@ -433,11 +439,11 @@ Scene GameScene::draw(GameAction& action, Scene scene, Level& level, LevelScene&
         else {
             gameboard.selected.x = gameboard.selector.x;
             gameboard.selected.y = gameboard.selector.y;
-            gameboard.pokemons[gameboard.selected.y][gameboard.selected.x].seleected = 1;
         }
-
+        
     }
-
+    
+    gameboard.MatchType = None;
 
     if (gameboard.isEmpty()) {
         short i;
@@ -451,8 +457,6 @@ Scene GameScene::draw(GameAction& action, Scene scene, Level& level, LevelScene&
 
     //Draw Pokemons
     gameboard.draw();
-    printNode (gameboard.path);
-    removeAll (gameboard.path);
     
     return PLAY;
 }
