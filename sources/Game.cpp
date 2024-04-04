@@ -86,7 +86,6 @@ void GameBoard::createTable (const unsigned short& quantity) {
                 pokemons[i][j].img = temp[0].img;
                 pokemons[i][j].cover = SlightGrayTrans;
                 pokemons[i][j].back = SlightGrayTrans;
-                pokemons[i][j].shown = false;      
             }
             else {
                 pokemons[i][j].ID = temp[pos].ID;
@@ -117,9 +116,15 @@ void GameBoard::draw() {
         for (j = 0; j < col; j ++) {
             if (selector.y == i && selector.x == j)
                 pokemons[i][j].back = WHITE;
+
+            else if (pokemons[i][j].seleected) {
+                pokemons[i][j].back = SlightGray;
+                pokemons[i][j].cover = SlightGray;
+            }
+
             else
                 pokemons[i][j].back = PokeBack;
-
+            
             if (pokemons[i][j].shown)
                 pokemons[i][j].draw();
         }
@@ -185,7 +190,6 @@ Scene GameScene::draw(GameAction& action, Scene scene, Level& level, LevelScene&
     }
 
     //Now action == PlayGame
-    moveSelector2D (gameboard.selector, 1, 1, gameboard.col - 2, gameboard.row - 2);
 
     //Draw main background
     DrawTexturePro (background, {0, 0, float(background.width), float(background.height)}, {0, 0, float(WinWdith), float(WinHeight)}, {0, 0}, 0, WHITE);
@@ -193,7 +197,11 @@ Scene GameScene::draw(GameAction& action, Scene scene, Level& level, LevelScene&
     DrawTexturePro (gameboard.HiddenBackground, {0, 0, float(gameboard.HiddenBackground.width), float(gameboard.HiddenBackground.height)}, {gameboard.pokemons[1][1].pos.x - 2, gameboard.pokemons[1][1].pos.y, gameboard.width, gameboard.height}, {0, 0}, 0, WHITE);
     
     //Selector Dealing
-
+    moveSelector2D (gameboard.selector, 1, 1, gameboard.col - 2, gameboard.row - 2);
+    //Selected Pokemons
+    if (IsKeyPressed(KEY_ENTER)) {
+        gameboard.pokemons[gameboard.selector.y, gameboard.selector.x]->seleected = true;
+    }
     
     //Draw Pokemons
     gameboard.draw();

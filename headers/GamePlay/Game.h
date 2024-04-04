@@ -3,7 +3,7 @@
 #include "Level.h"
 
 struct Pokemon {
-    bool shown = 0;
+    bool shown = 0, seleected = 0;
     unsigned short int ID;
     Rectangle border;
     Texture2D img;
