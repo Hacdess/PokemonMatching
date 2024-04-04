@@ -34,6 +34,10 @@ int main() {
             CloseWindow();
             UnloadImage(icon);
             UnloadFont(GameFont);
+            
+            //deadllocate
+            delete[] game.GameScreen.gameboard.PokemonsImg;
+
             return 0;
             break;
         }

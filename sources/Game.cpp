@@ -33,7 +33,7 @@ bool checkImatching (Pokemon** a, const Selector2D& pokemon1, const Selector2D& 
     if (pokemon1.x == pokemon2.x && pokemon1.y == pokemon2.y)
         return 0;
 
-    short start, end, i;
+    short start, end;
     // check vertically
     if (pokemon1.y == pokemon2.y) {
         start = pokemon1.x;
@@ -90,6 +90,9 @@ bool checkLmatching (Pokemon** pokemons, const Selector2D& pokemon1, const Selec
 
 int checking (Pokemon** pokemons, const Selector2D& pokemon1, const Selector2D& pokemon2, const short& row, const short& col) {
     // 0: for no match; 1 for I matching, 2 for L matching, 3 for Z matching and 4 for U matching
+    if (pokemon1.x == pokemon2.x && pokemon1.y == pokemon2.y)
+        return 0;
+
     if (checkImatching(pokemons, pokemon1, pokemon2))
         return 1;
 
@@ -124,7 +127,7 @@ int checking (Pokemon** pokemons, const Selector2D& pokemon1, const Selector2D& 
         if (tempPokemon.x != 0)
             tempPokemon.x --;
 
-        while (!pokemons[tempPokemon.y][tempPokemon.x].shown && tempPokemon.x > 0) {
+        while (!pokemons[tempPokemon.y][tempPokemon.x].shown && tempPokemon.x >= 0) {
             if (checkLmatching(pokemons, pokemon2, tempPokemon)) {
                 if (tempPokemon.x < pokemon2.x)
                     return 4;
@@ -301,8 +304,10 @@ void GameBoard::draw() {
                 pokemons[i][j].cover = SlightGray;
             }
 
-            else
+            else {
                 pokemons[i][j].back = PokeBack;
+                pokemons[i][j].cover = WHITE;
+            }
 
             if (pokemons[i][j].shown)
                 pokemons[i][j].draw();
@@ -387,8 +392,7 @@ Scene GameScene::draw(GameAction& action, Scene scene, Level& level, LevelScene&
             }
             gameboard.pokemons[gameboard.selector.y][gameboard.selector.x].seleected = 0;
             gameboard.pokemons[gameboard.selected.y][gameboard.selected.x].seleected = 0;
-            if (!IsKeyPressed(KEY_ENTER))
-                gameboard.pokemons[gameboard.selector.y][gameboard.selector.x].seleected = 0;
+
             gameboard.selected.x = 0;
         }
 
@@ -401,7 +405,16 @@ Scene GameScene::draw(GameAction& action, Scene scene, Level& level, LevelScene&
     }
 
 
-    
+    if (gameboard.isEmpty()) {
+        short i;
+        for (i = 0; i < gameboard.row; i ++)
+            delete[] gameboard.pokemons[i];
+        delete[] gameboard.pokemons;
+
+        action = ChooseLevel;
+        return PLAY;
+    }
+
     //Draw Pokemons
     gameboard.draw();
     
