@@ -337,7 +337,7 @@ void drawPath (Node* path, const Pokemon& pokemon) {
         while (cur -> next) {
             DrawLineEx ({pre -> x, pre -> y},
                         {cur -> x, cur -> y},
-                        pokemon.size / 5, PURPLE);
+                        pokemon.size / 4, PURPLE);
             pre = cur;
             cur = cur -> next;
         }
@@ -418,9 +418,9 @@ Scene GameScene::draw(GameAction& action, Scene scene, Level& level, LevelScene&
             if (gameboard.pokemons[gameboard.selector.y][gameboard.selector.x].ID == gameboard.pokemons[gameboard.selected.y][gameboard.selected.x].ID &&
                 gameboard.MatchType != None
             ) {
-                //drawPath (gameboard.path, gameboard.pokemons[0][0]);
+                drawPath (gameboard.path, gameboard.pokemons[0][0]);
 
-                //WaitTime(0.5f);
+                WaitTime(0.5f);
               
                 gameboard.pokemons[gameboard.selector.y][gameboard.selector.x].unSeen();
                 gameboard.pokemons[gameboard.selected.y][gameboard.selected.x].unSeen();
@@ -429,7 +429,7 @@ Scene GameScene::draw(GameAction& action, Scene scene, Level& level, LevelScene&
             }
 
             gameboard.pokemons[gameboard.selector.y][gameboard.selector.x].selected = 0;
-            gameboard.pokemons[gameboard.selected.y][gameboard.selected.y].selected = 0;
+            gameboard.pokemons[gameboard.selected.y][gameboard.selected.x].selected = 0;
 
             //Đưa cái Selection tạm về lại rìa (Đánh dấu chưa chọn)
             gameboard.selected.x = 0;
