@@ -38,7 +38,7 @@ void Time::formatTime() {
     }
 
     if (hour > 23) {
-        // Được thì bạn cứ để nó chạy hết 1 ngày đi, bạn sẽ thành người hùng của trò chơi này
+        // You can let it run for 24+ hour then you can be the god of this game
         hour = hour - short (hour / 24) * hour;
     }
 }
