@@ -26,6 +26,7 @@ int main() {
     init(game);
 
     while (!WindowShouldClose()) {
+        cout << GetFPS() << endl;
         BeginDrawing();
 
         switch (scene) {

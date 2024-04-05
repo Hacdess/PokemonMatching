@@ -26,8 +26,6 @@ bool isColEmpty (Pokemon** pokemons, const short& row, const short& col) {
     return 1;
 }
 
-void deletePokeRow (short pos, short col) {}
-
 //I, L, U, Z Matching
 bool checkImatching (Pokemon** pokemons, const Selector2D& pokemon1, const Selector2D& pokemon2, Node*& path) {
     if (pokemon1.x == pokemon2.x && pokemon1.y == pokemon2.y)
@@ -123,7 +121,7 @@ MatchingType checkMatching (Pokemon** pokemons, const Selector2D& pokemon1, cons
         if (tempPokemon.x != col - 1)
             tempPokemon.x++;
 
-        while (!pokemons[tempPokemon.y][tempPokemon.x].shown && tempPokemon.x <= col) {
+        while (!pokemons[tempPokemon.y][tempPokemon.x].shown && tempPokemon.x < col) {
             if (checkLmatching(pokemons, pokemon2, tempPokemon, path)) {
                 if (tempPokemon.x > pokemon2.x)
                     return U;
@@ -131,7 +129,7 @@ MatchingType checkMatching (Pokemon** pokemons, const Selector2D& pokemon1, cons
             }
             
             tempPokemon.x ++;
-            if (tempPokemon.x > col)
+            if (tempPokemon.x >= col)
                 break;
         }
 
@@ -180,7 +178,7 @@ MatchingType checkMatching (Pokemon** pokemons, const Selector2D& pokemon1, cons
         if (tempPokemon.y != row - 1)
             tempPokemon.y++;
 
-        while (!pokemons[tempPokemon.y][tempPokemon.x].shown && tempPokemon.y <= row) {
+        while (!pokemons[tempPokemon.y][tempPokemon.x].shown && tempPokemon.y < row) {
             if (checkLmatching(pokemons, pokemon2, tempPokemon, path)) {
                 if (tempPokemon.y > pokemon2.y)
                     return U;
@@ -188,7 +186,7 @@ MatchingType checkMatching (Pokemon** pokemons, const Selector2D& pokemon1, cons
             }
 
             tempPokemon.y++;
-            if (tempPokemon.y > row)
+            if (tempPokemon.y >= row)
                 break;
         }
     }
@@ -331,17 +329,22 @@ void GameBoard::draw() {
 
 void drawPath (Node* path, const Pokemon& pokemon) {
     if (path && path -> next) {
-        Node* pre = path;
-        Node* cur = path -> next;
+        Node* cur = path;
+        Node* next = path -> next;
 
         while (cur -> next) {
-            DrawLineEx ({pre -> x, pre -> y},
+            cout << "Drawing\n";
+
+            /*DrawLineEx ({next -> x, next -> y},
                         {cur -> x, cur -> y},
-                        pokemon.size / 4, PURPLE);
-            pre = cur;
-            cur = cur -> next;
+                        pokemon.size / 4, PURPLE);*/
+            cur = next;
+            next = next -> next;
         }
     }
+
+    WaitTime (0.5);
+    removeAll (path);
 }
 
 void GameScene::setup() {
@@ -402,7 +405,7 @@ Scene GameScene::draw(GameAction& action, Scene scene, Level& level, LevelScene&
     DrawTexturePro (background, {0, 0, float(background.width), float(background.height)}, {0, 0, float(WinWdith), float(WinHeight)}, {0, 0}, 0, WHITE);
     //Draw hidden background
     DrawTexturePro (gameboard.HiddenBackground, {0, 0, float(gameboard.HiddenBackground.width), float(gameboard.HiddenBackground.height)}, {gameboard.pokemons[1][1].pos.x - 2, gameboard.pokemons[1][1].pos.y, gameboard.width, gameboard.height}, {0, 0}, 0, WHITE);
-
+    
     //Selector Dealing
     moveSelector2D (gameboard.selector, 1, 1, gameboard.col - 2, gameboard.row - 2);
 
@@ -418,14 +421,12 @@ Scene GameScene::draw(GameAction& action, Scene scene, Level& level, LevelScene&
             if (gameboard.pokemons[gameboard.selector.y][gameboard.selector.x].ID == gameboard.pokemons[gameboard.selected.y][gameboard.selected.x].ID &&
                 gameboard.MatchType != None
             ) {
-                drawPath (gameboard.path, gameboard.pokemons[0][0]);
-
-                WaitTime(0.5f);
+                //drawPath (gameboard.path, gameboard.pokemons[0][0]);
               
                 gameboard.pokemons[gameboard.selector.y][gameboard.selector.x].unSeen();
                 gameboard.pokemons[gameboard.selected.y][gameboard.selected.x].unSeen();
                 
-                removeAll (gameboard.path);
+                //removeAll (gameboard.path);
             }
 
             gameboard.pokemons[gameboard.selector.y][gameboard.selector.x].selected = 0;
@@ -442,8 +443,7 @@ Scene GameScene::draw(GameAction& action, Scene scene, Level& level, LevelScene&
         }
         
     }
-    
-    gameboard.MatchType = None;
+
 
     if (gameboard.isEmpty()) {
         short i;
@@ -452,11 +452,18 @@ Scene GameScene::draw(GameAction& action, Scene scene, Level& level, LevelScene&
         delete[] gameboard.pokemons;
 
         action = ChooseLevel;
-        return PLAY;
     }
 
     //Draw Pokemons
     gameboard.draw();
+    DrawLineEx ({0.f, 0.f}, {float(WinWdith), float(WinHeight)}, 20.0f, BLACK);
+
+    //Drawline
+    if (gameboard.MatchType != None) {
+        gameboard.MatchType = None;
+        printNode(gameboard.path);
+        removeAll(gameboard.path);
+    }
     
     return PLAY;
 }
