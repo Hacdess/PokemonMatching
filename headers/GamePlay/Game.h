@@ -28,8 +28,7 @@ struct GameBoard {
     Selector2D selector = {1,1}, selected = {0, 0}, remove[4];
 
     Node* path = NULL;
-    bool isCounting = 0;
-    short TimeCount = 0;
+    float MatchingTime = 0;
     MatchingType MatchType = None;
 
     void createTable (const unsigned short& quantity);

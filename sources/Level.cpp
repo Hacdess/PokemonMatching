@@ -49,9 +49,7 @@ void LevelScene::setup() {
 Level LevelScene::draw(GameAction& action) {
     ClearBackground(background);
 
-    std::cout << count << endl;
     count ++;
-    std::cout << count << endl;
     if (count == GameFPS / 2) {
         if (isSameColor(TextBoxs[0].FontColor, YELLOW))
             TextBoxs[0].FontColor = RED;

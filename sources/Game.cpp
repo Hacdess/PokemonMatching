@@ -32,6 +32,7 @@ bool checkImatching (Pokemon** pokemons, const Selector2D& pokemon1, const Selec
         return 0;
 
     short start, end;
+
     // check vertically
     if (pokemon1.y == pokemon2.y) {
         start = pokemon1.x;
@@ -40,7 +41,7 @@ bool checkImatching (Pokemon** pokemons, const Selector2D& pokemon1, const Selec
         if (start > end)
             swap(start, end);
         
-        addHead (path,
+        addPath (path,
                 pokemons[pokemon1.y][start].pos.x + pokemons[pokemon1.y][start].size / 2,
                 pokemons[pokemon1.y][start].pos.y + pokemons[pokemon1.y][start].size / 2);
 
@@ -50,7 +51,7 @@ bool checkImatching (Pokemon** pokemons, const Selector2D& pokemon1, const Selec
             if (pokemons[pokemon1.y][start].shown)
                 return 0;
 
-        addHead (path,
+        addPath (path,
                 pokemons[pokemon1.y][start].pos.x + pokemons[pokemon1.y][start].size / 2,
                 pokemons[pokemon1.y][start].pos.y + pokemons[pokemon1.y][start].size / 2);
 
@@ -65,7 +66,7 @@ bool checkImatching (Pokemon** pokemons, const Selector2D& pokemon1, const Selec
         if (start > end) 
             swap(start, end);
 
-        addHead (path,
+        addPath (path,
                 pokemons[start][pokemon1.x].pos.x + pokemons[start][pokemon1.x].size / 2,
                 pokemons[start][pokemon1.x].pos.y + pokemons[start][pokemon1.x].size / 2);
         start ++;
@@ -73,10 +74,14 @@ bool checkImatching (Pokemon** pokemons, const Selector2D& pokemon1, const Selec
         for (; start < end; start ++)
             if (pokemons[start][pokemon1.x].shown)
                 return 0;
+        addPath (path,
+                pokemons[start][pokemon1.x].pos.x + pokemons[start][pokemon1.x].size / 2,
+                pokemons[start][pokemon1.x].pos.y + pokemons[start][pokemon1.x].size / 2);
 
         return 1;
     }
 
+    removePath (path);
     return 0;
 }
 
@@ -98,6 +103,7 @@ bool checkLmatching (Pokemon** pokemons, const Selector2D& pokemon1, const Selec
     )
         return 1;
 
+    removePath (path);
     return 0;
 }
 
@@ -109,86 +115,84 @@ MatchingType checkMatching (Pokemon** pokemons, const Selector2D& pokemon1, cons
     if (checkImatching(pokemons, pokemon1, pokemon2, path))
         return I;
 
-    else if (checkLmatching(pokemons, pokemon1, pokemon2, path))
-        return U;
-    
-    else {
-        Selector2D tempPokemon;
-        // Move right
-        tempPokemon.x = pokemon1.x;
-        tempPokemon.y = pokemon1.y;
-
-        if (tempPokemon.x != col - 1)
-            tempPokemon.x++;
-
-        while (!pokemons[tempPokemon.y][tempPokemon.x].shown && tempPokemon.x < col) {
-            if (checkLmatching(pokemons, pokemon2, tempPokemon, path)) {
-                if (tempPokemon.x > pokemon2.x)
-                    return U;
-                return Z;
-            }
+    if (checkLmatching(pokemons, pokemon1, pokemon2, path))
+        return L;
             
-            tempPokemon.x ++;
-            if (tempPokemon.x >= col)
-                break;
+    Selector2D tempPokemon;
+    // Move right
+    tempPokemon.x = pokemon1.x;
+    tempPokemon.y = pokemon1.y;
+
+    if (tempPokemon.x != col - 1)
+        tempPokemon.x++;
+
+    while (!pokemons[tempPokemon.y][tempPokemon.x].shown && tempPokemon.x < col) {
+        if (checkLmatching(pokemons, pokemon2, tempPokemon, path)) {
+            if (tempPokemon.x > pokemon2.x)
+                return U;
+            return Z;
+        }
+            
+        tempPokemon.x ++;
+        if (tempPokemon.x >= col)
+            break;
+    }
+
+    // Move left
+    tempPokemon.x = pokemon1.x;
+    tempPokemon.y = pokemon1.y;
+
+    if (tempPokemon.x != 0)
+        tempPokemon.x --;
+
+    while (!pokemons[tempPokemon.y][tempPokemon.x].shown && tempPokemon.x >= 0) {
+        if (checkLmatching(pokemons, pokemon2, tempPokemon, path)) {
+            if (tempPokemon.x < pokemon2.x)
+                return U;
+            return Z;
         }
 
-        // Move left
-        tempPokemon.x = pokemon1.x;
-        tempPokemon.y = pokemon1.y;
+        tempPokemon.x--;
+        if (tempPokemon.x < 0)
+            break;
+    }
 
-        if (tempPokemon.x != 0)
-            tempPokemon.x --;
+    // Move up
+    tempPokemon.x = pokemon1.x;
+    tempPokemon.y = pokemon1.y;
 
-        while (!pokemons[tempPokemon.y][tempPokemon.x].shown && tempPokemon.x >= 0) {
-            if (checkLmatching(pokemons, pokemon2, tempPokemon, path)) {
-                if (tempPokemon.x < pokemon2.x)
-                    return U;
-                return Z;
-            }
+    if (tempPokemon.y != 0)
+        tempPokemon.y--;
 
-            tempPokemon.x--;
-            if (tempPokemon.x < 0)
-                break;
+    while (!pokemons[tempPokemon.y][tempPokemon.x].shown && tempPokemon.y >= 0) {
+        if (checkLmatching(pokemons, pokemon2, tempPokemon, path)) {
+            if (tempPokemon.y < pokemon2.y)
+                return U;
+            return Z;
         }
 
-        // Move up
-        tempPokemon.x = pokemon1.x;
-        tempPokemon.y = pokemon1.y;
+        tempPokemon.y--;
+        if (tempPokemon.y < 0)
+            break;
+    }
 
-        if (tempPokemon.y != 0)
-            tempPokemon.y--;
+    // Move down
+    tempPokemon.x = pokemon1.x;
+    tempPokemon.y = pokemon1.y;
 
-        while (!pokemons[tempPokemon.y][tempPokemon.x].shown && tempPokemon.y >= 0) {
-            if (checkLmatching(pokemons, pokemon2, tempPokemon, path)) {
-                if (tempPokemon.y < pokemon2.y)
-                    return U;
-                return Z;
-            }
+    if (tempPokemon.y != row - 1)
+        tempPokemon.y++;
 
-            tempPokemon.y--;
-            if (tempPokemon.y < 0)
-                break;
+    while (!pokemons[tempPokemon.y][tempPokemon.x].shown && tempPokemon.y < row) {
+        if (checkLmatching(pokemons, pokemon2, tempPokemon, path)) {
+            if (tempPokemon.y > pokemon2.y)
+                return U;
+            return Z;
         }
 
-        // Move down
-        tempPokemon.x = pokemon1.x;
-        tempPokemon.y = pokemon1.y;
-
-        if (tempPokemon.y != row - 1)
-            tempPokemon.y++;
-
-        while (!pokemons[tempPokemon.y][tempPokemon.x].shown && tempPokemon.y < row) {
-            if (checkLmatching(pokemons, pokemon2, tempPokemon, path)) {
-                if (tempPokemon.y > pokemon2.y)
-                    return U;
-                return Z;
-            }
-
-            tempPokemon.y++;
-            if (tempPokemon.y >= row)
-                break;
-        }
+        tempPokemon.y++;
+        if (tempPokemon.y >= row)
+            break;
     }
 
     return None;
@@ -203,6 +207,7 @@ void Pokemon::unSeen() {
     shown = 0;
 }
 
+//Load images from folder
 Texture2D* readImage(const unsigned short int& quantity) {
     //Location to img
     string path = "resources/img/pokemon/pokemon";
@@ -222,6 +227,7 @@ Texture2D* readImage(const unsigned short int& quantity) {
     return resTexture;
 }
 
+//Suffle the 1D pokemon array
 void shuffle1D(Pokemon* Po1D, const unsigned short& size) {
     srand(time(0));
     unsigned short i, j;
@@ -241,6 +247,7 @@ bool GameBoard::isEmpty() {
     return 1;
 }
 
+//Setup the Gameboard
 void GameBoard::createTable (const unsigned short& quantity) {
     srand(time(0));
     unsigned short int randNum, i, j, size = (row - 2) * (col - 2), pos = 0;
@@ -249,6 +256,7 @@ void GameBoard::createTable (const unsigned short& quantity) {
             startX = 0,
             startY = startX;
 
+    
     Pokemon* temp = new Pokemon[size];
     for (i = 0; i < size; i ++) {
         randNum = rand() % quantity;
@@ -302,6 +310,7 @@ void GameBoard::createTable (const unsigned short& quantity) {
     delete[] temp;
 }
 
+//Draw the GameBoard
 void GameBoard::draw() {
     unsigned short i, j;
     for (i = 0; i < row; i ++)
@@ -327,6 +336,7 @@ void GameBoard::draw() {
         }
 }
 
+//Draw the Matching Path using Linked List
 void drawPath (Node* path, const Pokemon& pokemon) {
     if (path && path -> next) {
         Node* cur = path;
@@ -335,18 +345,16 @@ void drawPath (Node* path, const Pokemon& pokemon) {
         while (cur -> next) {
             cout << "Drawing\n";
 
-            /*DrawLineEx ({next -> x, next -> y},
+            DrawLineEx ({next -> x, next -> y},
                         {cur -> x, cur -> y},
-                        pokemon.size / 4, PURPLE);*/
+                        pokemon.size / 6, PURPLE);
             cur = next;
             next = next -> next;
         }
     }
-
-    WaitTime (0.5);
-    removeAll (path);
 }
 
+//Set up required data for Game Play
 void GameScene::setup() {
     //Get Background
     Image img = LoadImage("resources/img/background/background.png");
@@ -366,12 +374,17 @@ void GameScene::setup() {
     gameboard.height = gameboard.pokemons[0][0].size * (gameboard.row - 2);
 }
 
+//Manage Game scene
 Scene GameScene::draw(GameAction& action, Scene scene, Level& level, LevelScene& LevelScreen) {
+    //Choose the Level before playing
+    //Level Screen loaded already so just draw the scene for level choosing
     if (action == ChooseLevel) {
-        level = LevelScreen.draw(action); //Level Screen loaded already so just draw
+        level = LevelScreen.draw(action); 
+        
         return PLAY;
     }
 
+    //Load gamne before playing
     if (action == LoadGame) {
         if (level == EASY) {
             gameboard.row = 6;
@@ -390,11 +403,14 @@ Scene GameScene::draw(GameAction& action, Scene scene, Level& level, LevelScene&
 
         setup();
 
+        //Done choosing level and loading game, now play the game
         action = PlayGame;
         return PLAY;
     }
 
+    //This happen when Back to menu was selected, back to the Menu screen
     else if (action == End) {
+        //The next time, the player would be asked to choose level again
         action = ChooseLevel;
         return MENU;
     }
@@ -420,13 +436,11 @@ Scene GameScene::draw(GameAction& action, Scene scene, Level& level, LevelScene&
             //2 điểm trùng ID và nối với nhau được thì xóa
             if (gameboard.pokemons[gameboard.selector.y][gameboard.selector.x].ID == gameboard.pokemons[gameboard.selected.y][gameboard.selected.x].ID &&
                 gameboard.MatchType != None
-            ) {
-                //drawPath (gameboard.path, gameboard.pokemons[0][0]);
+            ) {   
+                gameboard.MatchingTime = GetTime();
               
                 gameboard.pokemons[gameboard.selector.y][gameboard.selector.x].unSeen();
                 gameboard.pokemons[gameboard.selected.y][gameboard.selected.x].unSeen();
-                
-                //removeAll (gameboard.path);
             }
 
             gameboard.pokemons[gameboard.selector.y][gameboard.selector.x].selected = 0;
@@ -444,26 +458,29 @@ Scene GameScene::draw(GameAction& action, Scene scene, Level& level, LevelScene&
         
     }
 
+    if (GetTime() - gameboard.MatchingTime < 0.5) {
+        drawPath (gameboard.path, gameboard.pokemons[0][0]);
+    }
+
+    else {
+        removePath (gameboard.path);
+    }
 
     if (gameboard.isEmpty()) {
-        short i;
-        for (i = 0; i < gameboard.row; i ++)
-            delete[] gameboard.pokemons[i];
-        delete[] gameboard.pokemons;
+        if (GetTime () - gameboard.MatchingTime > 0.5) {
+            short i;
+            for (i = 0; i < gameboard.row; i ++)
+                delete[] gameboard.pokemons[i];
+            delete[] gameboard.pokemons;
 
-        action = ChooseLevel;
+            action = ChooseLevel;
+        }
+
+        return PLAY;
     }
 
     //Draw Pokemons
     gameboard.draw();
-    DrawLineEx ({0.f, 0.f}, {float(WinWdith), float(WinHeight)}, 20.0f, BLACK);
-
-    //Drawline
-    if (gameboard.MatchType != None) {
-        gameboard.MatchType = None;
-        printNode(gameboard.path);
-        removeAll(gameboard.path);
-    }
     
     return PLAY;
 }

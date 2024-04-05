@@ -1,6 +1,6 @@
 #include "../headers/GamePlay/Path.h"
 
-void addHead (Node*& path, const float& x, const float& y) {
+void addPath (Node*& path, const float& x, const float& y) {
     Node* node = new Node (x, y);
     node -> next = path;
     path = node;
@@ -19,7 +19,7 @@ void printNode (Node* path) {
     cout << endl;
 }
 
-void removeAll (Node*& path) {
+void removePath (Node*& path) {
     if (! path) {
         cout << "Empty\n";
         return;

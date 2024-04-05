@@ -35,7 +35,7 @@ enum Level {EASY, MEDIUM, HARD, NOT_CHOSE};
 enum GameAction {ChooseLevel, LoadGame, PlayGame, End};
 enum MatchingType {None, I, L, U, Z};
 
-//Structs
+//General Structs
 struct TextBox {
     char* content;
     float FontSize;
@@ -47,10 +47,15 @@ struct TextBox {
 };
 
 struct Selector2D {
-    short int x, y;
+    short x, y;
+};
+
+struct Time {
+    short hour, min, sec;
+    void formatTime();
 };
 
 //Functions
-void DeallocateButtons1D (TextBox* buttons, const int& size);
-void DeallocateButtons2D (TextBox** buttons, const int& rows, const int& col);
+void DeallocateButtons1D (TextBox* buttons, const short& size);
+void DeallocateButtons2D (TextBox** buttons, const short& rows, const short& col);
 bool isSameColor (const Color& Color1, const Color& Color2);
