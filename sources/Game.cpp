@@ -31,59 +31,89 @@ bool checkImatching (Pokemon** pokemons, const Selector2D& pokemon1, const Selec
     if (pokemon1.x == pokemon2.x && pokemon1.y == pokemon2.y)
         return 0;
 
-    short start, end;
+    addPath (path,
+        pokemons[pokemon1.y][pokemon1.x].pos.x + pokemons[pokemon1.y][pokemon1.x].size / 2,
+        pokemons[pokemon1.y][pokemon1.x].pos.y + pokemons[pokemon1.y][pokemon1.x].size / 2
+    );
+
+    short start;
 
     //Check horizontally
     if (pokemon1.y == pokemon2.y) {
-        start = pokemon1.x;
-        end = pokemon2.x;
-
-        if (start > end)
-            swap(start, end);
-        
-        addPath (path,
-                pokemons[pokemon1.y][start].pos.x + pokemons[pokemon1.y][start].size / 2,
-                pokemons[pokemon1.y][start].pos.y + pokemons[pokemon1.y][start].size / 2);
-
-        start ++;
-
-        for (; start < end; start ++)
-            if (pokemons[pokemon1.y][start].shown) {
-                removePath (path);
-                return 0;
+        //Pokemon1 is on the right of Pokemon2
+        if (pokemon1.x > pokemon2.x) {
+            for (start = pokemon1.x - 1; start > pokemon2.x; start --) {
+                //Path hit the obstacle so return none
+                if (pokemons[pokemon1.y][start].shown) {
+                    removePath (path);
+                    return None;
+                }
             }
 
+            //No obstacle between pokemon1 and pokemon2 so add pokemon2 to create Path I
+            addPath (path,
+                    pokemons[pokemon1.y][start].pos.x + pokemons[pokemon1.y][start].size / 2,
+                    pokemons[pokemon1.y][start].pos.y + pokemons[pokemon1.y][start].size / 2
+            );            
+
+            return I;
+        }
+
+        //Pokemon1 is on the right of Pokemon2
+        for (start = pokemon1.x + 1; start < pokemon2.x; start ++) {
+            //Path hit the obstacle so return none
+            if (pokemons[pokemon1.y][start].shown) {
+                removePath (path);
+                return None;
+            }
+        }
+
+        //No obstacle between pokemon1 and pokemon2 so add pokemon2 to create Path I
         addPath (path,
                 pokemons[pokemon1.y][start].pos.x + pokemons[pokemon1.y][start].size / 2,
-                pokemons[pokemon1.y][start].pos.y + pokemons[pokemon1.y][start].size / 2);
+                pokemons[pokemon1.y][start].pos.y + pokemons[pokemon1.y][start].size / 2
+        );            
 
-        return 1;
+        return I;
     }
 
     //Check vertically
-    if (pokemon1.x == pokemon2.x)
-    {
-        start = pokemon1.y;
-        end = pokemon2.y;
-        if (start > end) 
-            swap(start, end);
+    if (pokemon1.x == pokemon2.x) {
+        //Pokemon1 is below Pokemon2
+        if (pokemon1.y > pokemon2.y) {
+            for (start = pokemon1.y - 1; start > pokemon2.y; start --) {
+                //Path hit the obstacle so return none
+                if (pokemons[start][pokemon1.x].shown) {
+                    removePath (path);
+                    return None;
+                }
+            }
+            
+            //No obstacle between pokemon1 and pokemon2 so add pokemon2 to create Path I
+            addPath (path,
+                    pokemons[start][pokemon1.x].pos.x + pokemons[start][pokemon1.x].size / 2,
+                    pokemons[start][pokemon1.x].pos.y + pokemons[start][pokemon1.x].size / 2
+            );            
 
-        addPath (path,
-                pokemons[start][pokemon1.x].pos.x + pokemons[start][pokemon1.x].size / 2,
-                pokemons[start][pokemon1.x].pos.y + pokemons[start][pokemon1.x].size / 2);
-        start ++;
-        
-        for (; start < end; start ++)
+            return I;
+        }
+
+        //Pokemon1 is above Pokemon2
+        for (start = pokemon1.y + 1; start < pokemon2.y; start ++) {
+            //Path hit the obstacle so return none
             if (pokemons[start][pokemon1.x].shown) {
                 removePath (path);
-                return 0;
+                return None;
             }
-
+        }
+        
+        //No obstacle between pokemon1 and pokemon2 so add pokemon2 to create Path I
         addPath (path,
                 pokemons[start][pokemon1.x].pos.x + pokemons[start][pokemon1.x].size / 2,
-                pokemons[start][pokemon1.x].pos.y + pokemons[start][pokemon1.x].size / 2);
+                pokemons[start][pokemon1.x].pos.y + pokemons[start][pokemon1.x].size / 2
+        );            
 
-        return 1;
+        return I;
     }
 
     removePath (path);
@@ -113,6 +143,7 @@ bool checkLmatching (Pokemon** pokemons, const Selector2D& pokemon1, const Selec
     return 0;
 }
 
+//U, Z matching
 MatchingType checkMatching (Pokemon** pokemons, const Selector2D& pokemon1, const Selector2D& pokemon2, const short& row, const short& col, Node*& path) {
     //Check if they are the same
     if (pokemon1.x == pokemon2.x && pokemon1.y == pokemon2.y)
@@ -125,6 +156,7 @@ MatchingType checkMatching (Pokemon** pokemons, const Selector2D& pokemon1, cons
         return L;
             
     Selector2D tempPokemon;
+
     // Move right
     tempPokemon.x = pokemon1.x;
     tempPokemon.y = pokemon1.y;
@@ -242,14 +274,41 @@ Texture2D* readImage(const unsigned short int& quantity) {
     return resTexture;
 }
 
-//Suffle the 1D pokemon array
-void shuffle1D(Pokemon* Po1D, const unsigned short& size) {
+//Shuffle the 1D pokemon array
+void shuffle1D(Pokemon* Po1D, const short& size) {
     srand(time(0));
     unsigned short i, j;
     for (i = 0; i < size; i ++) {
         j = rand() % size;
         swapPokemon (Po1D[i], Po1D[j]);
     }
+}
+
+//Shuffle the 2D pokemon array
+void shuffle2D(Pokemon** Po2D, const short& row, const short& col) {
+    short i, j;
+    srand(time(0));
+
+    for (i = 1; i < row - 1; i ++)
+        for (j = 1; j < col - 1; j ++)
+            Po2D[i][j] = Po2D[rand() % (row - 2) + 1][rand() % (col - 2) + 1];
+}
+
+bool GameBoard::checkMatchAble () {
+    short i, j, x, y;
+    for (i = 1; i < row - 1; i ++)
+        for (j = 0; j < col - 1; j ++)
+            for (x = i; x < row - 1; x ++)
+                for (y = j; y < col - 1; y ++) {
+                    if (pokemons[i][j].shown && pokemons[x][y].shown) {
+                        checkMatch1 = {i, j};
+                        checkMatch2 = {x, y};
+                        if (checkMatching (pokemons, checkMatch1, checkMatch2, row, col, path) != None)
+                            return 1;
+                    }
+                    
+                }
+    return 0;
 }
 
 //Check if GameBoard is empty
@@ -357,15 +416,14 @@ void drawPath (Node* path, const Pokemon& pokemon) {
         Node* cur = path;
         Node* next = path -> next;
 
+        DrawCircle (cur -> x, cur -> y, pokemon.size / 8, GREEN);
         while (cur -> next) {
-            cout << "Drawing\n";
-
-            DrawLineEx ({next -> x, next -> y},
-                        {cur -> x, cur -> y},
-                        pokemon.size / 6, PURPLE);
+            DrawLineEx ({next -> x, next -> y}, {cur -> x, cur -> y}, pokemon.size / 8, GREEN);
+            DrawCircle (cur -> x, cur -> y, pokemon.size / 16, GREEN);
             cur = next;
             next = next -> next;
         }
+        DrawCircle (cur -> x, cur -> y, pokemon.size / 8, GREEN);
     }
 }
 
@@ -497,7 +555,7 @@ Scene GameScene::draw(GameAction& action, Scene scene, Level& level, LevelScene&
 
     //Draw Pokemons
     gameboard.draw();
-    scoreboard.draw();
+    //scoreboard.draw(isSigned, name);
     
     return PLAY;
 }

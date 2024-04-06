@@ -1,20 +1,20 @@
 #include "../headers/items.h"
 
-void DeallocateButtons1D (TextBox* buttons, const short& size) {
+void DeallocateTextbox1D (TextBox* textbox, const short& size) {
     unsigned short int i;
     for (i = 0; i < size; i ++)
-        delete[] buttons[i].content;
-    delete[] buttons;
+        delete[] textbox[i].content;
+    delete[] textbox;
 }
 
-void DeallocateButtons2D (TextBox** buttons, const short & row, const short& col) {
+void DeallocateTextbox2D (TextBox** textbox, const short & row, const short& col) {
     unsigned short int i, j;
     for (i = 0; i < row; i ++) {
         for (j = 0; j < col; j ++)
-            delete[] buttons[i][j].content;
-        delete[] buttons[i];
+            delete[] textbox[i][j].content;
+        delete[] textbox[i];
     }
-    delete[] buttons;
+    delete[] textbox;
 }
 
 bool isSameColor (const Color& Color1, const Color& Color2) {

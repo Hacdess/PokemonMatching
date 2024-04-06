@@ -18,7 +18,7 @@ struct Pokemon {
 };
 
 Texture2D* readImage(const unsigned short int& quantity);
-void shuffle1D(Pokemon* Po1D, const unsigned short& size);
+void shuffle1D(Pokemon* Po1D, const short& size);
 
 struct GameBoard {
     float width, height;
@@ -26,14 +26,16 @@ struct GameBoard {
 
     unsigned short int row, col;
     Pokemon** pokemons;
-    Selector2D selector = {1,1}, selected = {0, 0}, remove[4];
+    Selector2D selector = {1,1}, selected = {0, 0};
 
     Node* path = NULL;
     float MatchingTime = 0;
     MatchingType MatchType = None;
+    Selector2D checkMatch1, checkMatch2;
 
     void createTable (const unsigned short& quantity);
     bool isEmpty();
+    bool checkMatchAble();
     void draw();
 };
 

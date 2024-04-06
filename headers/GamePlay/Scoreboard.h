@@ -12,8 +12,7 @@ struct ScoreBoard {
     const Color background = BlackTrans;
 
     //Read in setup function for more information
-    TextBox Title, Player, ScoreText, Message;
-
+    TextBox Title, Player, ScoreText, Message, TimeText;
     short ScoreNum;
 
     //Health Point illustrated as health bar
@@ -28,19 +27,25 @@ struct ScoreBoard {
         border.x + (border.width - HealthFull) / 2,
         0, // It will be changed after setting up
         HealthFull,
-        HealthUnit
+        HealthUnit * 0.75f
     };
     Color HP_Bar_Color = RED;
 
     //The green one showing your current health
-    Rectangle HP = {HP_Bar.x, HP_Bar.y, HealthUnit * health, HP_Bar.height};
+    Rectangle HP = {HP_Bar.x, 0, HealthUnit * health, HP_Bar.height};
     Color HP_Color = GREEN;
+
+    Time PlayTime;
 
     //Check if the player need help
     bool showHint;
 
     void setup();
+
+    bool isUpdatedPlayerName = 0;
     void updatePlayer(char* name);
-    void updateHint();
-    void draw();
+
+    bool StillMatchable = 1;
+    void updateHint(const Selector2D& pokemon1, const Selector2D& pokemon2, const MatchingType& MatchType);
+    void draw(bool& isSigned, char* name);
 };

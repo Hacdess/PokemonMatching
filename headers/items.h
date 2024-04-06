@@ -56,6 +56,6 @@ struct Time {
 };
 
 //Functions
-void DeallocateButtons1D (TextBox* buttons, const short& size);
-void DeallocateButtons2D (TextBox** buttons, const short& rows, const short& col);
+void DeallocateTextbox1D (TextBox* textbox, const short& size);
+void DeallocateTextbox2D (TextBox** textbox, const short & row, const short& col);
 bool isSameColor (const Color& Color1, const Color& Color2);
