@@ -17,7 +17,7 @@ void ScoreBoard::setup() {
     //At first, it's not login yet so the player name is "Guest"
     Player.content = new char[strlen("Guest") + 1];
     strcpy (Player.content, "Guest");
-    Player.FontSize = HealthUnit * 1.25f;
+    Player.FontSize = HealthUnit * 0.75f;
     Player.FontColor = YELLOW;
     Player.ContentLength = MeasureText (Player.content, Player.FontSize);
     Player.pos = {
@@ -44,7 +44,7 @@ void ScoreBoard::setup() {
     ScoreText.ContentLength = MeasureText (ScoreText.content, ScoreText.FontSize);
     ScoreText.pos = {
         border.x + (border.width - ScoreText.ContentLength) / 2,
-        border.y + Player.FontSize + HealthUnit
+        Player.pos.y + Player.FontSize + HealthUnit
     };
 }
 
@@ -71,4 +71,6 @@ void ScoreBoard::draw() {
     DrawText (Player.content, Player.pos.x, Player.pos.y, Player.FontSize, Player.FontColor);
     //Score
     DrawText (ScoreText.content, ScoreText.pos.x, ScoreText.pos.y, ScoreText.FontSize, ScoreText.FontColor);
+    //Message
+    DrawText (Message.content, Message.pos.x, Message.pos.y, Message.FontSize, Message.FontColor);
 }

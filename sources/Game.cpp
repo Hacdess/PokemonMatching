@@ -417,6 +417,7 @@ Scene GameScene::draw(GameAction& action, Scene scene, Level& level, LevelScene&
         }
 
         setup();
+        scoreboard.setup();
 
         //Done choosing level and loading game, now play the game
         action = PlayGame;
@@ -496,6 +497,7 @@ Scene GameScene::draw(GameAction& action, Scene scene, Level& level, LevelScene&
 
     //Draw Pokemons
     gameboard.draw();
+    scoreboard.draw();
     
     return PLAY;
 }

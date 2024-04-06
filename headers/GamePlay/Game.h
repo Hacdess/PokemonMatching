@@ -2,6 +2,7 @@
 #include "../Moving.h"
 #include "Level.h"
 #include "Path.h"
+#include "Scoreboard.h"
 
 struct Pokemon {
     bool shown = 0, selected = 0;
@@ -39,6 +40,7 @@ struct GameBoard {
 struct GameScene {
     Texture2D background;
     GameBoard gameboard;
+    ScoreBoard scoreboard;
 
     void setup();
     Scene draw(GameAction& action, Scene scene, Level& level, LevelScene& LEVEL);
