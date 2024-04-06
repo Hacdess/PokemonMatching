@@ -33,7 +33,7 @@ bool checkImatching (Pokemon** pokemons, const Selector2D& pokemon1, const Selec
 
     short start, end;
 
-    // check vertically
+    //Check horizontally
     if (pokemon1.y == pokemon2.y) {
         start = pokemon1.x;
         end = pokemon2.x;
@@ -48,8 +48,10 @@ bool checkImatching (Pokemon** pokemons, const Selector2D& pokemon1, const Selec
         start ++;
 
         for (; start < end; start ++)
-            if (pokemons[pokemon1.y][start].shown)
+            if (pokemons[pokemon1.y][start].shown) {
+                removePath (path);
                 return 0;
+            }
 
         addPath (path,
                 pokemons[pokemon1.y][start].pos.x + pokemons[pokemon1.y][start].size / 2,
@@ -58,7 +60,7 @@ bool checkImatching (Pokemon** pokemons, const Selector2D& pokemon1, const Selec
         return 1;
     }
 
-    // check horizontally
+    //Check vertically
     if (pokemon1.x == pokemon2.x)
     {
         start = pokemon1.y;
@@ -72,8 +74,11 @@ bool checkImatching (Pokemon** pokemons, const Selector2D& pokemon1, const Selec
         start ++;
         
         for (; start < end; start ++)
-            if (pokemons[start][pokemon1.x].shown)
+            if (pokemons[start][pokemon1.x].shown) {
+                removePath (path);
                 return 0;
+            }
+
         addPath (path,
                 pokemons[start][pokemon1.x].pos.x + pokemons[start][pokemon1.x].size / 2,
                 pokemons[start][pokemon1.x].pos.y + pokemons[start][pokemon1.x].size / 2);
@@ -87,19 +92,20 @@ bool checkImatching (Pokemon** pokemons, const Selector2D& pokemon1, const Selec
 
 bool checkLmatching (Pokemon** pokemons, const Selector2D& pokemon1, const Selector2D& pokemon2, Node*& path) {
     Selector2D tempPokemon;
+
     tempPokemon.x = pokemon1.x;
     tempPokemon.y = pokemon2.y;
     if (!pokemons[tempPokemon.y][tempPokemon.x].shown && 
         checkImatching(pokemons, pokemon1, tempPokemon, path) && 
-        checkImatching(pokemons, pokemon2, tempPokemon, path)
+        checkImatching(pokemons, tempPokemon, pokemon2, path)
     )
         return 1;
 
     tempPokemon.x = pokemon2.x;
     tempPokemon.y = pokemon1.y;
     if (!pokemons[tempPokemon.y][tempPokemon.x].shown && 
-        checkImatching(pokemons, pokemon2, tempPokemon, path) && 
-        checkImatching(pokemons, pokemon1, tempPokemon, path)
+        checkImatching(pokemons, pokemon1, tempPokemon, path) && 
+        checkImatching(pokemons, tempPokemon, pokemon2, path) 
     )
         return 1;
 
@@ -127,14 +133,16 @@ MatchingType checkMatching (Pokemon** pokemons, const Selector2D& pokemon1, cons
         tempPokemon.x++;
 
     while (!pokemons[tempPokemon.y][tempPokemon.x].shown && tempPokemon.x < col) {
-        if (checkLmatching(pokemons, pokemon2, tempPokemon, path)) {
+        if (checkImatching(pokemons, pokemon1, tempPokemon, path) &&
+            checkLmatching(pokemons, tempPokemon, pokemon2, path)) {
             if (tempPokemon.x > pokemon2.x)
                 return U;
             return Z;
         }
-            
+
+        removePath (path);
         tempPokemon.x ++;
-        if (tempPokemon.x >= col)
+        if (tempPokemon.x == col)
             break;
     }
 
@@ -146,12 +154,14 @@ MatchingType checkMatching (Pokemon** pokemons, const Selector2D& pokemon1, cons
         tempPokemon.x --;
 
     while (!pokemons[tempPokemon.y][tempPokemon.x].shown && tempPokemon.x >= 0) {
-        if (checkLmatching(pokemons, pokemon2, tempPokemon, path)) {
+        if (checkImatching(pokemons, pokemon1, tempPokemon, path) &&
+            checkLmatching(pokemons, tempPokemon, pokemon2, path)) {
             if (tempPokemon.x < pokemon2.x)
                 return U;
             return Z;
         }
 
+        removePath (path);
         tempPokemon.x--;
         if (tempPokemon.x < 0)
             break;
@@ -165,12 +175,14 @@ MatchingType checkMatching (Pokemon** pokemons, const Selector2D& pokemon1, cons
         tempPokemon.y--;
 
     while (!pokemons[tempPokemon.y][tempPokemon.x].shown && tempPokemon.y >= 0) {
-        if (checkLmatching(pokemons, pokemon2, tempPokemon, path)) {
+        if (checkImatching(pokemons, pokemon1, tempPokemon, path) &&
+            checkLmatching(pokemons, tempPokemon, pokemon2, path)) {
             if (tempPokemon.y < pokemon2.y)
                 return U;
             return Z;
         }
 
+        removePath (path);
         tempPokemon.y--;
         if (tempPokemon.y < 0)
             break;
@@ -184,17 +196,20 @@ MatchingType checkMatching (Pokemon** pokemons, const Selector2D& pokemon1, cons
         tempPokemon.y++;
 
     while (!pokemons[tempPokemon.y][tempPokemon.x].shown && tempPokemon.y < row) {
-        if (checkLmatching(pokemons, pokemon2, tempPokemon, path)) {
+        if (checkImatching(pokemons, pokemon1, tempPokemon, path) &&
+            checkLmatching(pokemons, tempPokemon, pokemon2, path)) {
             if (tempPokemon.y > pokemon2.y)
                 return U;
             return Z;
         }
 
+        removePath (path);
         tempPokemon.y++;
         if (tempPokemon.y >= row)
             break;
     }
 
+    removePath (path);
     return None;
 }
 
