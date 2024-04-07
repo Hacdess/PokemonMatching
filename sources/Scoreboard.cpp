@@ -54,7 +54,9 @@ void ScoreBoard::setup() {
 
     //At first, the score = 0
     ScoreNum = 0;
-    itoa (ScoreNum, ScoreText.content, 10);
+
+    ScoreText.content = new char[2];
+    strcpy (ScoreText.content, "0");
     ScoreText.FontSize = HealthUnit * 1.25f;
     ScoreText.FontColor = WHITE;
     ScoreText.ContentLength = MeasureText (ScoreText.content, ScoreText.FontSize);
@@ -86,15 +88,9 @@ void ScoreBoard::updateHint(const Selector2D& pokemon1, const Selector2D& pokemo
 
 }
 
-void ScoreBoard::draw(bool& isSigned, char* name) {
+void ScoreBoard::draw() {
     //Draw the border of ScoreBoard
     DrawRectangleRec (border, background);
-
-    //Update player name if player signed in
-    if (isSigned && !isUpdatedPlayerName) {
-        updatePlayer (name);
-        isUpdatedPlayerName = 1;
-    }
 
     //----Draw all the rest things----
 

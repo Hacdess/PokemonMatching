@@ -555,7 +555,7 @@ Scene GameScene::draw(GameAction& action, Scene scene, Level& level, LevelScene&
 
     //Draw Pokemons
     gameboard.draw();
-    //scoreboard.draw(isSigned, name);
+    scoreboard.draw();
     
     return PLAY;
 }

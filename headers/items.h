@@ -59,3 +59,4 @@ struct Time {
 void DeallocateTextbox1D (TextBox* textbox, const short& size);
 void DeallocateTextbox2D (TextBox** textbox, const short & row, const short& col);
 bool isSameColor (const Color& Color1, const Color& Color2);
+void updateText (char* dest, const char* content);

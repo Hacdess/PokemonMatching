@@ -1,5 +1,22 @@
 #include "../headers/items.h"
 
+void Time::formatTime() {
+    if (sec > 59) {
+        min = min + short (sec / 60);
+        sec = sec - short (sec / 60) * sec;
+    }
+
+    if (min > 59) {
+        hour = hour + short (min / 60);
+        min = min - short (min / 60) * min;
+    }
+
+    if (hour > 23) {
+        // You can let it run for 24+ hour then you can be the god of this game
+        hour = hour - short (hour / 24) * hour;
+    }
+}
+
 void DeallocateTextbox1D (TextBox* textbox, const short& size) {
     unsigned short int i;
     for (i = 0; i < size; i ++)
@@ -26,19 +43,9 @@ bool isSameColor (const Color& Color1, const Color& Color2) {
     return 1;
 }
 
-void Time::formatTime() {
-    if (sec > 59) {
-        min = min + short (sec / 60);
-        sec = sec - short (sec / 60) * sec;
-    }
-
-    if (min > 59) {
-        hour = hour + short (min / 60);
-        min = min - short (min / 60) * min;
-    }
-
-    if (hour > 23) {
-        // You can let it run for 24+ hour then you can be the god of this game
-        hour = hour - short (hour / 24) * hour;
-    }
+//Up dest text with new content
+void updateText (char* dest, const char* content) {
+    delete[] dest;
+    dest = new char[strlen(content) + 1];
+    strcpy (dest, content);
 }

@@ -47,5 +47,5 @@ struct ScoreBoard {
 
     bool StillMatchable = 1;
     void updateHint(const Selector2D& pokemon1, const Selector2D& pokemon2, const MatchingType& MatchType);
-    void draw(bool& isSigned, char* name);
+    void draw();
 };
