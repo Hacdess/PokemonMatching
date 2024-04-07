@@ -34,11 +34,23 @@ int main() {
                 scene = game.MenuScreen.draw(isSigned);
                 break;
 
-/*
+
             case SIGNUP:
-                status = Scene.AccountScreen.draw(isSigned);
+                if (!game.SignUpScreen.set)
+                    game.SignUpScreen.setup();
+                else {
+                    scene = game.SignUpScreen.draw (isSigned, game.MenuScreen.account);
+                    if (!game.SignUpScreen.set) {
+                        DeallocateTextbox1D (game.SignUpScreen.title, 2);
+                        DeallocateTextbox1D (game.SignUpScreen.constant, 2);
+                        DeallocateTextbox1D (game.SignUpScreen.input, 2);
+                        DeallocateTextbox1D (game.SignUpScreen.confirm, 2);
+                        delete[] game.SignUpScreen.command.content;
+                        scene = MENU;
+                    }
+                }
                 break;
-*/
+
             case PLAY:
                 scene = game.GameScreen.draw(action, scene, level, game.LevelScreen);
                 break;
@@ -51,7 +63,6 @@ int main() {
                 
                 //deadllocate
                 delete[] game.GameScreen.gameboard.PokemonsImg;
-
                 return 0;
         }
         

@@ -125,23 +125,35 @@ Scene MenuScene::draw(bool& isSigned) {
         if (IsKeyPressed (KEY_ENTER)) {
             //Column: Sign up / Sign in / Sign out / Account
             if (selector.x == 0) {
-                if (!(selector.y == 0 && isSigned)) {
-                updateStatus (isSigned, buttons[0][0].content, buttons[1][0].content);
-
+                //When it is not signed, turn to Sign up or Sign in
+                if (!isSigned) {
+                    //Sign Up button
+                    if (selector.y == 0) {
+                        updateStatus (isSigned, buttons[0][0].content, buttons[1][0].content);
+                        for (i = 0; i < 2; i ++) {
+                            buttons[i][0].ContentLength = float(MeasureText(buttons[i][0].content, buttons[i][0].FontSize));
+                            buttons[i][0].pos.x = (float(WinWdith) / 3 - buttons[i][0].ContentLength) / 2;
+                        }
+                        return SIGNUP;
+                    }
+                    //Sign In button
+                    updateStatus (isSigned, buttons[0][0].content, buttons[1][0].content);
                     for (i = 0; i < 2; i ++) {
                         buttons[i][0].ContentLength = float(MeasureText(buttons[i][0].content, buttons[i][0].FontSize));
                         buttons[i][0].pos.x = (float(WinWdith) / 3 - buttons[i][0].ContentLength) / 2;
                     }
+                    return MENU;
                 }
 
-                if (!isSigned ) {
-                    
+                //If already signed, Sign out
+                else if (selector.y == 1) {
+                    updateStatus (isSigned, buttons[0][0].content, buttons[1][0].content);
+                    for (i = 0; i < 2; i ++) {
+                        buttons[i][0].ContentLength = float(MeasureText(buttons[i][0].content, buttons[i][0].FontSize));
+                        buttons[i][0].pos.x = (float(WinWdith) / 3 - buttons[i][0].ContentLength) / 2;
+                    }
+                    return MENU;
                 }
-
-                else {
-                    
-                }
-
             }
 
             //Column: PlayGame and LeaderBoard

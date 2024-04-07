@@ -5,6 +5,8 @@
 #include <iostream>
 #include "stdlib.h"
 #include "time.h"
+#include <fstream>
+#include <sstream>
 
 using namespace std;
 
@@ -58,5 +60,7 @@ struct Time {
 //Functions
 void DeallocateTextbox1D (TextBox* textbox, const short& size);
 void DeallocateTextbox2D (TextBox** textbox, const short & row, const short& col);
+void DeallocateDynamicTextbox1D (TextBox* textbox, const short& size);
+void DeallocateDynamicTextbox2D (TextBox** textbox, const short & row, const short& col);
 bool isSameColor (const Color& Color1, const Color& Color2);
 void updateText (char* dest, const char* content);
