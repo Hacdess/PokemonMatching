@@ -30,25 +30,29 @@ int main() {
         BeginDrawing();
 
         switch (scene) {
-        case EXIT: {
-            CloseWindow();
-            UnloadImage(icon);
-            UnloadFont(GameFont);
+            case MENU:
+                scene = game.MenuScreen.draw(isSigned);
+                break;
+
+/*
+            case SIGNUP:
+                status = Scene.AccountScreen.draw(isSigned);
+                break;
+*/
+            case PLAY:
+                scene = game.GameScreen.draw(action, scene, level, game.LevelScreen);
+                break;
             
-            //deadllocate
-            delete[] game.GameScreen.gameboard.PokemonsImg;
+            //Exit the game
+            default:
+                CloseWindow();
+                UnloadImage(icon);
+                UnloadFont(GameFont);
+                
+                //deadllocate
+                delete[] game.GameScreen.gameboard.PokemonsImg;
 
-            return 0;
-            break;
-        }
-
-        case PLAY:
-            scene = game.GameScreen.draw(action, scene, level, game.LevelScreen);
-            break;
-        
-        default:
-            scene = game.MenuScreen.draw(isSigned);
-            break;
+                return 0;
         }
         
         EndDrawing();
