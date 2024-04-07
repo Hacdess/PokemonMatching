@@ -1,47 +1,42 @@
 #include "raylib.h"
 #include "../headers/SceneManager.h"
 #include <iostream>
+#include<cstring>
+#include<fstream>
+#include<sstream>
+using namespace std;
+#define MAX_INPUT_CHARS 21
 
-void init(SceneManager& Scene) {
-    Scene.MenuScreen.setup();
-    Scene.LevelScreen.setup();
+void init(SceneManager &game)
+{
+    game.MenuScreen.setup();
+    game.LevelScreen.setup();
+    game.AccountScreen.setupSignUp();
+    game.AccountScreen.setupSignIn();
 }
 
-int main() {
+int main()
+{
     bool isSigned = 0;
-    Status status = MENU;
 
-    //Init Window
-    InitWindow (WinWdith, WinHeight, GameName);
+    // Init Window
+    InitWindow(WinWdith, WinHeight, GameName);
     SetTargetFPS(GameFPS);
 
-    //Create icon
+    // Create icon
     Image icon = LoadImage("resources/img/logo.png");
-    SetWindowIcon (icon);
+    SetWindowIcon(icon);
 
-    SceneManager Scene;
-    init(Scene);
-
-    while (!WindowShouldClose()) {
+    SceneManager game;
+    init(game);
+    Account a;
+    
+    while (!WindowShouldClose())
+    {
         BeginDrawing();
-        std::cout << GetFPS() << std::endl;
 
-        switch (status) {
-        case EXIT: {
-            CloseWindow();
-            UnloadImage(icon);
-            UnloadFont(GameFont);
-            return 0;
-            break;
-        }
-        
-        default:
-            status = Scene.AccountScreen.draw(isSigned);
-            break;
-        }
-        //Scene.LevelScreen.draw();    
+        game.AccountScreen.drawSignIn(isSigned, a);
 
         EndDrawing();
     }
-    return 0;
 }
