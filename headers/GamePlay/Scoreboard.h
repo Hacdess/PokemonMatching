@@ -20,7 +20,7 @@ struct ScoreBoard {
     //Player has 5 health points meaning that player has 5 chances for wrong answer
     float HealthUnit = HealthFull / 5; 
     //At first, player has 5 health points
-    short health = 5;
+    short health;
 
     //The red one at the back
     Rectangle HP_Bar = {
@@ -32,7 +32,7 @@ struct ScoreBoard {
     Color HP_Bar_Color = RED;
 
     //The green one showing your current health
-    Rectangle HP = {HP_Bar.x, 0, HealthUnit * health, HP_Bar.height};
+    Rectangle HP;
     Color HP_Color = GREEN;
 
     Time PlayTime;
@@ -44,6 +44,9 @@ struct ScoreBoard {
 
     bool isUpdatedPlayerName = 0;
     void updatePlayer(char* name);
+
+    void updateHP();
+    void updateScoreText();
 
     bool StillMatchable = 1;
     void updateHint(const Selector2D& pokemon1, const Selector2D& pokemon2, const MatchingType& MatchType);

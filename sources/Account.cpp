@@ -315,6 +315,8 @@ bool isExistedUsername (Account account) {
             tmp[0] = s;
             tmp[1] = '\0';
             strcat(name, tmp);
+            ss >> pass;
+            strcat(name, pass);
             ss >> s;
         }
 
@@ -625,7 +627,7 @@ void deleteList(Account *&pHead) {
     }
 }
 
-Scene SignUpScene::draw (Account& account) {
+Scene SignUpScene::draw (bool& isSigned, Account& account) {
     // Draw Background image
     ClearBackground(BLACK);
     DrawTexturePro(background, {0, 0, 1792.0f, 1024.0f}, {0, 0, float(WinWdith), float(WinHeight)}, {0, 0}, 0.0f, WHITE);
@@ -701,7 +703,7 @@ Scene SignUpScene::draw (Account& account) {
         command.content = modifyCommand(account);
         if (IsKeyPressed(KEY_ENTER) && checkVaildUsername(account) == 5 && checkValidPassWord(account) == 4 && !isExistedUsername(account)) {
             storeAccount (account);
-
+            isSigned = 1;
             set = 0;
             selector.x = 0, selector.y = 0;
             return SIGNUP;
@@ -721,7 +723,9 @@ Scene SignUpScene::draw (Account& account) {
         confirm[1].BorderColor = WHITE;
         if (IsKeyPressed(KEY_ENTER)) {
 
+           
             set = 0;
+            isSigned = 0;
             selector.x = 0, selector.y = 0;
             return SIGNUP;
         }

@@ -78,9 +78,9 @@ void MenuScene::setup() {
 }
 
 //Signed or not
-void updateStatus(bool& isSigned, char*& content1, char*& content2, const char* newContent) {
+void updateStatus(const bool& isSigned, char*& content1, char*& content2, const char* newContent) {
     //Not Signed to Signed
-    if (!isSigned) {
+    if (isSigned) {
         delete[] content1;
         content1 = NULL;
         content1 = new char [strlen(newContent) + 1];
@@ -104,8 +104,6 @@ void updateStatus(bool& isSigned, char*& content1, char*& content2, const char* 
         content2 = new char [strlen("Sign in") + 1];
         strcpy (content2, "Sign in");
     }
-
-    isSigned = 1 - isSigned;
 }
 
 Scene MenuScene::draw(bool& isSigned) {
@@ -138,6 +136,7 @@ Scene MenuScene::draw(bool& isSigned) {
 
                 //If already signed, Sign out
                 else if (selector.y == 1) {
+                    isSigned = 0;
                     isChanged = 1;
                     return MENU;
                 }

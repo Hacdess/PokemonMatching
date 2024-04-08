@@ -3,10 +3,11 @@
 #include "Level.h"
 #include "Path.h"
 #include "Scoreboard.h"
+#include "Result.h"
 
 struct Pokemon {
     bool shown = 0, selected = 0;
-    unsigned short int ID;
+    short int ID;
     Rectangle border;
     Texture2D img;
     Color cover;
@@ -17,14 +18,14 @@ struct Pokemon {
     void unSeen();
 };
 
-Texture2D* readImage(const unsigned short int& quantity);
+Texture2D* readImage(const short int& quantity);
 void shuffle1D(Pokemon* Po1D, const short& size);
 
 struct GameBoard {
     float width, height;
     Texture2D HiddenBackground, *PokemonsImg;
 
-    unsigned short int row, col;
+    short int row, col;
     Pokemon** pokemons;
     Selector2D selector = {1,1}, selected = {0, 0};
 
@@ -33,7 +34,7 @@ struct GameBoard {
     MatchingType MatchType = None;
     Selector2D checkMatch1, checkMatch2;
 
-    void createTable (const unsigned short& quantity);
+    void createTable (const short& quantity);
     bool isEmpty();
     bool checkMatchAble();
     void draw();

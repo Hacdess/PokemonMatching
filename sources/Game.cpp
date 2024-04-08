@@ -255,13 +255,13 @@ void Pokemon::unSeen() {
 }
 
 //Load images from folder
-Texture2D* readImage(const unsigned short int& quantity) {
+Texture2D* readImage(const short int& quantity) {
     //Location to img
     string path = "resources/img/pokemon/pokemon";
     Texture2D *resTexture = new Texture2D[quantity];
 
     // Load image
-    unsigned short int i;
+    short int i;
     for (i = 0; i < quantity; i++)
     {
         path = path + to_string(i) + ".png"; //picname
@@ -277,7 +277,7 @@ Texture2D* readImage(const unsigned short int& quantity) {
 //Shuffle the 1D pokemon array
 void shuffle1D(Pokemon* Po1D, const short& size) {
     srand(time(0));
-    unsigned short i, j;
+    short i, j;
     for (i = 0; i < size; i ++) {
         j = rand() % size;
         swapPokemon (Po1D[i], Po1D[j]);
@@ -291,20 +291,23 @@ void shuffle2D(Pokemon** Po2D, const short& row, const short& col) {
 
     for (i = 1; i < row - 1; i ++)
         for (j = 1; j < col - 1; j ++)
-            Po2D[i][j] = Po2D[rand() % (row - 2) + 1][rand() % (col - 2) + 1];
+            swapPokemon(Po2D[i][j], Po2D[rand() % (row - 2) + 1][rand() % (col - 2) + 1]);
 }
 
 bool GameBoard::checkMatchAble () {
     short i, j, x, y;
+    Node* temp = NULL;
     for (i = 1; i < row - 1; i ++)
-        for (j = 0; j < col - 1; j ++)
-            for (x = i; x < row - 1; x ++)
-                for (y = j; y < col - 1; y ++) {
+        for (j = 1; j < col - 1; j ++)
+            for (x = 1; x < row - 1; x ++)
+                for (y = 1; y < col - 1; y ++) {
                     if (pokemons[i][j].shown && pokemons[x][y].shown) {
                         checkMatch1 = {i, j};
                         checkMatch2 = {x, y};
-                        if (checkMatching (pokemons, checkMatch1, checkMatch2, row, col, path) != None)
+                        if (checkMatching (pokemons, checkMatch1, checkMatch2, row, col, temp) != None) {
+                            removePath (temp);
                             return 1;
+                        }
                     }
                     
                 }
@@ -322,14 +325,13 @@ bool GameBoard::isEmpty() {
 }
 
 //Setup the Gameboard
-void GameBoard::createTable (const unsigned short& quantity) {
+void GameBoard::createTable (const short& quantity) {
     srand(time(0));
-    unsigned short int randNum, i, j, size = (row - 2) * (col - 2), pos = 0;
+    short int randNum, i, j, size = (row - 2) * (col - 2), pos = 0;
     float   sizePokemon = float(WinWdith) / (1.75f * col),
             padding = sizePokemon / 30,
             startX = 0,
             startY = startX;
-
     
     Pokemon* temp = new Pokemon[size];
     for (i = 0; i < size; i ++) {
@@ -386,7 +388,7 @@ void GameBoard::createTable (const unsigned short& quantity) {
 
 //Draw the GameBoard
 void GameBoard::draw() {
-    unsigned short i, j;
+    short i, j;
     for (i = 0; i < row; i ++)
         for (j = 0; j < col; j ++) {
             if (selector.y == i && selector.x == j) {
@@ -495,7 +497,7 @@ Scene GameScene::draw(GameAction& action, Scene scene, Level& level, LevelScene&
     DrawTexturePro (background, {0, 0, float(background.width), float(background.height)}, {0, 0, float(WinWdith), float(WinHeight)}, {0, 0}, 0, WHITE);
     //Draw hidden background
     DrawTexturePro (gameboard.HiddenBackground, {0, 0, float(gameboard.HiddenBackground.width), float(gameboard.HiddenBackground.height)}, {gameboard.pokemons[1][1].pos.x - 2, gameboard.pokemons[1][1].pos.y, gameboard.width, gameboard.height}, {0, 0}, 0, WHITE);
-    
+
     //Selector Dealing
     moveSelector2D (gameboard.selector, 1, 1, gameboard.col - 2, gameboard.row - 2);
 
@@ -510,11 +512,27 @@ Scene GameScene::draw(GameAction& action, Scene scene, Level& level, LevelScene&
             //2 điểm trùng ID và nối với nhau được thì xóa
             if (gameboard.pokemons[gameboard.selector.y][gameboard.selector.x].ID == gameboard.pokemons[gameboard.selected.y][gameboard.selected.x].ID &&
                 gameboard.MatchType != None
-            ) {   
+            ) {
+                switch (gameboard.MatchType) {
+                    case I:
+                    case L:
+                        scoreboard.ScoreNum += 2;
+                        break;
+                    
+                    default:
+                        scoreboard.ScoreNum += 4;
+                        break;
+                }
+
                 gameboard.MatchingTime = GetTime();
               
                 gameboard.pokemons[gameboard.selector.y][gameboard.selector.x].unSeen();
                 gameboard.pokemons[gameboard.selected.y][gameboard.selected.x].unSeen();
+            }
+
+            else {
+                scoreboard.ScoreNum -= 2;
+                scoreboard.health --;
             }
 
             gameboard.pokemons[gameboard.selector.y][gameboard.selector.x].selected = 0;
@@ -556,6 +574,10 @@ Scene GameScene::draw(GameAction& action, Scene scene, Level& level, LevelScene&
     //Draw Pokemons
     gameboard.draw();
     scoreboard.draw();
-    
+
+    //If it isn't matchable anymore, shuffle the gameboard
+    if (!gameboard.checkMatchAble())
+        shuffle2D (gameboard.pokemons, gameboard.row, gameboard.col);
+
     return PLAY;
 }

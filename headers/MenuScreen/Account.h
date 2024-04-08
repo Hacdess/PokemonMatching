@@ -24,7 +24,7 @@ struct SignUpScene {
     Selector2D selector = {0, 0};
 
     void setup();
-    Scene draw (Account& account);
+    Scene draw (bool& isSigned, Account& account);
 };
 
 struct SignInScene {

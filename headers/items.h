@@ -29,7 +29,7 @@ const Font GameFont = GetFontDefault();
 #define BlackTrans (Color) {0, 0, 0, 100}
 #define SlightGray (Color) {204, 204, 204, 255}
 #define SlightGrayTrans (Color) {204, 204, 204, 150}
-#define PokeBack (Color) {255, 205, 230, 255};
+#define PokeBack (Color) {255, 205, 230, 255}
 
 //Game Level
 enum Scene {MENU, SIGNUP, SIGNIN, PLAY, SETTING, RANK, EXIT};
@@ -64,3 +64,4 @@ void DeallocateDynamicTextbox1D (TextBox* textbox, const short& size);
 void DeallocateDynamicTextbox2D (TextBox** textbox, const short & row, const short& col);
 bool isSameColor (const Color& Color1, const Color& Color2);
 void updateText (char* dest, const char* content);
+char* StoA (const string& s);

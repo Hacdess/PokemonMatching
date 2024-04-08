@@ -62,3 +62,13 @@ void updateText (char* dest, const char* content) {
     dest = new char[strlen(content) + 1];
     strcpy (dest, content);
 }
+
+char* StoA (const string& s) {
+    short len = s.length();
+    char* arr = new char[len + 1];
+    short i;
+    for (i = 0; i < len; i ++)
+        arr[i] = s[i];
+    arr[len] = '\0';
+    return arr;
+}
