@@ -19,6 +19,14 @@ void printNode (Node* path) {
     cout << endl;
 }
 
+void removeHead(Node*& path) {
+    if (!path)
+        return;
+    Node* cur = path;
+    path = path -> next;
+    delete cur;
+}
+
 void removePath (Node*& path) {
     if (! path) {
         cout << "Empty\n";

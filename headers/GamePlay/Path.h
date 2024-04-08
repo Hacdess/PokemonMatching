@@ -12,4 +12,5 @@ struct Node {
 
 void addPath (Node*& path, const float& x, const float& y);
 void printNode(Node* path);
+void removeHead(Node*& path);
 void removePath (Node*& path);

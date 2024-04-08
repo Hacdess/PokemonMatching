@@ -24,7 +24,7 @@ const Font GameFont = GetFontDefault();
 
 //Define colors
 #define DarkCyanTrans (Color)  {0, 190, 190, 150}
-#define DarkCyan (Color) {0, 190, 190, 255}
+#define DarkCyan (Color) {0, 230, 230, 255}
 #define MoreDarkCyan (Color) {0, 125, 125, 0}
 #define BlackTrans (Color) {0, 0, 0, 100}
 #define SlightGray (Color) {204, 204, 204, 255}

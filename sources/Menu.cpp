@@ -79,7 +79,7 @@ void MenuScene::setup() {
 
 //Signed or not
 void updateStatus(const bool& isSigned, char*& content1, char*& content2, const char* newContent) {
-    //Not Signed to Signed
+    //Signed
     if (isSigned) {
         delete[] content1;
         content1 = NULL;
@@ -92,7 +92,7 @@ void updateStatus(const bool& isSigned, char*& content1, char*& content2, const 
         strcpy(content2, "Sign out");
     }
 
-    //Signed to Signed out
+    //Not Signed
     else {
         delete[] content1;
         content1 = NULL;

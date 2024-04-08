@@ -1,9 +1,35 @@
 #include "../headers/GamePlay/Game.h"
 
 void swapPokemon (Pokemon& pokemon1, Pokemon& pokemon2) {
-    Pokemon temp = pokemon1;
-    pokemon1 = pokemon2;
-    pokemon2 = temp;
+    bool shown = pokemon1.shown;
+    pokemon1.shown = pokemon2.shown;
+    pokemon2.shown = shown;
+
+    short ID = pokemon1.ID;
+    pokemon1.ID = pokemon2.ID;
+    pokemon2.ID = ID;
+
+    Rectangle border = pokemon1.border;
+    pokemon1.border = pokemon2.border;
+    pokemon2.border = border;
+
+    Texture2D img = pokemon1.img;
+    pokemon1.img = pokemon2.img;
+    pokemon2.img = img;
+
+    Color color = pokemon1.cover;
+    pokemon1.cover = pokemon2.cover;
+    pokemon2.cover = color;
+
+    color = pokemon1.back;
+    pokemon1.back = pokemon2.back;
+    pokemon2.back = color;
+
+/*
+    Vector2 pos = pokemon1.pos;
+    pokemon1.pos = pokemon2.pos;
+    pokemon1.pos = pos;
+*/
 }
 
 void copyPokemon (Pokemon& des, Pokemon source) {
@@ -45,8 +71,8 @@ bool checkImatching (Pokemon** pokemons, const Selector2D& pokemon1, const Selec
             for (start = pokemon1.x - 1; start > pokemon2.x; start --) {
                 //Path hit the obstacle so return none
                 if (pokemons[pokemon1.y][start].shown) {
-                    removePath (path);
-                    return None;
+                    removeHead (path);
+                    return 0;
                 }
             }
 
@@ -56,14 +82,14 @@ bool checkImatching (Pokemon** pokemons, const Selector2D& pokemon1, const Selec
                     pokemons[pokemon1.y][start].pos.y + pokemons[pokemon1.y][start].size / 2
             );            
 
-            return I;
+            return 1;
         }
 
         //Pokemon1 is on the right of Pokemon2
         for (start = pokemon1.x + 1; start < pokemon2.x; start ++) {
             //Path hit the obstacle so return none
             if (pokemons[pokemon1.y][start].shown) {
-                removePath (path);
+                removeHead (path);
                 return None;
             }
         }
@@ -74,7 +100,7 @@ bool checkImatching (Pokemon** pokemons, const Selector2D& pokemon1, const Selec
                 pokemons[pokemon1.y][start].pos.y + pokemons[pokemon1.y][start].size / 2
         );            
 
-        return I;
+        return 1;
     }
 
     //Check vertically
@@ -84,8 +110,8 @@ bool checkImatching (Pokemon** pokemons, const Selector2D& pokemon1, const Selec
             for (start = pokemon1.y - 1; start > pokemon2.y; start --) {
                 //Path hit the obstacle so return none
                 if (pokemons[start][pokemon1.x].shown) {
-                    removePath (path);
-                    return None;
+                    removeHead (path);
+                    return 0;
                 }
             }
             
@@ -95,15 +121,15 @@ bool checkImatching (Pokemon** pokemons, const Selector2D& pokemon1, const Selec
                     pokemons[start][pokemon1.x].pos.y + pokemons[start][pokemon1.x].size / 2
             );            
 
-            return I;
+            return 1;
         }
 
         //Pokemon1 is above Pokemon2
         for (start = pokemon1.y + 1; start < pokemon2.y; start ++) {
             //Path hit the obstacle so return none
             if (pokemons[start][pokemon1.x].shown) {
-                removePath (path);
-                return None;
+                removeHead (path);
+                return 0;
             }
         }
         
@@ -113,7 +139,7 @@ bool checkImatching (Pokemon** pokemons, const Selector2D& pokemon1, const Selec
                 pokemons[start][pokemon1.x].pos.y + pokemons[start][pokemon1.x].size / 2
         );            
 
-        return I;
+        return 1;
     }
 
     removePath (path);
@@ -125,26 +151,35 @@ bool checkLmatching (Pokemon** pokemons, const Selector2D& pokemon1, const Selec
 
     tempPokemon.x = pokemon1.x;
     tempPokemon.y = pokemon2.y;
-    if (!pokemons[tempPokemon.y][tempPokemon.x].shown && 
-        checkImatching(pokemons, pokemon1, tempPokemon, path) && 
-        checkImatching(pokemons, tempPokemon, pokemon2, path)
-    )
-        return 1;
+    if (!pokemons[tempPokemon.y][tempPokemon.x].shown && checkImatching(pokemons, pokemon1, tempPokemon, path)) {
+        if (checkImatching(pokemons, tempPokemon, pokemon2, path))
+            return 1;
+        removeHead(path);
+        removeHead(path);
+    }
 
     tempPokemon.x = pokemon2.x;
     tempPokemon.y = pokemon1.y;
-    if (!pokemons[tempPokemon.y][tempPokemon.x].shown && 
-        checkImatching(pokemons, pokemon1, tempPokemon, path) && 
-        checkImatching(pokemons, tempPokemon, pokemon2, path) 
-    )
-        return 1;
+    if (!pokemons[tempPokemon.y][tempPokemon.x].shown && checkImatching(pokemons, pokemon1, tempPokemon, path)) {
+        if (checkImatching(pokemons, tempPokemon, pokemon2, path))
+            return 1;
+        removeHead(path);
+        removeHead(path);
+    }
 
-    removePath (path);
     return 0;
 }
 
 //U, Z matching
 MatchingType checkMatching (Pokemon** pokemons, const Selector2D& pokemon1, const Selector2D& pokemon2, const short& row, const short& col, Node*& path) {
+    //Not the same ID
+    if (pokemons[pokemon1.y][pokemon1.x].ID != pokemons[pokemon2.y][pokemon2.x].ID)
+        return None;
+
+    //If one of them is deleted
+    if (!pokemons[pokemon1.y][pokemon1.x].shown || !pokemons[pokemon2.y][pokemon2.x].shown)
+        return None;
+
     //Check if they are the same
     if (pokemon1.x == pokemon2.x && pokemon1.y == pokemon2.y)
         return None;
@@ -276,8 +311,8 @@ Texture2D* readImage(const short int& quantity) {
 
 //Shuffle the 1D pokemon array
 void shuffle1D(Pokemon* Po1D, const short& size) {
-    srand(time(0));
     short i, j;
+    srand(time(0));
     for (i = 0; i < size; i ++) {
         j = rand() % size;
         swapPokemon (Po1D[i], Po1D[j]);
@@ -285,13 +320,14 @@ void shuffle1D(Pokemon* Po1D, const short& size) {
 }
 
 //Shuffle the 2D pokemon array
-void shuffle2D(Pokemon** Po2D, const short& row, const short& col) {
+void shuffle2D(Pokemon** Po2D, const short& row, const short& col, Selector2D selector, Selector2D selected) {
     short i, j;
-    srand(time(0));
-
     for (i = 1; i < row - 1; i ++)
-        for (j = 1; j < col - 1; j ++)
+        for (j = 1; j < col - 1; j ++) {
+            srand(time(0));
             swapPokemon(Po2D[i][j], Po2D[rand() % (row - 2) + 1][rand() % (col - 2) + 1]);
+        }
+    selector = {1, 1}, selected = {0, 0};
 }
 
 bool GameBoard::checkMatchAble () {
@@ -299,17 +335,13 @@ bool GameBoard::checkMatchAble () {
     Node* temp = NULL;
     for (i = 1; i < row - 1; i ++)
         for (j = 1; j < col - 1; j ++)
-            for (x = 1; x < row - 1; x ++)
-                for (y = 1; y < col - 1; y ++) {
-                    if (pokemons[i][j].shown && pokemons[x][y].shown) {
-                        checkMatch1 = {i, j};
-                        checkMatch2 = {x, y};
-                        if (checkMatching (pokemons, checkMatch1, checkMatch2, row, col, temp) != None) {
-                            removePath (temp);
-                            return 1;
-                        }
+            for (y = 1; y < row - 1; y ++)
+                for (x = 1; x < col - 1; x ++) {
+                    checkMatch1 = {j, i}, checkMatch2 = {x, y};
+                    if (checkMatching (pokemons, checkMatch1, checkMatch2, row, col, temp) != None) {
+                        removePath (temp);
+                        return 1;
                     }
-                    
                 }
     return 0;
 }
@@ -317,8 +349,8 @@ bool GameBoard::checkMatchAble () {
 //Check if GameBoard is empty
 bool GameBoard::isEmpty() {
     short i, j;
-    for (i = 1; i < row; i ++)
-        for (j = 1; j < col; j ++)
+    for (i = 1; i < row - 1; i ++)
+        for (j = 1; j < col - 1; j ++)
             if (pokemons[i][j].shown)
                 return 0;
     return 1;
@@ -508,11 +540,8 @@ Scene GameScene::draw(GameAction& action, Scene scene, Level& level, LevelScene&
         //Nếu đã có 1 cái được chọn trước đó
         if (gameboard.selected.x != 0) {
             gameboard.MatchType = checkMatching (gameboard.pokemons, gameboard.selector, gameboard.selected, gameboard.row, gameboard.col, gameboard.path);
-
-            //2 điểm trùng ID và nối với nhau được thì xóa
-            if (gameboard.pokemons[gameboard.selector.y][gameboard.selector.x].ID == gameboard.pokemons[gameboard.selected.y][gameboard.selected.x].ID &&
-                gameboard.MatchType != None
-            ) {
+            //Matchable
+            if (gameboard.MatchType != None) {
                 switch (gameboard.MatchType) {
                     case I:
                     case L:
@@ -523,7 +552,6 @@ Scene GameScene::draw(GameAction& action, Scene scene, Level& level, LevelScene&
                         scoreboard.ScoreNum += 4;
                         break;
                 }
-
                 gameboard.MatchingTime = GetTime();
               
                 gameboard.pokemons[gameboard.selector.y][gameboard.selector.x].unSeen();
@@ -576,8 +604,19 @@ Scene GameScene::draw(GameAction& action, Scene scene, Level& level, LevelScene&
     scoreboard.draw();
 
     //If it isn't matchable anymore, shuffle the gameboard
-    if (!gameboard.checkMatchAble())
-        shuffle2D (gameboard.pokemons, gameboard.row, gameboard.col);
+    if (!gameboard.checkMatchAble()) {
+        if (GetTime () - gameboard.MatchingTime > 0.5) {
+            short i;
+            for (i = 0; i < gameboard.row; i ++)
+                delete[] gameboard.pokemons[i];
+            delete[] gameboard.pokemons;
+
+            action = ChooseLevel;
+        }
+
+        return PLAY;
+    }
+        //shuffle2D (gameboard.pokemons, gameboard.row, gameboard.col, gameboard.selector, gameboard.selected);
 
     return PLAY;
 }

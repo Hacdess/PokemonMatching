@@ -25,7 +25,7 @@ struct GameBoard {
     float width, height;
     Texture2D HiddenBackground, *PokemonsImg;
 
-    short int row, col;
+    short row, col;
     Pokemon** pokemons;
     Selector2D selector = {1,1}, selected = {0, 0};
 
