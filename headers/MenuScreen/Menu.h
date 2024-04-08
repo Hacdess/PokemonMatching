@@ -5,6 +5,7 @@
 #include "Account.h"
 
 struct MenuScene {
+    bool isChanged = 0;
     Texture2D background;
     TextBox title[2];
     TextBox buttons[2][3];

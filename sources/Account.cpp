@@ -99,7 +99,7 @@ void SignUpScene::setup() {
     command.BorderColor = DarkCyanTrans;
     command.FontColor = RED;
     command.ContentLength = float(MeasureText(command.content, command.FontSize));
-    command.pos = {startX - (SignUpSpace - command.ContentLength) / 2 - SignUpSpace / 1.5f, startY + (SignUpHeight - command.FontSize) / 2};
+    command.pos = {(float(WinWdith) - command.ContentLength) / 2, startY + (SignUpHeight - command.FontSize) / 2};
 
     startY += spacing + SignUpHeight;
     startX = 1.5f * SignUpSpace;
@@ -209,14 +209,14 @@ void SignInScene::setup() {
     }
 
     startX = SignUpSpace;
-    startY += 2.5f * (spacing + SignUpHeight);
+    startY = startY + 2.5f * (spacing + SignUpHeight);
     command.FontSize = FontSize;
     command.BorderColor = DarkCyanTrans;
     command.FontColor = RED;
     command.ContentLength = float(MeasureText(command.content, command.FontSize));
     command.pos = {startX - (SignUpSpace - command.ContentLength) / 2 - SignUpSpace / 1.5f, startY + (SignUpHeight - command.FontSize) / 2};
 
-    startY += spacing + SignUpHeight;
+    startY = startY + spacing + SignUpHeight;
     startX = 1.5f * SignUpSpace;
     for (i = 0; i < 2; i++) {
         confirm[i].FontSize = FontSize;
@@ -275,8 +275,8 @@ void inputPass(Account &account) {
 }
 
 void storeAccount (Account &account) {
-    std::fstream f;
-    f.open("resources/file/Account.txt", std::ios::out | std::ios::app);
+    fstream f;
+    f.open("resources/file/Account.txt", ios::out | ios::app);
 
     f << account.name << " " << '|' << " " << account.pass << '\n';
 
@@ -290,29 +290,34 @@ void storeAccount (Account &account) {
 }
 
 bool isExistedUsername (Account account) {
-    std::fstream f;
-    f.open("resources/file/Account.txt", std::ios ::in);
+    fstream f;
+    f.open("resources/file/Account.txt", ios::in);
 
-    char s, name[21], pass[21];
+    char s, name[20], pass[20], tmp[2];
+    string t;
 
-    std::string t;
-
-    // Get the first line that's not neccessary
+    //Get the first line that's not neccessary
     getline(f, t, '\n');
-    std::stringstream ss(t);
+    stringstream ss(t);
     ss >> name;
     ss >> s;
     ss >> pass;
 
-    while (!f.eof())
-    {
-
+    while (!f.eof()) {
         getline(f, t, '\n');
-
-        std::stringstream ss(t);
+        stringstream ss(t);
 
         ss >> name;
         ss >> s;
+
+        while (s != '|') {
+            strcat(name, " ");
+            tmp[0] = s;
+            tmp[1] = '\0';
+            strcat(name, tmp);
+            ss >> s;
+        }
+
         ss >> pass;
 
         if (name[0] != '\0' && pass[0] != '\0')
@@ -326,29 +331,37 @@ bool isExistedUsername (Account account) {
 }
 
 bool isCorrectSigIn (Account account) {
-    std::fstream f;
-    f.open("resources/file/Account.txt", std::ios ::in);
+    fstream f;
+    f.open("resources/file/Account.txt", ios::in);
 
-    char s, name[21], pass[21];
-
-    std::string t;
+    char s, name[20], pass[20], tmp[2];
+    string t;
 
     // Get the first line that's not neccessary
     getline(f, t, '\n');
-    std::stringstream ss(t);
+    stringstream ss(t);
     ss >> name;
     ss >> s;
     ss >> pass;
 
-    while (!f.eof())
-    {
-
+    while (!f.eof()) {
         getline(f, t, '\n');
 
-        std::stringstream ss(t);
+        stringstream ss(t);
 
         ss >> name;
         ss >> s;
+
+        while (s != '|') {
+            strcat(name, " ");
+            tmp[0] = s;
+            tmp[1] = '\0';
+            strcat(name, tmp);
+            ss >> pass;
+            strcat(name, pass);
+            ss >> s;
+        }        
+        
         ss >> pass;
 
         if (name[0] != '\0' && pass[0] != '\0')
@@ -361,7 +374,7 @@ bool isCorrectSigIn (Account account) {
     return 0;
 }
 
-char *modifyName (Account account) {
+char *modifyName (Account& account) {
     char *tmp;
     tmp = NULL;
 
@@ -385,7 +398,7 @@ char *modifyName (Account account) {
     return tmp;
 }
 
-char *modifyPass(Account account) {
+char *modifyPass(Account& account) {
     char *tmp;
     tmp = NULL;
 
@@ -456,13 +469,17 @@ short checkValidPassWord (Account account) {
     return 4;
 }
 
-char *modifyCommandUsername(Account account) {
+char *modifyCommandUsername(Account& account) {
     char *tmp;
     tmp = NULL;
     short check = checkVaildUsername(account);
 
     switch (check) {
+        //No input
         case 1:
+        case 3:
+            tmp = new char[strlen("Username should have at least one letter alphabet") + 1];
+            strcpy(tmp, "Username should have at least one letter alphabet");
             break;
 
         case 2:
@@ -470,14 +487,9 @@ char *modifyCommandUsername(Account account) {
             strcpy(tmp, "Username should have no more than 15 letters");
             break;
 
-        case 3:
-            tmp = new char[strlen("Username should have at least one letter alphabet") + 1];
-            strcpy(tmp, "Username should have at least one letter alphabet");
-            break;
-
         case 4:
-            tmp = new char[strlen("Try another username") + 1];
-            strcpy(tmp, "Try another username");
+            tmp = new char[strlen("Existed Account") + 1];
+            strcpy(tmp, "Existed Account");
             break;
 
         case 5:
@@ -489,7 +501,7 @@ char *modifyCommandUsername(Account account) {
     return tmp;
 }
 
-char *modifyCommandPassword (Account account) {
+char *modifyCommandPassword (Account& account) {
     char *tmp;
     tmp = NULL;
     short check = checkValidPassWord(account);
@@ -515,7 +527,7 @@ char *modifyCommandPassword (Account account) {
     return tmp;
 }
 
-char *modifyCommand(Account account) {
+char *modifyCommand(Account& account) {
     char *tmp;
     tmp = NULL;
 
@@ -613,7 +625,7 @@ void deleteList(Account *&pHead) {
     }
 }
 
-Scene SignUpScene::draw (bool &isSigned, Account& account) {
+Scene SignUpScene::draw (Account& account) {
     // Draw Background image
     ClearBackground(BLACK);
     DrawTexturePro(background, {0, 0, 1792.0f, 1024.0f}, {0, 0, float(WinWdith), float(WinHeight)}, {0, 0}, 0.0f, WHITE);
@@ -692,7 +704,6 @@ Scene SignUpScene::draw (bool &isSigned, Account& account) {
 
             set = 0;
             selector.x = 0, selector.y = 0;
-            isSigned = 1;
             return SIGNUP;
         }
     }
@@ -703,6 +714,9 @@ Scene SignUpScene::draw (bool &isSigned, Account& account) {
 
     //Back to Menu button
     if (selector.y == 2 && selector.x == 1) {
+        delete[] command.content;
+        command.content = NULL;
+
         confirm[1].FontColor = DarkCyanTrans;
         confirm[1].BorderColor = WHITE;
         if (IsKeyPressed(KEY_ENTER)) {
@@ -736,6 +750,8 @@ Scene SignUpScene::draw (bool &isSigned, Account& account) {
     }
 
     //  DrawRectangleRec(loginCommand[0].border, loginCommand[0].BorderColor);
+    command.ContentLength = float(MeasureText(command.content, command.FontSize));
+    command.pos.x = (float(WinWdith) - command.ContentLength) / 2;
     DrawText(command.content, command.pos.x, command.pos.y, command.FontSize, command.FontColor);
 
     for (i = 0; i < 2; i++) {

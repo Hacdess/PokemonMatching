@@ -78,13 +78,13 @@ void MenuScene::setup() {
 }
 
 //Signed or not
-void updateStatus(bool& isSigned, char*& content1, char*& content2) {
+void updateStatus(bool& isSigned, char*& content1, char*& content2, const char* newContent) {
     //Not Signed to Signed
     if (!isSigned) {
         delete[] content1;
         content1 = NULL;
-        content1 = new char [strlen("Account") + 1];
-        strcpy(content1, "Account");
+        content1 = new char [strlen(newContent) + 1];
+        strcpy(content1, newContent);
 
         delete[] content2;
         content2 = NULL;
@@ -109,12 +109,11 @@ void updateStatus(bool& isSigned, char*& content1, char*& content2) {
 }
 
 Scene MenuScene::draw(bool& isSigned) {
-
     //Draw Background image
     ClearBackground (BLACK);
     DrawTexturePro (background, {0, 0, float(background.width), float(background.height)}, {0, 0, float(WinWdith), float(WinHeight)}, {0, 0}, 0.0f, WHITE);
 
-    unsigned short int i, j;
+    short i, j;
 
     //Draw Game Title
     for (i = 0; i < 2; i ++) {
@@ -129,29 +128,17 @@ Scene MenuScene::draw(bool& isSigned) {
                 if (!isSigned) {
                     //Sign Up button
                     if (selector.y == 0) {
-                        updateStatus (isSigned, buttons[0][0].content, buttons[1][0].content);
-                        for (i = 0; i < 2; i ++) {
-                            buttons[i][0].ContentLength = float(MeasureText(buttons[i][0].content, buttons[i][0].FontSize));
-                            buttons[i][0].pos.x = (float(WinWdith) / 3 - buttons[i][0].ContentLength) / 2;
-                        }
+                        isChanged = 1;
                         return SIGNUP;
                     }
                     //Sign In button
-                    updateStatus (isSigned, buttons[0][0].content, buttons[1][0].content);
-                    for (i = 0; i < 2; i ++) {
-                        buttons[i][0].ContentLength = float(MeasureText(buttons[i][0].content, buttons[i][0].FontSize));
-                        buttons[i][0].pos.x = (float(WinWdith) / 3 - buttons[i][0].ContentLength) / 2;
-                    }
+                    isChanged = 1;
                     return MENU;
                 }
 
                 //If already signed, Sign out
                 else if (selector.y == 1) {
-                    updateStatus (isSigned, buttons[0][0].content, buttons[1][0].content);
-                    for (i = 0; i < 2; i ++) {
-                        buttons[i][0].ContentLength = float(MeasureText(buttons[i][0].content, buttons[i][0].FontSize));
-                        buttons[i][0].pos.x = (float(WinWdith) / 3 - buttons[i][0].ContentLength) / 2;
-                    }
+                    isChanged = 1;
                     return MENU;
                 }
             }
@@ -174,6 +161,15 @@ Scene MenuScene::draw(bool& isSigned) {
             }
         }
 
+    if (isChanged) {
+        updateStatus (isSigned, buttons[0][0].content, buttons[1][0].content, account.name);
+        for (i = 0; i < 2; i ++) {
+            buttons[i][0].ContentLength = float(MeasureText(buttons[i][0].content, buttons[i][0].FontSize));
+            buttons[i][0].pos.x = (float(WinWdith) / 3 - buttons[i][0].ContentLength) / 2;
+        }
+        isChanged = 0;
+    }
+    
     //Handlde Selector
     moveSelector2D (selector, 0, 0, 2, 1);
 

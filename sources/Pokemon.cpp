@@ -39,8 +39,9 @@ int main() {
                 if (!game.SignUpScreen.set)
                     game.SignUpScreen.setup();
                 else {
-                    scene = game.SignUpScreen.draw (isSigned, game.MenuScreen.account);
+                    scene = game.SignUpScreen.draw (game.MenuScreen.account);
                     if (!game.SignUpScreen.set) {
+                        //Refresh for the next Sign Up
                         DeallocateTextbox1D (game.SignUpScreen.title, 2);
                         DeallocateTextbox1D (game.SignUpScreen.constant, 2);
                         DeallocateTextbox1D (game.SignUpScreen.input, 2);

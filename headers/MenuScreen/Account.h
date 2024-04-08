@@ -24,7 +24,7 @@ struct SignUpScene {
     Selector2D selector = {0, 0};
 
     void setup();
-    Scene draw(bool& isSigned, Account& account);
+    Scene draw (Account& account);
 };
 
 struct SignInScene {
@@ -51,15 +51,15 @@ bool isExistedUsername (Account account);
 bool isCorrectSigIn (Account account);
 
 //Fuctions dealing with Username && Password: Max 15 characters
-char* modifyName(Account account);
-char* modifyPass(Account account);
+char* modifyName(Account& account);
+char* modifyPass(Account& account);
 short checkVaildUsername(Account account); //Many invalid cases
 short checkValidPassWord(Account account);
    
 //Hàm chỉnh dòng Commnad
-char* modifyCommandUsername(Account account);
-char* modifyCommandPassword(Account account);
-char* modifyCommand(Account account);
+char* modifyCommandUsername(Account& account);
+char* modifyCommandPassword(Account& account);
+char* modifyCommand(Account& account);
 
 //Some fuctions to work on Linked List
 void addHead(Account* &pHead, Account account);
