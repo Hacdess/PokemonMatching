@@ -3,17 +3,23 @@
 #include "Account.h"
 
 struct Player {
-    Account account; // Save the username
-    Time time;
     short score;
+    Time time;
+    TextBox name, ScoreText, TimeText;
     Player *next;
 };
 
 struct StageScene {
-    TextBox level;
+    const Color background = WHITE;
+    TextBox constant[5];
     Player* list;
+    void setup();
+    void draw();
 };
 
-struct  LeaderboardSceen {
+struct LeaderboardSceen {
     StageScene stages[3];
+    short selector;
+    void setup();
+    Scene draw();
 };

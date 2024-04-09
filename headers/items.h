@@ -64,6 +64,7 @@ void DeallocateTextbox2D (TextBox** textbox, const short & row, const short& col
 void DeallocateDynamicTextbox1D (TextBox* textbox, const short& size);
 void DeallocateDynamicTextbox2D (TextBox** textbox, const short & row, const short& col);
 bool isSameColor (const Color& Color1, const Color& Color2);
+void addText (char*& dest, const char* content);
 void updateText (char*& dest, const char* content);
 char* StoA (const string& s);
 string TimeToString (Time time);

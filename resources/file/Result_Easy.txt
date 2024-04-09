@@ -1,7 +1,0 @@
-Player | Score | Time
-Guest | 42 | 00:00:41
-TrungKien | 54 | 00:01:23
-TKin2k5 | 40 | 00:00:43
-Tri | 46 | 00:00:43
-Tri | 42 | 00:00:49
-Tri | 48 | 00:01:12

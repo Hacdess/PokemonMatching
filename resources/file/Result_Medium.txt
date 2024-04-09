@@ -1,2 +1,0 @@
-Player | Score | Time
-Tri | 98 | 00:03:52
