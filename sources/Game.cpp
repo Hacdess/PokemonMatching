@@ -1,35 +1,21 @@
 #include "../headers/GamePlay/Game.h"
 
 void swapPokemon (Pokemon& pokemon1, Pokemon& pokemon2) {
-    bool shown = pokemon1.shown;
+    bool temp = pokemon1.shown;
     pokemon1.shown = pokemon2.shown;
-    pokemon2.shown = shown;
+    pokemon2.shown = temp;
+
+    temp = pokemon1.selected;
+    pokemon1.selected = pokemon2.selected;
+    pokemon2.selected = temp;
 
     short ID = pokemon1.ID;
     pokemon1.ID = pokemon2.ID;
     pokemon2.ID = ID;
 
-    Rectangle border = pokemon1.border;
-    pokemon1.border = pokemon2.border;
-    pokemon2.border = border;
-
     Texture2D img = pokemon1.img;
     pokemon1.img = pokemon2.img;
     pokemon2.img = img;
-
-    Color color = pokemon1.cover;
-    pokemon1.cover = pokemon2.cover;
-    pokemon2.cover = color;
-
-    color = pokemon1.back;
-    pokemon1.back = pokemon2.back;
-    pokemon2.back = color;
-
-/*
-    Vector2 pos = pokemon1.pos;
-    pokemon1.pos = pokemon2.pos;
-    pokemon1.pos = pos;
-*/
 }
 
 void copyPokemon (Pokemon& des, Pokemon source) {
@@ -604,19 +590,8 @@ Scene GameScene::draw(GameAction& action, Scene scene, Level& level, LevelScene&
     scoreboard.draw();
 
     //If it isn't matchable anymore, shuffle the gameboard
-    if (!gameboard.checkMatchAble()) {
-        if (GetTime () - gameboard.MatchingTime > 0.5) {
-            short i;
-            for (i = 0; i < gameboard.row; i ++)
-                delete[] gameboard.pokemons[i];
-            delete[] gameboard.pokemons;
-
-            action = ChooseLevel;
-        }
-
-        return PLAY;
-    }
-        //shuffle2D (gameboard.pokemons, gameboard.row, gameboard.col, gameboard.selector, gameboard.selected);
+    if (!gameboard.checkMatchAble()) 
+        shuffle2D (gameboard.pokemons, gameboard.row, gameboard.col, gameboard.selector, gameboard.selected);
 
     return PLAY;
 }
