@@ -1,6 +1,6 @@
 #include "../headers/GamePlay/Scoreboard.h"
 
-void ScoreBoard::setup() {
+void ScoreBoard::setup(const char* username) {
     showHint = 0;
 
     //"Scoreboard" word on the top
@@ -15,8 +15,14 @@ void ScoreBoard::setup() {
     };
 
     //At first, it's not login yet so the player name is "Guest"
-    Player.content = new char[strlen("Guest") + 1];
-    strcpy (Player.content, "Guest");
+    if (username == NULL) {
+        Player.content = new char[strlen("Guest") + 1];
+        strcpy (Player.content, "Guest");
+    }
+    else {
+        Player.content = new char[strlen(username) + 1];
+        strcpy (Player.content, username);
+    }
     Player.FontSize = HealthUnit * 0.75f;
     Player.FontColor = YELLOW;
     Player.ContentLength = MeasureText (Player.content, Player.FontSize);
@@ -128,6 +134,22 @@ void ScoreBoard::draw() {
     //----Draw all the rest things----
 
     //Title
+    if (GetTime() - markTime >= 1) {
+        if (isSameColor(Title.FontColor, RED))
+            Title.FontColor = ORANGE;
+        else if (isSameColor(Title.FontColor, ORANGE))
+            Title.FontColor = YELLOW;
+        else if (isSameColor(Title.FontColor, YELLOW))
+            Title.FontColor = GREEN;
+        else if (isSameColor(Title.FontColor, GREEN))
+            Title.FontColor = BLUE;
+        else if (isSameColor(Title.FontColor, BLUE))
+            Title.FontColor = VIOLET;
+        else if (isSameColor(Title.FontColor, VIOLET))
+            Title.FontColor = PINK;
+        else if (isSameColor(Title.FontColor, PINK))
+            Title.FontColor = RED;
+    }
     DrawText (Title.content, Title.pos.x, Title.pos.y, Title.FontSize, Title.FontColor);
     //Player name
     DrawText (Player.content, Player.pos.x, Player.pos.y, Player.FontSize, Player.FontColor);

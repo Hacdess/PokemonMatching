@@ -15,6 +15,7 @@ struct Account {
 
 struct SignUpScene {
     bool set = 0;
+    Account account;
     Texture2D background;
     TextBox title[2]; //Game name
     TextBox constant[2]; // The word "Username" and "PassWord" - they're constant
@@ -24,11 +25,12 @@ struct SignUpScene {
     Selector2D selector = {0, 0};
 
     void setup();
-    Scene draw (bool& isSigned, Account& account);
+    Scene draw (bool& isSigned, char*& username);
 };
 
 struct SignInScene {
     bool set = 0;
+    Account account;
     Texture2D background;
     TextBox title[2]; //Game name
     TextBox constant[2]; // The word "Username" and "PassWord" - they're constant

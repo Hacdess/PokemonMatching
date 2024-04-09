@@ -39,7 +39,7 @@ int main() {
                 if (!game.SignUpScreen.set)
                     game.SignUpScreen.setup();
                 else {
-                    scene = game.SignUpScreen.draw (isSigned, game.MenuScreen.account);
+                    scene = game.SignUpScreen.draw (isSigned, game.MenuScreen.username);
                     if (!game.SignUpScreen.set) {
                         //Refresh for the next Sign Up
                         DeallocateTextbox1D (game.SignUpScreen.title, 2);
@@ -53,7 +53,7 @@ int main() {
                 break;
 
             case PLAY:
-                scene = game.GameScreen.draw(action, scene, level, game.LevelScreen);
+                scene = game.GameScreen.draw(action, scene, level, game.LevelScreen, game.MenuScreen.username);
                 break;
             
             //Exit the game

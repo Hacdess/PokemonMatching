@@ -47,5 +47,5 @@ struct GameScene {
     ResultScene ResultScreen;
 
     void setup();
-    Scene draw(GameAction& action, Scene scene, Level& level, LevelScene& LEVEL);
+    Scene draw(GameAction& action, Scene scene, Level& level, LevelScene& LEVEL, const char* username);
 };

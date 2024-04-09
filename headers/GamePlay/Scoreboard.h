@@ -42,7 +42,7 @@ struct ScoreBoard {
     //Check if the player need help
     bool showHint;
 
-    void setup();
+    void setup(const char* username);
 
     bool isUpdatedPlayerName = 0;
     void updatePlayer(char* name);

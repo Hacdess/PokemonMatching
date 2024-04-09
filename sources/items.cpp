@@ -56,9 +56,10 @@ bool isSameColor (const Color& Color1, const Color& Color2) {
     return 1;
 }
 
-//Up dest text with new content
-void updateText (char* dest, const char* content) {
+//Update dest text with new content
+void updateText (char*& dest, const char* content) {
     delete[] dest;
+    dest = NULL;
     dest = new char[strlen(content) + 1];
     strcpy (dest, content);
 }

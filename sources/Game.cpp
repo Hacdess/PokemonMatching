@@ -447,6 +447,27 @@ void drawPath (Node* path, const Pokemon& pokemon) {
     }
 }
 
+//Store game result in file .txt if that player won
+void storeResult (const ScoreBoard& scoreboard, const Level& level) {
+    ofstream fout;
+
+    if (level == EASY)
+        fout.open("resources/file/Result_Easy.txt", ios::app);
+    if (level == MEDIUM)
+        fout.open("resources/file/Result_Medium.txt", ios::app);
+    if (level == HARD)
+        fout.open("resources/file/Result_Hard.txt", ios::app);
+
+    if (!fout.is_open()) {
+        cout << "Can't open file to store\n";
+        return;
+    }
+
+    fout << scoreboard.Player.content << " | " << scoreboard.ScoreText.content << " | " << scoreboard.TimeText.content << endl;
+
+    fout.close();
+}
+
 //Set up required data for Game Play
 void GameScene::setup() {
     //Get Background
@@ -468,7 +489,7 @@ void GameScene::setup() {
 }
 
 //Manage Game scene
-Scene GameScene::draw(GameAction& action, Scene scene, Level& level, LevelScene& LevelScreen) {
+Scene GameScene::draw(GameAction& action, Scene scene, Level& level, LevelScene& LevelScreen, const char* username) {
     //Choose the Level before playing
     //Level Screen loaded already so just draw the scene for level choosing
     if (action == ChooseLevel) {
@@ -495,7 +516,7 @@ Scene GameScene::draw(GameAction& action, Scene scene, Level& level, LevelScene&
         }
 
         setup();
-        scoreboard.setup();
+        scoreboard.setup(username);
 
         //Done choosing level and loading game, now play the game
         action = PlayGame;
@@ -503,7 +524,8 @@ Scene GameScene::draw(GameAction& action, Scene scene, Level& level, LevelScene&
     }
 
     else if (action == ShowResult) {
-        ResultScreen.setup();
+        if (!ResultScreen.isSet)
+            ResultScreen.setup();
         ResultScreen.draw (action);
         return PLAY;
     }
@@ -530,36 +552,40 @@ Scene GameScene::draw(GameAction& action, Scene scene, Level& level, LevelScene&
     if (IsKeyPressed(KEY_ENTER)) {
         gameboard.pokemons[gameboard.selector.y][gameboard.selector.x].selected = 1;
         
-        //Nếu đã có 1 cái được chọn trước đó
+        //If one pokemon has been selected before
         if (gameboard.selected.x != 0) {
+            //Then check matching
             gameboard.MatchType = checkMatching (gameboard.pokemons, gameboard.selector, gameboard.selected, gameboard.row, gameboard.col, gameboard.path);
-            //Matchable
+            //Correct Matching => add score
             if (gameboard.MatchType != None) {
                 switch (gameboard.MatchType) {
                     case I:
-                    case L:
                         scoreboard.ScoreNum += 2;
+                        break;
+                    case L:
+                        scoreboard.ScoreNum += 4;
                         break;
                     
                     default:
-                        scoreboard.ScoreNum += 4;
+                        scoreboard.ScoreNum += 6;
                         break;
                 }
                 gameboard.MatchingTime = GetTime();
-              
+                //Unshow pokemon == delete
                 gameboard.pokemons[gameboard.selector.y][gameboard.selector.x].unSeen();
                 gameboard.pokemons[gameboard.selected.y][gameboard.selected.x].unSeen();
             }
 
+            //Wrong matching => minus 2
             else {
                 scoreboard.ScoreNum -= 2;
                 scoreboard.health --;
             }
-            
+            //After check matching, stop selecting
             gameboard.pokemons[gameboard.selector.y][gameboard.selector.x].selected = 0;
             gameboard.pokemons[gameboard.selected.y][gameboard.selected.x].selected = 0;
 
-            //Đưa cái Selection tạm về lại rìa (Đánh dấu chưa chọn)
+            //Move Selection to the border => Mark that no pokemon is selected
             gameboard.selected.x = 0;
         }
 
@@ -579,15 +605,21 @@ Scene GameScene::draw(GameAction& action, Scene scene, Level& level, LevelScene&
         removePath (gameboard.path);
     }
 
+    //Player won
     if (gameboard.isEmpty()) {
         if (GetTime () - gameboard.MatchingTime > 0.5) {
             short i;
             for (i = 0; i < gameboard.row; i ++)
                 delete[] gameboard.pokemons[i];
             delete[] gameboard.pokemons;
-
             action = ShowResult;
+
+            storeResult (scoreboard, level);
+            //Assign some information for the result scene
             ResultScreen.isVictory = 1;
+            ResultScreen.player.content = scoreboard.Player.content;
+            ResultScreen.time.content = scoreboard.TimeText.content;
+            ResultScreen.score.content = scoreboard.ScoreText.content; 
         }
 
         return PLAY;
@@ -597,6 +629,7 @@ Scene GameScene::draw(GameAction& action, Scene scene, Level& level, LevelScene&
     gameboard.draw();
     scoreboard.draw();
 
+    //Score < 0 or health back to 0 => Player lost
     if (scoreboard.ScoreNum < 0 || scoreboard.health <= 0) {
         short i;
         for (i = 0; i < gameboard.row; i ++)

@@ -75,6 +75,8 @@ void MenuScene::setup() {
                 startX += ButtonSpace;
             }
         }
+
+    username = NULL;
 }
 
 //Signed or not
@@ -138,6 +140,8 @@ Scene MenuScene::draw(bool& isSigned) {
                 else if (selector.y == 1) {
                     isSigned = 0;
                     isChanged = 1;
+                    delete[] username;
+                    username = NULL;
                     return MENU;
                 }
             }
@@ -161,7 +165,7 @@ Scene MenuScene::draw(bool& isSigned) {
         }
 
     if (isChanged) {
-        updateStatus (isSigned, buttons[0][0].content, buttons[1][0].content, account.name);
+        updateStatus (isSigned, buttons[0][0].content, buttons[1][0].content, username);
         for (i = 0; i < 2; i ++) {
             buttons[i][0].ContentLength = float(MeasureText(buttons[i][0].content, buttons[i][0].FontSize));
             buttons[i][0].pos.x = (float(WinWdith) / 3 - buttons[i][0].ContentLength) / 2;

@@ -1,0 +1,3 @@
+Player | Score | Time
+Guest | 42 | 00:00:41
+TrungKien | 54 | 00:01:23

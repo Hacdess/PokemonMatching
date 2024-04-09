@@ -2,6 +2,10 @@
 
 void SignUpScene::setup() {
     set = 1;
+    account.nameCount = 0;
+    account.name[account.nameCount] = '\0';
+    account.passCount = 0;
+    account.pass[account.passCount] = '\0';
 
     // Get Background
     Image img = LoadImage("resources/img/background/background.png");
@@ -165,8 +169,8 @@ void SignInScene::setup() {
     strcpy(input[1].content, "Input password here");
 
     //Sign Up and Exit buttons
-    confirm[0].content = new char[strlen("Sign Up") + 1];
-    strcpy(confirm[0].content, "Sign Up");
+    confirm[0].content = new char[strlen("Sign In") + 1];
+    strcpy(confirm[0].content, "Sign In");
 
     confirm[1].content = new char[strlen("BACK") + 1];
     strcpy(confirm[1].content, "BACK");
@@ -209,14 +213,14 @@ void SignInScene::setup() {
     }
 
     startX = SignUpSpace;
-    startY = startY + 2.5f * (spacing + SignUpHeight);
+    startY += 2.5f * (spacing + SignUpHeight);
     command.FontSize = FontSize;
     command.BorderColor = DarkCyanTrans;
     command.FontColor = RED;
     command.ContentLength = float(MeasureText(command.content, command.FontSize));
-    command.pos = {startX - (SignUpSpace - command.ContentLength) / 2 - SignUpSpace / 1.5f, startY + (SignUpHeight - command.FontSize) / 2};
+    command.pos = {(float(WinWdith) - command.ContentLength) / 2, startY + (SignUpHeight - command.FontSize) / 2};
 
-    startY = startY + spacing + SignUpHeight;
+    startY += spacing + SignUpHeight;
     startX = 1.5f * SignUpSpace;
     for (i = 0; i < 2; i++) {
         confirm[i].FontSize = FontSize;
@@ -235,7 +239,7 @@ void inputAccount(Account& account) {
     while (key > 0) {
         if (32 <= key && key <= 126) {
             account.name[account.nameCount] = (char)key;
-            account.nameCount++;
+            account.nameCount ++;
             if (account.nameCount > 20)
                 account.nameCount = 20;
             account.name[account.nameCount] = '\0';
@@ -243,9 +247,8 @@ void inputAccount(Account& account) {
         key = GetCharPressed();
     }
 
-    if (IsKeyPressed(KEY_BACKSPACE))
-    {
-        account.nameCount--;
+    if (IsKeyPressed(KEY_BACKSPACE)) {
+        account.nameCount --;
         if (account.nameCount < 0)
             account.nameCount = 0;
         account.name[account.nameCount] = '\0';
@@ -254,11 +257,10 @@ void inputAccount(Account& account) {
 
 void inputPass(Account &account) {
     short key = GetCharPressed();
-    while (key > 0)
-    {
+    while (key > 0) {
         if (32 <= key && key <= 126) {
             account.pass[account.passCount] = (char)key;
-            account.passCount++;
+            account.passCount ++;
             if (account.passCount > 20)
                 account.passCount = 20;
             account.pass[account.passCount] = '\0';
@@ -267,7 +269,7 @@ void inputPass(Account &account) {
     }
 
     if (IsKeyPressed(KEY_BACKSPACE)) {
-        account.passCount--;
+        account.passCount --;
         if (account.passCount < 0)
             account.passCount = 0;
         account.pass[account.passCount] = '\0';
@@ -277,15 +279,7 @@ void inputPass(Account &account) {
 void storeAccount (Account &account) {
     fstream f;
     f.open("resources/file/Account.txt", ios::out | ios::app);
-
     f << account.name << " " << '|' << " " << account.pass << '\n';
-
-    account.nameCount = 0;
-    account.name[account.nameCount] = '\0';
-
-    account.passCount = 0;
-    account.pass[account.passCount] = '\0';
-
     f.close();
 }
 
@@ -309,17 +303,6 @@ bool isExistedUsername (Account account) {
 
         ss >> name;
         ss >> s;
-
-        while (s != '|') {
-            strcat(name, " ");
-            tmp[0] = s;
-            tmp[1] = '\0';
-            strcat(name, tmp);
-            ss >> pass;
-            strcat(name, pass);
-            ss >> s;
-        }
-
         ss >> pass;
 
         if (name[0] != '\0' && pass[0] != '\0')
@@ -352,18 +335,7 @@ bool isCorrectSigIn (Account account) {
         stringstream ss(t);
 
         ss >> name;
-        ss >> s;
-
-        while (s != '|') {
-            strcat(name, " ");
-            tmp[0] = s;
-            tmp[1] = '\0';
-            strcat(name, tmp);
-            ss >> pass;
-            strcat(name, pass);
-            ss >> s;
-        }        
-        
+        ss >> s;     
         ss >> pass;
 
         if (name[0] != '\0' && pass[0] != '\0')
@@ -424,8 +396,8 @@ char *modifyPass(Account& account) {
     return tmp;
 }
 
-short checkVaildUsername (Account account) {
-    short i, sig = 0;
+short checkValidUsername (Account account) {
+    short i;
 
     // Check if there is nothing
     if (account.nameCount == 0)
@@ -435,13 +407,10 @@ short checkVaildUsername (Account account) {
     if (account.nameCount > 16)
         return 2;
 
-    // Check if there are only space
+    // Check if there is any space
     for (i = 0; i < account.nameCount; i ++)
-        if (account.name[i] != ' ')
-            sig ++;
-
-    if (sig == 0)
-        return 3;
+        if (account.name[i] == ' ')
+            return 3;
 
     if (isExistedUsername(account))
         return 4;
@@ -450,7 +419,7 @@ short checkVaildUsername (Account account) {
 }
 
 short checkValidPassWord (Account account) {
-    short i, sig = 0;
+    short i;
 
     // Check if there is nothing
     if (account.passCount == 0)
@@ -460,13 +429,10 @@ short checkValidPassWord (Account account) {
     if (account.passCount > 16)
         return 2;
 
-    // Check if there are only space
+    // Check if there is only space
     for (i = 0; i < account.passCount; i ++)
-        if (account.pass[i] != ' ')
-            sig ++;
-
-    if (sig == 0)
-        return 3;
+        if (account.pass[i] == ' ')
+            return 3;
 
     return 4;
 }
@@ -474,12 +440,11 @@ short checkValidPassWord (Account account) {
 char *modifyCommandUsername(Account& account) {
     char *tmp;
     tmp = NULL;
-    short check = checkVaildUsername(account);
+    short check = checkValidUsername(account);
 
     switch (check) {
         //No input
         case 1:
-        case 3:
             tmp = new char[strlen("Username should have at least one letter alphabet") + 1];
             strcpy(tmp, "Username should have at least one letter alphabet");
             break;
@@ -487,6 +452,11 @@ char *modifyCommandUsername(Account& account) {
         case 2:
             tmp = new char[strlen("Username should have no more than 15 letters") + 1];
             strcpy(tmp, "Username should have no more than 15 letters");
+            break;
+
+        case 3:
+            tmp = new char[strlen("Username mustn't have space") + 1];
+            strcpy(tmp, "Username mustn't have space");
             break;
 
         case 4:
@@ -510,15 +480,17 @@ char *modifyCommandPassword (Account& account) {
 
     switch (check) {
     case 1:
-
+        tmp = new char[strlen("Password should have at least one letter alphabet") + 1];
+        strcpy(tmp, "Passowrd should have at least one letter alphabet");
+        break;
     case 2:
         tmp = new char[strlen("Password should have no more than 15 letters") + 1];
         strcpy(tmp, "Password should have no more than 15 letters");
         break;
 
     case 3:
-        tmp = new char[strlen("Password should have at least one letter alphabet") + 1];
-        strcpy(tmp, "Passowrd should have at least one letter alphabet");
+        tmp = new char[strlen("Password mustn't have space") + 1];
+        strcpy(tmp, "Password mustn't have space");
         break;
 
     case 4:
@@ -526,6 +498,7 @@ char *modifyCommandPassword (Account& account) {
         strcpy(tmp, "Valid Password");
         break;
     }
+
     return tmp;
 }
 
@@ -533,7 +506,7 @@ char *modifyCommand(Account& account) {
     char *tmp;
     tmp = NULL;
 
-    short checkName = checkVaildUsername(account);
+    short checkName = checkValidUsername(account);
     short checkPass = checkValidPassWord(account);
 
     if (checkName == 4) {
@@ -570,8 +543,6 @@ char *modifyCommand(Account& account) {
         tmp = new char[strlen("Invalid username") + 1];
         strcpy(tmp, "Invalid username");
     }
-
-
 
     else {
         tmp = new char[strlen("Invalid account") + 1];
@@ -627,7 +598,7 @@ void deleteList(Account *&pHead) {
     }
 }
 
-Scene SignUpScene::draw (bool& isSigned, Account& account) {
+Scene SignUpScene::draw (bool& isSigned, char*& username) {
     // Draw Background image
     ClearBackground(BLACK);
     DrawTexturePro(background, {0, 0, 1792.0f, 1024.0f}, {0, 0, float(WinWdith), float(WinHeight)}, {0, 0}, 0.0f, WHITE);
@@ -701,7 +672,9 @@ Scene SignUpScene::draw (bool& isSigned, Account& account) {
         delete[] command.content;
         command.content = NULL;
         command.content = modifyCommand(account);
-        if (IsKeyPressed(KEY_ENTER) && checkVaildUsername(account) == 5 && checkValidPassWord(account) == 4 && !isExistedUsername(account)) {
+        if (IsKeyPressed(KEY_ENTER) && checkValidUsername(account) == 5 && checkValidPassWord(account) == 4 && !isExistedUsername(account)) {
+            username = new char[strlen(account.name) + 1];
+            strcpy (username, account.name);
             storeAccount (account);
             isSigned = 1;
             set = 0;
@@ -722,8 +695,6 @@ Scene SignUpScene::draw (bool& isSigned, Account& account) {
         confirm[1].FontColor = DarkCyanTrans;
         confirm[1].BorderColor = WHITE;
         if (IsKeyPressed(KEY_ENTER)) {
-
-           
             set = 0;
             isSigned = 0;
             selector.x = 0, selector.y = 0;

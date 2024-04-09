@@ -23,6 +23,7 @@ const Font GameFont = GetFontDefault();
 #define WinHeight 1080
 
 //Define colors
+#define CYAN (Color)  {0, 255, 255, 255}
 #define DarkCyanTrans (Color)  {0, 190, 190, 150}
 #define DarkCyan (Color) {0, 180, 180, 255}
 #define MoreDarkCyan (Color) {0, 125, 125, 0}
@@ -63,6 +64,6 @@ void DeallocateTextbox2D (TextBox** textbox, const short & row, const short& col
 void DeallocateDynamicTextbox1D (TextBox* textbox, const short& size);
 void DeallocateDynamicTextbox2D (TextBox** textbox, const short & row, const short& col);
 bool isSameColor (const Color& Color1, const Color& Color2);
-void updateText (char* dest, const char* content);
+void updateText (char*& dest, const char* content);
 char* StoA (const string& s);
 string TimeToString (Time time);

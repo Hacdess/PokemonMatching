@@ -1,17 +1,15 @@
 Username | Password
 TKin | 1
-TKin1 | 1
-TKin12 | 1
- TKin123 21 123 | 12321322323
-12321i32193 | 12321323
-Le Trung Kien | 2
-TKin 22132321 | 1
+AnhTri | 1
+Tri | 1
+Kin | 1
+Kinne | 1
+TK | 1
 1 | 1
-1111   111   11 | 132132
-1231214234432 | 1323214
-TKin12332 | 13
-1232123 | 1313321
-1312323 | 132
-Le Trung Kin | 13213
-Anh  Tri | 1
-Anh  Tri | 2
+2 | 2
+3 | 3
+4 | 4
+34 | 3
+342 | 2
+5 | 5
+TrungKien | 123

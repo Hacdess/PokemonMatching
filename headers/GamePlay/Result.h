@@ -4,9 +4,9 @@
 struct ResultScene {
     bool isSet = 0;
     bool isVictory = 0;
-    short StartCount;
+    float markTime;
     const Rectangle background = {0, 0, float(WinWdith), float(WinHeight)};
-    const Color BackgrounColor = DarkCyan;
+    const Color BackgrounColor = DARKGRAY;
     TextBox result, player, time, score, message;
 
     void setup();
