@@ -126,14 +126,13 @@ Scene MenuScene::draw(bool& isSigned) {
             if (selector.x == 0) {
                 //When it is not signed, turn to Sign up or Sign in
                 if (!isSigned) {
-                    //Sign Up button
-                    if (selector.y == 0) {
-                        isChanged = 1;
-                        return SIGNUP;
-                    }
-                    //Sign In button
                     isChanged = 1;
-                    return MENU;
+                    //Sign Up button
+                    if (selector.y == 0)
+                        return SIGNUP;
+
+                    //Sign In button
+                    return SIGNIN;
                 }
 
                 //If already signed, Sign out

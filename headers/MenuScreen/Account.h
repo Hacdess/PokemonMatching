@@ -40,7 +40,7 @@ struct SignInScene {
     Selector2D selector = {0, 0};
 
     void setup();
-    Scene draw(bool& isSigned, Account& account);
+    Scene draw(bool& isSigned, char* & username);
 };
 
 //Input function
@@ -55,13 +55,14 @@ bool isCorrectSigIn (Account account);
 //Fuctions dealing with Username && Password: Max 15 characters
 char* modifyName(Account& account);
 char* modifyPass(Account& account);
-short checkVaildUsername(Account account); //Many invalid cases
+short checkValidUsername(Account account); //Many invalid cases
 short checkValidPassWord(Account account);
    
 //Hàm chỉnh dòng Commnad
 char* modifyCommandUsername(Account& account);
 char* modifyCommandPassword(Account& account);
-char* modifyCommand(Account& account);
+char* modifyCommandForSignUp(Account& account);
+char* modifyCommandForSignIn(Account& account);
 
 //Some fuctions to work on Linked List
 void addHead(Account* &pHead, Account account);
