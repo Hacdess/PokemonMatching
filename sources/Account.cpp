@@ -26,8 +26,7 @@ void SignUpScene::setup() {
           spacing = FontSize / 5;
 
     short i;
-    for (i = 0; i < 2; i++)
-    {
+    for (i = 0; i < 2; i++) {
         title[i].FontSize = FontSize;
         title[i].BorderColor = BlackTrans;
 
@@ -141,8 +140,7 @@ void SignInScene::setup() {
           spacing = FontSize / 5;
 
     short i;
-    for (i = 0; i < 2; i++)
-    {
+    for (i = 0; i < 2; i++) {
         title[i].FontSize = FontSize;
         title[i].BorderColor = BlackTrans;
 
@@ -184,10 +182,10 @@ void SignInScene::setup() {
 
     FontSize = float(WinHeight) / 20,
     spacing = FontSize / 8;
-    float SignUpSpace = float(WinWdith) / 5,
-          SignUpWidth = SignUpSpace - 4.0f * spacing,
-          SignUpHeight = float(WinHeight) / 15;
-    startX = SignUpSpace;
+    float SignInSpace = float(WinWdith) / 5,
+          SignInWidth = SignInSpace - 4.0f * spacing,
+          SignInHeight = float(WinHeight) / 15;
+    startX = SignInSpace;
 
     //Get the parameters of the constant boxes which contain the word "Username" and "Password"
     for (i = 0; i < 2; i++) {
@@ -196,41 +194,41 @@ void SignInScene::setup() {
         constant[i].FontColor = WHITE;
 
         constant[i].ContentLength = float(MeasureText(constant[i].content, constant[i].FontSize));
-        constant[i].border = {startX + spacing * 2.0f, startY + (spacing + SignUpHeight) * i, SignUpWidth, SignUpHeight};
-        constant[i].pos = {startX + (SignUpSpace - constant[i].ContentLength) / 2, startY + (SignUpHeight - constant[i].FontSize) / 2 + (spacing + SignUpHeight) * i};
+        constant[i].border = {startX + spacing * 2.0f, startY + (spacing + SignInHeight) * i, SignInWidth, SignInHeight};
+        constant[i].pos = {startX + (SignInSpace - constant[i].ContentLength) / 2, startY + (SignInHeight - constant[i].FontSize) / 2 + (spacing + SignInHeight) * i};
     }
 
     //Get the parameters of the input boxes
-    startX += spacing + SignUpWidth;
+    startX += spacing + SignInWidth;
     for (i = 0; i < 2; i++) {
         input[i].FontSize = FontSize;
         input[i].BorderColor = DarkCyanTrans;
         input[i].FontColor = DARKGRAY;
 
         input[i].ContentLength = float(MeasureText(input[i].content, input[i].FontSize));
-        input[i].border = {startX + spacing * 2.0f, startY + (spacing + SignUpHeight) * i, SignUpWidth * 2, SignUpHeight};
-        input[i].pos = {startX - (SignUpSpace - input[i].ContentLength) / 2, startY + (SignUpHeight - input[i].FontSize) / 2 + (spacing + SignUpHeight) * i};
+        input[i].border = {startX + spacing * 2.0f, startY + (spacing + SignInHeight) * i, SignInWidth * 2, SignInHeight};
+        input[i].pos = {startX - (SignInSpace - input[i].ContentLength) / 2, startY + (SignInHeight - input[i].FontSize) / 2 + (spacing + SignInHeight) * i};
     }
 
-    startX = SignUpSpace;
-    startY += 2.5f * (spacing + SignUpHeight);
+    startX = SignInSpace;
+    startY += 2.5f * (spacing + SignInHeight);
     command.FontSize = FontSize;
     command.BorderColor = DarkCyanTrans;
     command.FontColor = RED;
     command.ContentLength = float(MeasureText(command.content, command.FontSize));
-    command.pos = {(float(WinWdith) - command.ContentLength) / 2, startY + (SignUpHeight - command.FontSize) / 2};
+    command.pos = {(float(WinWdith) - command.ContentLength) / 2, startY + (SignInHeight - command.FontSize) / 2};
 
-    startY += spacing + SignUpHeight;
-    startX = 1.5f * SignUpSpace;
+    startY += spacing + SignInHeight;
+    startX = 1.5f * SignInSpace;
     for (i = 0; i < 2; i++) {
         confirm[i].FontSize = FontSize;
         confirm[i].BorderColor = DarkCyanTrans;
         confirm[i].FontColor = WHITE;
 
         confirm[i].ContentLength = float(MeasureText(confirm[i].content, confirm[i].FontSize));
-        confirm[i].border = {startX + spacing * 2.0f, startY, SignUpWidth, SignUpHeight};
-        confirm[i].pos = {startX + (SignUpSpace - confirm[i].ContentLength) / 2, startY + (SignUpHeight - confirm[i].FontSize) / 2};
-        startX += spacing + SignUpWidth;
+        confirm[i].border = {startX + spacing * 2.0f, startY, SignInWidth, SignInHeight};
+        confirm[i].pos = {startX + (SignInSpace - confirm[i].ContentLength) / 2, startY + (SignInHeight - confirm[i].FontSize) / 2};
+        startX += spacing + SignInWidth;
     }
 }
 
@@ -727,7 +725,6 @@ Scene SignUpScene::draw (bool& isSigned, char*& username) {
         DrawText(input[i].content, input[i].pos.x, input[i].pos.y, input[i].FontSize, input[i].FontColor);
     }
 
-    //  DrawRectangleRec(loginCommand[0].border, loginCommand[0].BorderColor);
     command.ContentLength = float(MeasureText(command.content, command.FontSize));
     command.pos.x = (float(WinWdith) - command.ContentLength) / 2;
     DrawText(command.content, command.pos.x, command.pos.y, command.FontSize, command.FontColor);
