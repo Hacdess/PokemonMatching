@@ -1,5 +1,6 @@
 #include "../headers/MenuScreen/Account.h"
 
+
 void SignUpScene::setup() {
     set = 1;
     account.nameCount = 0;
@@ -232,6 +233,7 @@ void SignInScene::setup() {
     }
 }
 
+    
 void inputAccount(Account& account) {
     short key = GetCharPressed();
     while (key > 0) {
@@ -396,7 +398,7 @@ char *modifyPass(Account& account) {
     return tmp;
 }
 
-short checkValidUsername (Account account) {
+short checkValidUsername(Account account) {
     short i;
 
     // Check if there is nothing
@@ -460,8 +462,8 @@ char *modifyCommandUsername(Account& account) {
             break;
 
         case 4:
-            tmp = new char[strlen("Existed Account") + 1];
-            strcpy(tmp, "Existed Account");
+            tmp = new char[strlen("Existed Username") + 1];
+            strcpy(tmp, "Existed Username");
             break;
 
         case 5:
@@ -503,7 +505,7 @@ char *modifyCommandPassword (Account& account) {
     return tmp;
 }
 
-char *modifyCommand(Account& account) {
+char *modifyCommandForSignUp(Account& account) {
     char *tmp;
     tmp = NULL;
 
@@ -546,6 +548,61 @@ char *modifyCommand(Account& account) {
     }
 
     else {
+        tmp = new char[strlen("Invalid account") + 1];
+        strcpy(tmp, "Invalid account");
+    }
+
+    return tmp;
+}
+
+char *modifyCommandForSignIn(Account &account)
+{
+    char *tmp;
+    tmp = NULL;
+
+    int checkName = checkValidUsername(account);
+    int checkPass = checkValidPassWord(account);
+
+    if (checkName == 1 && checkPass == 1)
+    {
+        tmp = new char[strlen("Please input username and password") + 1];
+        strcpy(tmp, "Please input username and password");
+    }
+    else if (checkName == 1)
+    {
+        tmp = new char[strlen("Remember to input username") + 1];
+        strcpy(tmp, "Remember to input username");
+    }
+    else if (checkPass == 1)
+    {
+        tmp = new char[strlen("Remember to input password") + 1];
+        strcpy(tmp, "Remember to input password");
+    }
+    else if ((checkName == 5 || checkName == 4) && checkPass == 4)
+    {
+        if (isCorrectSigIn(account) == 0)
+        {
+            tmp = new char[strlen("Account didn't exist") + 1];
+            strcpy(tmp, "Account didn't exist");
+        }
+        else
+        {
+            tmp = new char[strlen("Valid username and password") + 1];
+            strcpy(tmp, "Valid username and password");
+        }
+    }
+    else if (checkName == 5)
+    {
+        tmp = new char[strlen("Invalid password") + 1];
+        strcpy(tmp, "Invalid password");
+    }
+    else if (checkPass == 4 && checkName != 4)
+    {
+        tmp = new char[strlen("Invalid username") + 1];
+        strcpy(tmp, "Invalid username");
+    }
+    else
+    {
         tmp = new char[strlen("Invalid account") + 1];
         strcpy(tmp, "Invalid account");
     }
@@ -672,7 +729,7 @@ Scene SignUpScene::draw (bool& isSigned, char*& username) {
         confirm[0].BorderColor = WHITE;
         delete[] command.content;
         command.content = NULL;
-        command.content = modifyCommand(account);
+        command.content = modifyCommandForSignUp(account);
         if (IsKeyPressed(KEY_ENTER) && checkValidUsername(account) == 5 && checkValidPassWord(account) == 4 && !isExistedUsername(account)) {
             username = new char[strlen(account.name) + 1];
             strcpy (username, account.name);
@@ -735,4 +792,144 @@ Scene SignUpScene::draw (bool& isSigned, char*& username) {
     }
 
     return SIGNUP;
+}
+
+
+Scene SignInScene::draw(bool &isSigned, char* &username)
+{
+    // Draw Background image
+    ClearBackground(BLACK);
+    DrawTexturePro(background, {0, 0, 1792.0f, 1024.0f}, {0, 0, float(WinWdith), float(WinHeight)}, {0, 0}, 0.0f, WHITE);
+
+    short i;
+    // Draw Game Title
+    for (i = 0; i < 2; i++) {
+        DrawRectangleRec(title[i].border, title[i].BorderColor);
+        DrawText(title[i].content, title[i].pos.x, title[i].pos.y, title[i].FontSize, title[i].FontColor);
+    }
+
+    //---Selector at this is different in movements---
+    if (IsKeyPressed(KEY_LEFT))
+        selector.x --;
+    else if (IsKeyPressed(KEY_RIGHT))
+        selector.x ++;
+    else if (IsKeyPressed(KEY_UP))
+        selector.y --;
+    else if (IsKeyPressed(KEY_DOWN))
+        selector.y ++;
+
+    if (selector.y == 2) {
+        if (selector.x < 0)
+            selector.x = 1;
+        if (selector.x > 1)
+            selector.x = 0;
+    }
+
+    if (selector.y == 1)
+        if (selector.x != 1)
+            selector.x = 1;
+
+    if (selector.y == 0)
+        if (selector.x != 1)
+            selector.x = 1;
+
+    if (selector.y < 0)
+        selector.y = 2;
+
+    if (selector.y > 2) {
+        if (selector.x == 0)
+            selector.y = 2;
+        if (selector.x == 1)
+            selector.y = 0;
+    }
+
+    if (selector.x == 1 && selector.y == 0) {
+        input[0].BorderColor = WHITE;
+        inputAccount(account);
+        delete[] command.content;
+        command.content = NULL;
+        command.content = modifyCommandUsername(account);
+    }
+    else
+        input[0].BorderColor = DarkCyanTrans;
+
+    if (selector.x == 1 && selector.y == 1) {
+        input[1].BorderColor = WHITE;
+        inputPass(account);
+        delete[] command.content;
+        command.content = NULL;
+        command.content = modifyCommandPassword(account);
+    }
+    else
+        input[1].BorderColor = DarkCyanTrans;
+
+    //Sign Up button
+    if (selector.y == 2 && selector.x == 0) {
+        confirm[0].FontColor = DarkCyanTrans;
+        confirm[0].BorderColor = WHITE;
+        delete[] command.content;
+        command.content = NULL;
+        command.content = modifyCommandForSignIn(account);
+        if (IsKeyPressed(KEY_ENTER) && (checkValidUsername(account) == 5 || checkValidUsername(account) == 4) && checkValidPassWord(account) == 4 && isCorrectSigIn(account) == 1) {
+            username = new char[strlen(account.name) + 1];
+            strcpy (username, account.name);
+            //storeAccount (account);
+            isSigned = 1;
+            set = 0;
+            selector.x = 0, selector.y = 0;
+            return SIGNIN;
+        }
+    }
+    else {
+        confirm[0].FontColor = WHITE;
+        confirm[0].BorderColor = DarkCyanTrans;
+    }
+
+    //Back to Menu button
+    if (selector.y == 2 && selector.x == 1) {
+        delete[] command.content;
+        command.content = NULL;
+
+        confirm[1].FontColor = DarkCyanTrans;
+        confirm[1].BorderColor = WHITE;
+        if (IsKeyPressed(KEY_ENTER)) {
+            set = 0;
+            isSigned = 0;
+            selector.x = 0, selector.y = 0;
+            return SIGNIN;
+        }
+    }
+    else {
+        confirm[1].FontColor = WHITE;
+        confirm[1].BorderColor = DarkCyanTrans;
+    }
+
+    //Draw constant "Username" and "PassWord"
+    for (i = 0; i < 2; i++) {
+        DrawRectangleRec(constant[i].border, constant[i].BorderColor);
+        DrawText(constant[i].content, constant[i].pos.x, constant[i].pos.y, constant[i].FontSize, constant[i].FontColor);
+    }
+    //Draw constant input boxes
+    for (i = 0; i < 2; i++) {
+        delete[] input[i].content;
+        input[i].content = NULL;
+    }
+
+    input[0].content = modifyName(account);
+    input[1].content = modifyPass(account);
+    for (i = 0; i < 2; i++) {
+        DrawRectangleRec(input[i].border, input[i].BorderColor);
+        DrawText(input[i].content, input[i].pos.x, input[i].pos.y, input[i].FontSize, input[i].FontColor);
+    }
+
+    command.ContentLength = float(MeasureText(command.content, command.FontSize));
+    command.pos.x = (float(WinWdith) - command.ContentLength) / 2;
+    DrawText(command.content, command.pos.x, command.pos.y, command.FontSize, command.FontColor);
+
+    for (i = 0; i < 2; i++) {
+        DrawRectangleRec(confirm[i].border, confirm[i].BorderColor);
+        DrawText(confirm[i].content, confirm[i].pos.x, confirm[i].pos.y, confirm[i].FontSize, confirm[i].FontColor);
+    }
+
+    return SIGNIN;
 }

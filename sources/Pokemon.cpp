@@ -16,6 +16,7 @@ int main() {
 
     //Init Window
     InitWindow (WinWdith, WinHeight, GameName);
+    ToggleFullscreen();
     SetTargetFPS(GameFPS);
 
     //Create icon
@@ -47,6 +48,23 @@ int main() {
                         DeallocateTextbox1D (game.SignUpScreen.input, 2);
                         DeallocateTextbox1D (game.SignUpScreen.confirm, 2);
                         delete[] game.SignUpScreen.command.content;
+                        scene = MENU;
+                    }
+                }
+                break;
+
+            case SIGNIN:
+                if (!game.SignInScreen.set)
+                    game.SignInScreen.setup();
+                else {
+                    scene = game.SignInScreen.draw (isSigned, game.MenuScreen.username);
+                    if (!game.SignInScreen.set) {
+                        //Refresh for the next Sign Up
+                        DeallocateTextbox1D (game.SignInScreen.title, 2);
+                        DeallocateTextbox1D (game.SignInScreen.constant, 2);
+                        DeallocateTextbox1D (game.SignInScreen.input, 2);
+                        DeallocateTextbox1D (game.SignInScreen.confirm, 2);
+                        delete[] game.SignInScreen.command.content;
                         scene = MENU;
                     }
                 }
