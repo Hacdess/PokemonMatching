@@ -280,11 +280,11 @@ void storeAccount (Account &account) {
 
     f << account.name << " " << '|' << " " << account.pass << '\n';
 
-    account.nameCount = 0;
-    account.name[account.nameCount] = '\0';
+    // account.nameCount = 0;
+    // account.name[account.nameCount] = '\0';
 
-    account.passCount = 0;
-    account.pass[account.passCount] = '\0';
+    // account.passCount = 0;
+    // account.pass[account.passCount] = '\0';
 
     f.close();
 }
@@ -310,15 +310,15 @@ bool isExistedUsername (Account account) {
         ss >> name;
         ss >> s;
 
-        while (s != '|') {
-            strcat(name, " ");
-            tmp[0] = s;
-            tmp[1] = '\0';
-            strcat(name, tmp);
-            ss >> pass;
-            strcat(name, pass);
-            ss >> s;
-        }
+        // while (s != '|') {
+        //     strcat(name, " ");
+        //     tmp[0] = s;
+        //     tmp[1] = '\0';
+        //     strcat(name, tmp);
+        //     ss >> pass;
+        //     strcat(name, pass);
+        //     ss >> s;
+        // } Since there is no space/ no necccessary to do this
 
         ss >> pass;
 
@@ -354,15 +354,15 @@ bool isCorrectSigIn (Account account) {
         ss >> name;
         ss >> s;
 
-        while (s != '|') {
-            strcat(name, " ");
-            tmp[0] = s;
-            tmp[1] = '\0';
-            strcat(name, tmp);
-            ss >> pass;
-            strcat(name, pass);
-            ss >> s;
-        }        
+        // while (s != '|') {
+        //     strcat(name, " ");
+        //     tmp[0] = s;
+        //     tmp[1] = '\0';
+        //     strcat(name, tmp);
+        //     ss >> pass;
+        //     strcat(name, pass);
+        //     ss >> s;
+        // }        
         
         ss >> pass;
 
@@ -435,12 +435,9 @@ short checkVaildUsername (Account account) {
     if (account.nameCount > 16)
         return 2;
 
-    // Check if there are only space
+    // Check if there is any space here
     for (i = 0; i < account.nameCount; i ++)
-        if (account.name[i] != ' ')
-            sig ++;
-
-    if (sig == 0)
+        if (account.name[i] == ' ')
         return 3;
 
     if (isExistedUsername(account))
@@ -479,7 +476,6 @@ char *modifyCommandUsername(Account& account) {
     switch (check) {
         //No input
         case 1:
-        case 3:
             tmp = new char[strlen("Username should have at least one letter alphabet") + 1];
             strcpy(tmp, "Username should have at least one letter alphabet");
             break;
@@ -487,6 +483,11 @@ char *modifyCommandUsername(Account& account) {
         case 2:
             tmp = new char[strlen("Username should have no more than 15 letters") + 1];
             strcpy(tmp, "Username should have no more than 15 letters");
+            break;
+
+        case 3:
+            tmp = new char[strlen("Username shouldn't have space") + 1];
+            strcpy(tmp, "Username shouldn't have space");
             break;
 
         case 4:
@@ -510,17 +511,17 @@ char *modifyCommandPassword (Account& account) {
 
     switch (check) {
     case 1:
-
+        tmp = new char[strlen("Password should have at least one letter alphabet") + 1];
+        strcpy(tmp, "Passowrd should have at least one letter alphabet");
+        break;
     case 2:
         tmp = new char[strlen("Password should have no more than 15 letters") + 1];
         strcpy(tmp, "Password should have no more than 15 letters");
         break;
-
     case 3:
-        tmp = new char[strlen("Password should have at least one letter alphabet") + 1];
-        strcpy(tmp, "Passowrd should have at least one letter alphabet");
-        break;
-
+            tmp = new char[strlen("Password shouldn't have space") + 1];
+            strcpy(tmp, "Password shouldn't have space");
+            break;
     case 4:
         tmp = new char[strlen("Valid Password") + 1];
         strcpy(tmp, "Valid Password");
