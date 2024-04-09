@@ -311,6 +311,7 @@ bool isExistedUsername (Account account) {
                 return 1;
             }
     }
+
     f.close();
     return 0;
 }
@@ -344,6 +345,7 @@ bool isCorrectSigIn (Account account) {
                 return 1;
             }
     }
+
     f.close();
     return 0;
 }
@@ -479,24 +481,25 @@ char *modifyCommandPassword (Account& account) {
     short check = checkValidPassWord(account);
 
     switch (check) {
-    case 1:
-        tmp = new char[strlen("Password should have at least one letter alphabet") + 1];
-        strcpy(tmp, "Passowrd should have at least one letter alphabet");
-        break;
-    case 2:
-        tmp = new char[strlen("Password should have no more than 15 letters") + 1];
-        strcpy(tmp, "Password should have no more than 15 letters");
-        break;
+        case 1:
+            tmp = new char[strlen("Password should have at least one letter alphabet") + 1];
+            strcpy(tmp, "Passowrd should have at least one letter alphabet");
+            break;
+            
+        case 2:
+            tmp = new char[strlen("Password should have no more than 15 letters") + 1];
+            strcpy(tmp, "Password should have no more than 15 letters");
+            break;
 
-    case 3:
-        tmp = new char[strlen("Password mustn't have space") + 1];
-        strcpy(tmp, "Password mustn't have space");
-        break;
+        case 3:
+            tmp = new char[strlen("Password mustn't have space") + 1];
+            strcpy(tmp, "Password mustn't have space");
+            break;
 
-    case 4:
-        tmp = new char[strlen("Valid Password") + 1];
-        strcpy(tmp, "Valid Password");
-        break;
+        case 4:
+            tmp = new char[strlen("Valid Password") + 1];
+            strcpy(tmp, "Valid Password");
+            break;
     }
 
     return tmp;
