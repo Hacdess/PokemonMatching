@@ -3,6 +3,7 @@
 #include "../GamePlay/Level.h"
 #include "../GamePlay/Game.h"
 #include "Account.h"
+#include "Leaderboard.h"
 
 struct MenuScene {
     bool isChanged = 0;
