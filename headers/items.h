@@ -24,7 +24,7 @@ const Font GameFont = GetFontDefault();
 
 //Define colors
 #define DarkCyanTrans (Color)  {0, 190, 190, 150}
-#define DarkCyan (Color) {0, 230, 230, 255}
+#define DarkCyan (Color) {0, 180, 180, 255}
 #define MoreDarkCyan (Color) {0, 125, 125, 0}
 #define BlackTrans (Color) {0, 0, 0, 100}
 #define SlightGray (Color) {204, 204, 204, 255}
@@ -34,7 +34,7 @@ const Font GameFont = GetFontDefault();
 //Game Level
 enum Scene {MENU, SIGNUP, SIGNIN, PLAY, SETTING, RANK, EXIT};
 enum Level {EASY, MEDIUM, HARD, NOT_CHOSE};
-enum GameAction {ChooseLevel, LoadGame, PlayGame, End};
+enum GameAction {ChooseLevel, LoadGame, PlayGame, ShowResult, End};
 enum MatchingType {None, I, L, U, Z};
 
 //General Structs
@@ -65,3 +65,4 @@ void DeallocateDynamicTextbox2D (TextBox** textbox, const short & row, const sho
 bool isSameColor (const Color& Color1, const Color& Color2);
 void updateText (char* dest, const char* content);
 char* StoA (const string& s);
+string TimeToString (Time time);

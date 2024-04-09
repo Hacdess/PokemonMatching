@@ -36,6 +36,8 @@ struct ScoreBoard {
     Color HP_Color = GREEN;
 
     Time PlayTime;
+    float markTime = 0;
+    void updateTimeText();
 
     //Check if the player need help
     bool showHint;

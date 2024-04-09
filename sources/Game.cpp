@@ -502,10 +502,17 @@ Scene GameScene::draw(GameAction& action, Scene scene, Level& level, LevelScene&
         return PLAY;
     }
 
+    else if (action == ShowResult) {
+        ResultScreen.setup();
+        ResultScreen.draw (action);
+        return PLAY;
+    }
+
     //This happen when Back to menu was selected, back to the Menu screen
     else if (action == End) {
         //The next time, the player would be asked to choose level again
         action = ChooseLevel;
+
         return MENU;
     }
 
@@ -548,7 +555,7 @@ Scene GameScene::draw(GameAction& action, Scene scene, Level& level, LevelScene&
                 scoreboard.ScoreNum -= 2;
                 scoreboard.health --;
             }
-
+            
             gameboard.pokemons[gameboard.selector.y][gameboard.selector.x].selected = 0;
             gameboard.pokemons[gameboard.selected.y][gameboard.selected.x].selected = 0;
 
@@ -579,7 +586,8 @@ Scene GameScene::draw(GameAction& action, Scene scene, Level& level, LevelScene&
                 delete[] gameboard.pokemons[i];
             delete[] gameboard.pokemons;
 
-            action = ChooseLevel;
+            action = ShowResult;
+            ResultScreen.isVictory = 1;
         }
 
         return PLAY;
@@ -588,6 +596,17 @@ Scene GameScene::draw(GameAction& action, Scene scene, Level& level, LevelScene&
     //Draw Pokemons
     gameboard.draw();
     scoreboard.draw();
+
+    if (scoreboard.ScoreNum < 0 || scoreboard.health <= 0) {
+        short i;
+        for (i = 0; i < gameboard.row; i ++)
+            delete[] gameboard.pokemons[i];
+        delete[] gameboard.pokemons;
+        action = ShowResult;
+        ResultScreen.isVictory = 0;
+
+        return PLAY;
+    }
 
     //If it isn't matchable anymore, shuffle the gameboard
     if (!gameboard.checkMatchAble()) 

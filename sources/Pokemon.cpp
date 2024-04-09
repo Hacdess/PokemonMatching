@@ -63,6 +63,9 @@ int main() {
                 UnloadFont(GameFont);
                 
                 //deadllocate
+                short i;
+                for (i = 0; i < 60; i ++)
+                    UnloadTexture (game.GameScreen.gameboard.PokemonsImg[i]);
                 delete[] game.GameScreen.gameboard.PokemonsImg;
                 return 0;
         }

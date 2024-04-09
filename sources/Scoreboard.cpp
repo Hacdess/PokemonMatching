@@ -58,7 +58,6 @@ void ScoreBoard::setup() {
 
     //At first, the score = 0
     ScoreNum = 0;
-
     ScoreText.content = new char[2];
     strcpy (ScoreText.content, "0");
     ScoreText.FontSize = HealthUnit * 1.25f;
@@ -68,6 +67,8 @@ void ScoreBoard::setup() {
         border.x + (border.width - ScoreText.ContentLength) / 2,
         TimeText.pos.y + HealthUnit
     };
+
+    markTime = GetTime();
 }
 
 void ScoreBoard::updatePlayer(char* name) {
@@ -87,11 +88,22 @@ void ScoreBoard::updateScoreText() {
 
     string s = to_string (ScoreNum);
     ScoreText.content = StoA(s);
-/*
-    ScoreText.content = new char[s.length() + 1];
-    strcpy (ScoreText.content, s);
-*/    ScoreText.ContentLength = MeasureText (ScoreText.content, ScoreText.FontSize);
+    ScoreText.ContentLength = MeasureText (ScoreText.content, ScoreText.FontSize);
     ScoreText.pos.x = border.x + (border.width - ScoreText.ContentLength) / 2;
+}
+
+void ScoreBoard::updateTimeText() {
+    float newTime = GetTime();
+    if (newTime - markTime >= 1) {
+        markTime = newTime;
+        PlayTime.sec ++;
+        PlayTime.formatTime();
+        delete[] TimeText.content;
+        TimeText.content = NULL;
+        TimeText.content = StoA (TimeToString (PlayTime));
+        TimeText.ContentLength = MeasureText (TimeText.content, TimeText.FontSize);
+        TimeText.pos.x = border.x + (border.width - TimeText.ContentLength) / 2;
+    }
 }
 
 void ScoreBoard::updateHint(const Selector2D& pokemon1, const Selector2D& pokemon2, const MatchingType& MatchType) {
@@ -124,9 +136,10 @@ void ScoreBoard::draw() {
     DrawRectangleRec (HP_Bar, HP_Bar_Color);
     DrawRectangleRec (HP, HP_Color);
     //Score
-    updateScoreText ();
+    updateScoreText();
     DrawText (ScoreText.content, ScoreText.pos.x, ScoreText.pos.y, ScoreText.FontSize, ScoreText.FontColor);
     //Play time
+    updateTimeText();
     DrawText (TimeText.content, TimeText.pos.x, TimeText.pos.y, TimeText.FontSize, TimeText.FontColor);
     //Message
     DrawText (Message.content, Message.pos.x, Message.pos.y, Message.FontSize, Message.FontColor);

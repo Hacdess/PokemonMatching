@@ -72,3 +72,22 @@ char* StoA (const string& s) {
     arr[len] = '\0';
     return arr;
 }
+
+string TimeToString (Time time) {
+    time.formatTime();
+    string res = "";
+
+    if (time.hour < 10)
+        res += '0';
+    res = res + to_string(time.hour) + ':';
+
+    if (time.min < 10)
+        res += '0';
+    res = res + to_string(time.min) + ':';
+
+    if (time.sec < 10)
+        res += '0';
+    res += to_string(time.sec);
+
+    return res;
+}

@@ -3,7 +3,7 @@
 void LevelScene::setup() {
     //Background color
     count = 0;
-    background = MoreDarkCyan;
+    background = DarkCyan;
 
     //Title Textbox
     TextBoxs[0].content = new char [strlen("CHOOSE YOUR CHALLENGE") + 1];
@@ -31,10 +31,10 @@ void LevelScene::setup() {
             FontSize = float(WinWdith) / 25,
             spacing = FontSize / 5;
 
-    unsigned int i;
+    short i;
     for (i = 1; i < 5; i ++) {
-        TextBoxs[i].FontColor = BLACK;
-        TextBoxs[i].BorderColor = SlightGray;
+        TextBoxs[i].FontColor = WHITE;
+        TextBoxs[i].BorderColor = SlightGrayTrans;
         TextBoxs[i].FontSize = FontSize;
         TextBoxs[i].ContentLength = float(MeasureText (TextBoxs[i].content, TextBoxs[i].FontSize));
         TextBoxs[i].border = {float(WinWdith)  / 4, startY, float(WinWdith) / 2, height};
@@ -71,7 +71,7 @@ Level LevelScene::draw(GameAction& action) {
 
             else {
                 TextBoxs[i].BorderColor = SlightGray;
-                TextBoxs[i].FontColor = BLACK;
+                TextBoxs[i].FontColor = WHITE;
             }
 
             DrawRectangleRec (TextBoxs[i].border, TextBoxs[i].BorderColor);

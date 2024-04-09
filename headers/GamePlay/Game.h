@@ -44,6 +44,7 @@ struct GameScene {
     Texture2D background;
     GameBoard gameboard;
     ScoreBoard scoreboard;
+    ResultScene ResultScreen;
 
     void setup();
     Scene draw(GameAction& action, Scene scene, Level& level, LevelScene& LEVEL);
