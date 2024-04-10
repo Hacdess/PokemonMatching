@@ -1,1 +1,3 @@
-Stage | Player | Score | Time
+Stage,Player,Score,Time
+Easy,TKin2005,52,00:01:12
+Easy,TKin,52,00:00:58

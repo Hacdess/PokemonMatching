@@ -450,20 +450,22 @@ void drawPath (Node* path, const Pokemon& pokemon) {
 //Store game result in file .txt if that player won
 void storeResult (const ScoreBoard& scoreboard, const Level& level) {
     ofstream fout;
+    string stage;
 
     if (level == EASY)
-        fout.open("resources/file/Result_Easy.txt", ios::app);
+        stage = "Easy";
     if (level == MEDIUM)
-        fout.open("resources/file/Result_Medium.txt", ios::app);
+        stage = "Medium";
     if (level == HARD)
-        fout.open("resources/file/Result_Hard.txt", ios::app);
+        stage = "Hard";
 
+    fout.open("resources/file/Result.txt", ios::app);
     if (!fout.is_open()) {
         cout << "Can't open file to store\n";
         return;
     }
 
-    fout << scoreboard.Player.content << " | " << scoreboard.ScoreText.content << " | " << scoreboard.TimeText.content << endl;
+    fout << stage << ',' << scoreboard.Player.content << ',' << scoreboard.ScoreText.content << ',' << scoreboard.TimeText.content << endl;
 
     fout.close();
 }

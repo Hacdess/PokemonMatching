@@ -16,7 +16,6 @@ int main() {
 
     //Init Window
     InitWindow (WinWdith, WinHeight, GameName);
-    ToggleFullscreen();
     SetTargetFPS(GameFPS);
 
     //Create icon
@@ -72,6 +71,12 @@ int main() {
 
             case PLAY:
                 scene = game.GameScreen.draw(action, scene, level, game.LevelScreen, game.MenuScreen.username);
+                break;
+
+            case RANK:
+                if (!game.LeaderboardScreen.isSet)
+                    game.LeaderboardScreen.setup();
+                scene = game.LeaderboardScreen.draw();
                 break;
             
             //Exit the game

@@ -26,3 +26,4 @@ aanh | atri
 anhtt | a
 TKin2k5 | 1
 TKin2@5 | 1
+TKin2005 | 1

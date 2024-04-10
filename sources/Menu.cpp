@@ -149,6 +149,7 @@ Scene MenuScene::draw(bool& isSigned) {
             if (selector.x == 1) {
                 if (selector.y == 0)
                     return PLAY;
+                return RANK;
             }
 
             //Column: Setting and Exit

@@ -68,3 +68,4 @@ void addText (char*& dest, const char* content);
 void updateText (char*& dest, const char* content);
 char* StoA (const string& s);
 string TimeToString (Time time);
+short compareTime (const Time& time1, const Time& time2);
