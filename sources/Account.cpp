@@ -287,7 +287,7 @@ bool isExistedUsername (Account account) {
     fstream f;
     f.open("resources/file/Account.txt", ios::in);
 
-    char s, name[20], pass[20], tmp[2];
+    char s, name[20], pass[20];
     string t;
 
     //Get the first line that's not neccessary
@@ -320,7 +320,7 @@ bool isCorrectSigIn (Account account) {
     fstream f;
     f.open("resources/file/Account.txt", ios::in);
 
-    char s, name[20], pass[20], tmp[2];
+    char s, name[20], pass[20];
     string t;
 
     // Get the first line that's not neccessary
