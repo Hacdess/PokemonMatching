@@ -5,29 +5,36 @@
 struct Player {
     short score;
     Time time;
-    TextBox name, ScoreText, TimeText;
+    TextBox rank, name, ScoreText, TimeText;
 };
 
 struct PlayerNode {
     Player data;
-    PlayerNode* next;
+    PlayerNode *next, *prev;
     PlayerNode (Player input) {
         data.score = input.score;
         data.time.hour = input.time.hour;
         data.time.min = input.time.min;
         data.time.sec = input.time.sec;
-        addText (data.name.content, input.name);
+        addText (data.name.content, input.name.content);
         addText (data.ScoreText.content, input.ScoreText.content);
         addText (data.TimeText.content, input.TimeText.content); 
+        next = NULL;
+        prev = NULL;
     }
+};
+
+struct PlayerList {
+    PlayerNode *head, *tail;
 };
 
 struct StageScene {
     const Color background = WHITE;
     TextBox constant[5];
-    Player* list;
+    PlayerList list;
+    short lengthList;
     void getList(const Level& level);
-    void setup();
+    void setup(const Level& level);
     void draw();
 };
 

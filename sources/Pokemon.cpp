@@ -5,7 +5,7 @@
 void init(SceneManager& game) {
     game.MenuScreen.setup();
     game.LevelScreen.setup();
-    game.GameScreen.gameboard.PokemonsImg = readImage(60);
+    game.GameScreen.gameboard.PokemonsImg = readImage(50);
 }
 
 int main() {
@@ -87,7 +87,7 @@ int main() {
                 
                 //deadllocate
                 short i;
-                for (i = 0; i < 60; i ++)
+                for (i = 0; i < 50; i ++)
                     UnloadTexture (game.GameScreen.gameboard.PokemonsImg[i]);
                 delete[] game.GameScreen.gameboard.PokemonsImg;
                 return 0;

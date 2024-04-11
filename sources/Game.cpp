@@ -477,13 +477,12 @@ void GameScene::setup() {
     background = LoadTextureFromImage(img);
     UnloadImage(img);
 
-    //Get Gameboard hidden background
-    img = LoadImage("resources/img/logo.png");
-    gameboard.HiddenBackground = LoadTextureFromImage(img);
-    UnloadImage(img);
+    //Get random Gameboard hidden background
+    srand (time(0));
+    gameboard.HiddenBackground = gameboard.PokemonsImg[rand() % 50];
 
     //Get pokemons
-    gameboard.createTable(60);
+    gameboard.createTable(50);
 
     //size of gameboard
     gameboard.width = gameboard.pokemons[0][0].size * (gameboard.col - 2);
