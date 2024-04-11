@@ -80,7 +80,7 @@ void copyPlayer (Player& dest, Player source) {
     dest.time.sec = source.time.sec;
     strcpy (dest.name.content, source.name.content);
     strcpy (dest.ScoreText.content, source.ScoreText.content);
-    strcpy (dest.TimeText.content, source.TimeText.content);
+    //strcpy (dest.TimeText.content, source.TimeText.content);
 }
 
 void sortList (PlayerList& list) {
@@ -124,7 +124,7 @@ void StageScene::setup(const Level& level) {
 
     //Get list players' results
     getList (level);
-    sortList (list);
+    //sortList (list);
 
     //Category bar
     addText (constant[1].content, "Rank");
@@ -220,10 +220,6 @@ void StageScene::draw() {
         DrawText (cur -> data.name.content, cur -> data.name.pos.x, cur -> data.name.pos.y, cur -> data.name.FontSize, cur -> data.name.FontColor);
         DrawText (cur -> data.ScoreText.content, cur -> data.ScoreText.pos.x, cur -> data.ScoreText.pos.y, cur -> data.ScoreText.FontSize, cur -> data.ScoreText.FontColor);
         DrawText (cur -> data.TimeText.content, cur -> data.TimeText.pos.x, cur -> data.TimeText.pos.y, cur -> data.TimeText.FontSize, cur -> data.TimeText.FontColor);
-        cout << cur -> data.rank.content << " - ";
-        cout << cur -> data.name.content << " - ";
-        cout << cur -> data.ScoreText.content << " - ";
-        cout << cur -> data.TimeText.content << "\n\n";
 
         cur = cur -> next;
         count ++;
