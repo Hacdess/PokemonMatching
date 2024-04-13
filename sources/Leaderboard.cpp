@@ -81,30 +81,43 @@ void StageScene::getList(const Level& level) {
     fin.close();
 }
 
-/*
+void swapPlayer (Player* player1, Player* player2) {
+    swap (player1 -> score, player2 -> score);
+    swap (player1 -> time, player2 -> time);
+    swap (player1 -> name.content, player2 -> name.content);
+    swap (player1 -> ScoreText.content, player2 -> ScoreText.content);
+    swap (player1 -> TimeText.content, player2 -> TimeText.content);
+}
+
+//Based on bubble sort
 void sortList (PlayerList& list) {
     if (!list.head || !list.head -> next)
         return;
 
-    PlayerNode *I = list.head -> next, *prevI = list.head, *J = NULL, *prevJ = NULL;
-    
-    while (I) {
-        J = list.head;
-        while (J) {
+    bool swapped = 1; //Ensure the while loop below starts running
+    PlayerNode *i;
+
+    while (swapped) {
+        swapped = 0;
+        i = list.head;
+        while (i -> next) {
+            //Swap if the score of the player 1 < player 2 or player 1 == player 2 but is faster
             if (
-                J -> data.score < I -> data.score ||
-                J -> data.score == I -> data.score && compareTime (J -> data.time, I -> data.time) > 0
+                i -> data.score < i -> next -> data.score ||
+                (i -> data.score == i -> next -> data.score &&
+                compareTime (i -> data.time, i -> next -> data.time) > 0)
             ) {
-                if (!prevJ) {
-                    prevI -> next = I -> next;
-                    I -> next = list.head;
-                    list.head = I;
-                }
+                swapPlayer (&i -> data, &i -> next -> data);
+                swapped = 1;
             }
+            i = i -> next;
         }
+
+        //If not swapped means everything is in wanted order
+        if (!swapped)
+            return;
     }
 }
-*/
 
 void StageScene::setup(const Level& level) {
     short i, count;
@@ -120,7 +133,7 @@ void StageScene::setup(const Level& level) {
 
     //Get list players' results
     getList (level);
-    //sortList (list);
+    sortList (list);
 
     //Category bar
     addText (constant[1].content, "Rank");

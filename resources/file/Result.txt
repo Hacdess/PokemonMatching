@@ -3,10 +3,6 @@ Easy,TKin2005,52,00:01:12
 Easy,TKin,52,00:00:58
 Easy,Guest,52,00:00:43
 Easy,Guest,50,00:00:29
-<<<<<<< HEAD
 Medium,Guest,108,00:03:10
 Hard,Guest,184,00:09:18
 Easy,TKin,50,00:00:44
-=======
-Easy,Guest,46,00:00:44
->>>>>>> dc91590a96b74648647904f685dced999a2bdcea
