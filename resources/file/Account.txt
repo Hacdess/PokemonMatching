@@ -28,3 +28,6 @@ TKin2k5 | 1
 TKin2@5 | 1
 TKin2005 | 1
 AnhTri23 | AnhTri123
+TKin2 | TKin12
+Anhi | Anhi
+Anhtri1 | Anhtr123
