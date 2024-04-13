@@ -37,7 +37,7 @@ void ResultScene::setup() {
 
     result.FontColor = RED;
     
-    message.content = new char[strlen("Press Enter to get back to Choose Level")];
+    message.content = new char[strlen("Press Enter to get back to Choose Level") + 1];
     strcpy (message.content, "Press Enter to get back to Choose Level");
     message.FontSize = float(WinHeight) / 20;
     message.FontColor = LIGHTGRAY;

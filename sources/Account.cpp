@@ -340,7 +340,7 @@ bool isExistedUsername(Account account)
     return 0;
 }
 
-bool checkCorrectPassword(Account account)
+bool checkCorrectPassword(Account account) //return 0 if same username, different password
 {
     fstream f;
     f.open("resources/file/Account.txt", ios::in);
@@ -365,15 +365,15 @@ bool checkCorrectPassword(Account account)
         ss >> pass;
 
         if (name[0] != '\0' && pass[0] != '\0')
-            if (strcmp(name, account.name) == 0 && strcmp(pass, account.pass) == 0)
+            if (strcmp(name, account.name) == 0 && strcmp(pass, account.pass) != 0)
             {
                 f.close();
-                return 1;
+                return 0;
             }
     }
 
     f.close();
-    return 0;
+    return 1;
 }
 
 bool isCorrectSigIn(Account account)
@@ -577,9 +577,12 @@ char *modifyCommandUsernameForSignIn(Account &account)
             strcpy(tmp, "Username mustn't have space");
             break;
         case 4:
-        case 5:
-            tmp = new char[strlen("Valid Username") + 1];
+        tmp = new char[strlen("Valid Username") + 1];
             strcpy(tmp, "Valid Username");
+            break;
+        case 5:
+            tmp = new char[strlen("Username didn't exist") + 1];
+            strcpy(tmp, "Username didn't exist");
             break;
     }
 
@@ -686,25 +689,19 @@ char *modifyCommandForSignUp(Account &account)
         strcpy(tmp, "Remember to input password");
     }
 
-    else if (checkName == 5 && (checkPass == 4 || checkPass == 5))
-    {
-        tmp = new char[strlen("Valid username and password") + 1];
-        strcpy(tmp, "Valid username and password");
-    }
-
-    else if (checkName == 5)
+    else if (checkName == 5 && checkPass <= 3)
     {
         tmp = new char[strlen("Invalid password") + 1];
         strcpy(tmp, "Invalid password");
     }
 
-    else if (checkPass == 4 || checkPass == 5)
+    else if (checkPass > 3 && checkName != 5)
     {
         tmp = new char[strlen("Invalid username") + 1];
         strcpy(tmp, "Invalid username");
     }
 
-    else
+    else if (checkName <= 4 && checkPass <= 3)
     {
         tmp = new char[strlen("Invalid account") + 1];
         strcpy(tmp, "Invalid account");
@@ -736,25 +733,20 @@ char *modifyCommandForSignIn(Account &account)
         tmp = new char[strlen("Remember to input password") + 1];
         strcpy(tmp, "Remember to input password");
     }
-    else if ((checkName == 5 || checkName == 4) && checkPass == 5)
+    else if ((checkName > 3) && checkPass > 3)
     {
         if (!isCorrectSigIn(account))
         {
             tmp = new char[strlen("Wrong password or username") + 1];
             strcpy(tmp, "Wrong password or username");
         }
-        else
-        {
-            tmp = new char[strlen("Valid username and password") + 1];
-            strcpy(tmp, "Valid username and password");
-        }
     }
-    else if (checkName == 5)
+    else if (checkName > 3)
     {
         tmp = new char[strlen("Invalid password") + 1];
         strcpy(tmp, "Invalid password");
     }
-    else if (checkPass == 5 && checkName != 4)
+    else if (checkPass > 3)
     {
         tmp = new char[strlen("Invalid username") + 1];
         strcpy(tmp, "Invalid username");
@@ -871,9 +863,11 @@ Scene SignUpScene::draw(bool &isSigned, char *&username)
     {
         input[0].BorderColor = WHITE;
         inputAccount(account);
+        if (IsKeyPressed(KEY_ENTER)){
         delete[] command.content;
         command.content = NULL;
         command.content = modifyCommandUsernameForSignUp(account);
+        }
     }
     else
         input[0].BorderColor = DarkCyanTrans;
@@ -882,9 +876,11 @@ Scene SignUpScene::draw(bool &isSigned, char *&username)
     {
         input[1].BorderColor = WHITE;
         inputPass(account);
+        if (IsKeyPressed(KEY_ENTER)){
         delete[] command.content;
         command.content = NULL;
         command.content = modifyCommandPasswordForSignUp(account);
+        }
     }
     else
         input[1].BorderColor = DarkCyanTrans;
@@ -894,10 +890,12 @@ Scene SignUpScene::draw(bool &isSigned, char *&username)
     {
         confirm[0].FontColor = DarkCyanTrans;
         confirm[0].BorderColor = WHITE;
+        if (IsKeyPressed(KEY_ENTER)){
         delete[] command.content;
         command.content = NULL;
         command.content = modifyCommandForSignUp(account);
-        if (IsKeyPressed(KEY_ENTER) && checkValidUsername(account) == 5 && checkValidPassWord(account) == 4 && !isExistedUsername(account))
+        }
+        if (IsKeyPressed(KEY_ENTER) && checkValidUsername(account) == 5 && checkValidPassWord(account) > 3 && !isExistedUsername(account))
         {
             username = new char[strlen(account.name) + 1];
             strcpy(username, account.name);
@@ -1025,9 +1023,11 @@ Scene SignInScene::draw(bool &isSigned, char *&username)
     {
         input[0].BorderColor = WHITE;
         inputAccount(account);
+        if (IsKeyPressed(KEY_ENTER)){
         delete[] command.content;
         command.content = NULL;
         command.content = modifyCommandUsernameForSignIn(account);
+        }
     }
     else
         input[0].BorderColor = DarkCyanTrans;
@@ -1036,9 +1036,11 @@ Scene SignInScene::draw(bool &isSigned, char *&username)
     {
         input[1].BorderColor = WHITE;
         inputPass(account);
+        if (IsKeyPressed(KEY_ENTER)){
         delete[] command.content;
         command.content = NULL;
         command.content = modifyCommandPasswordForSignIn(account);
+        }
     }
     else
         input[1].BorderColor = DarkCyanTrans;
@@ -1048,9 +1050,11 @@ Scene SignInScene::draw(bool &isSigned, char *&username)
     {
         confirm[0].FontColor = DarkCyanTrans;
         confirm[0].BorderColor = WHITE;
+        if (IsKeyPressed(KEY_ENTER)){
         delete[] command.content;
         command.content = NULL;
         command.content = modifyCommandForSignIn(account);
+        }
         if (IsKeyPressed(KEY_ENTER) && (checkValidUsername(account) == 5 || checkValidUsername(account) == 4) && checkValidPassWord(account) == 5 && isCorrectSigIn(account) == 1)
         {
             username = new char[strlen(account.name) + 1];
