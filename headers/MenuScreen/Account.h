@@ -50,6 +50,7 @@ void inputPass(Account &account);
 //Hàm xử lý File
 void storeAccount (Account &account);
 bool isExistedUsername (Account account);
+bool checkCorrectPassword(Account account);
 bool isCorrectSigIn (Account account);
 
 //Fuctions dealing with Username && Password: Max 15 characters
@@ -61,7 +62,8 @@ short checkValidPassWord(Account account);
 //Hàm chỉnh dòng Commnad
 char* modifyCommandUsernameForSignUp(Account& account);
 char* modifyCommandUsernameForSignIn(Account& account);
-char* modifyCommandPassword(Account& account);
+char* modifyCommandPasswordForSignUp(Account& account);
+char* modifyCommandPasswordForSignIn(Account& account);
 char* modifyCommandForSignUp(Account& account);
 char* modifyCommandForSignIn(Account& account);
 
