@@ -1,18 +1,5 @@
 #include "../headers/MenuScreen/Leaderboard.h"
 
-/*
-void addHead (PlayerList& list, Player input) {
-    PlayerNode* player = new PlayerNode(input);
-    if (!list.head) {
-        list.head = list.tail = player;
-        return;
-    }
-
-    player -> next = list.head;
-    list.head -> prev = player;
-    list.head = player;
-}
-*/
 void addHead (PlayerList& list, Player input) {
     PlayerNode* player = new PlayerNode(input);
     if (!list.head) {
