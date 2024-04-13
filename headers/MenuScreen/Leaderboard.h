@@ -10,7 +10,7 @@ struct Player {
 
 struct PlayerNode {
     Player data;
-    PlayerNode *next, *prev;
+    PlayerNode *next;
     PlayerNode (Player input) {
         data.score = input.score;
         data.time.hour = input.time.hour;
@@ -20,7 +20,6 @@ struct PlayerNode {
         addText (data.ScoreText.content, input.ScoreText.content);
         addText (data.TimeText.content, input.TimeText.content); 
         next = NULL;
-        prev = NULL;
     }
 };
 

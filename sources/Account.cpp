@@ -1,6 +1,4 @@
 #include "../headers/MenuScreen/Account.h"
-#include "Account.h"
-
 
 void SignUpScene::setup() {
     set = 1;
@@ -122,7 +120,11 @@ void SignUpScene::setup() {
 
 void SignInScene::setup() {
     set = 1;
-
+    account.nameCount = 0;
+    account.name[account.nameCount] = '\0';
+    account.passCount = 0;
+    account.pass[account.passCount] = '\0';
+    
     // Get Background
     Image img = LoadImage("resources/img/background/background.png");
     background = LoadTextureFromImage(img);
@@ -497,7 +499,8 @@ char *modifyCommandUsernameForSignIn(Account & account){
             tmp = new char[strlen("Username mustn't have space") + 1];
             strcpy(tmp, "Username mustn't have space");
             break;
-        case 4, 5:
+        case 4:
+        case 5:
             tmp = new char[strlen("Valid Username") + 1];
             strcpy(tmp, "Valid Username");
             break;
@@ -611,10 +614,10 @@ char *modifyCommandForSignIn(Account &account)
     }
     else if ((checkName == 5 || checkName == 4) && checkPass == 4)
     {
-        if (isCorrectSigIn(account) == 0)
+        if (!isCorrectSigIn(account))
         {
-            tmp = new char[strlen("Account didn't exist") + 1];
-            strcpy(tmp, "Account didn't exist");
+            tmp = new char[strlen("Wrong password or username") + 1];
+            strcpy(tmp, "Wrong password or username");
         }
         else
         {

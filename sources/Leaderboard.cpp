@@ -1,19 +1,27 @@
 #include "../headers/MenuScreen/Leaderboard.h"
 
+/*
 void addHead (PlayerList& list, Player input) {
     PlayerNode* player = new PlayerNode(input);
+    if (!list.head) {
+        list.head = list.tail = player;
+        return;
+    }
+
+    player -> next = list.head;
+    list.head -> prev = player;
+    list.head = player;
+}
+*/
+void addHead (PlayerList& list, Player input) {
+    PlayerNode* player = new PlayerNode(input);
+    if (!list.head) {
+        list.head = list.tail = player;
+        return;
+    }
+
     player -> next = list.head;
     list.head = player;
-    if (!player -> next)
-        list.tail = player;
-}
-
-void addTail (PlayerList& list, Player input) {
-    PlayerNode* player = new PlayerNode(input);
-    player -> prev = list.tail;
-    list.tail = player;
-    if (!player -> prev)
-        list.tail = player;
 }
 
 void StageScene::getList(const Level& level) {
@@ -73,42 +81,30 @@ void StageScene::getList(const Level& level) {
     fin.close();
 }
 
-void copyPlayer (Player& dest, Player source) {
-    dest.score = source.score;
-    dest.time.hour = source.time.hour;
-    dest.time.min = source.time.min;
-    dest.time.sec = source.time.sec;
-    strcpy (dest.name.content, source.name.content);
-    strcpy (dest.ScoreText.content, source.ScoreText.content);
-    //strcpy (dest.TimeText.content, source.TimeText.content);
-}
-
+/*
 void sortList (PlayerList& list) {
     if (!list.head || !list.head -> next)
         return;
 
-    PlayerNode *i = list.head -> next, *j;
-    Player key;
-
-    while (i) {
-        j = i -> prev;
-        copyPlayer (key, i -> data);
-        
-        while (j) {
-            if (j -> data.score < key.score)
-                copyPlayer (j -> next -> data, j -> data);
-            else if (j -> data.score == key.score)
-                if (compareTime(j -> data.time, key.time) > 0)
-                    copyPlayer (j -> next -> data, j -> data);
-            else
-                copyPlayer (j -> next -> data, key);
-            
-            j = j -> prev;
+    PlayerNode *I = list.head -> next, *prevI = list.head, *J = NULL, *prevJ = NULL;
+    
+    while (I) {
+        J = list.head;
+        while (J) {
+            if (
+                J -> data.score < I -> data.score ||
+                J -> data.score == I -> data.score && compareTime (J -> data.time, I -> data.time) > 0
+            ) {
+                if (!prevJ) {
+                    prevI -> next = I -> next;
+                    I -> next = list.head;
+                    list.head = I;
+                }
+            }
         }
-
-        i = i -> next;
     }
-} 
+}
+*/
 
 void StageScene::setup(const Level& level) {
     short i, count;
@@ -139,7 +135,7 @@ void StageScene::setup(const Level& level) {
         constant[i].FontColor = BLUE;
         constant[i].BorderColor = DarkCyan;
         constant[i].border.y = constant[0].border.y + constant[0].border.height;
-        constant[i].border.height = constant[i].FontSize * 1.1f;
+        constant[i].border.height = constant[i].FontSize * 1.2f;
         constant[i].pos.y = constant[i].border.y + (constant[i].border.height - constant[i].FontSize) / 2;
         constant[i].ContentLength = MeasureText (constant[i].content, constant[i].FontSize);
         constant[i].border.x = startX;
