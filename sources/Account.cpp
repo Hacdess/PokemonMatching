@@ -1,4 +1,5 @@
 #include "../headers/MenuScreen/Account.h"
+#include "Account.h"
 
 
 void SignUpScene::setup() {
@@ -439,7 +440,7 @@ short checkValidPassWord (Account account) {
     return 4;
 }
 
-char *modifyCommandUsername(Account& account) {
+char *modifyCommandUsernameForSignUp(Account& account) {
     char *tmp;
     tmp = NULL;
     short check = checkValidUsername(account);
@@ -475,7 +476,37 @@ char *modifyCommandUsername(Account& account) {
     return tmp;
 }
 
+char *modifyCommandUsernameForSignIn(Account & account){
+    char *tmp;
+    tmp = NULL;
+    short check = checkValidUsername(account);
+
+    switch (check) {
+        //No input
+        case 1:
+            tmp = new char[strlen("Username should have at least one letter alphabet") + 1];
+            strcpy(tmp, "Username should have at least one letter alphabet");
+            break;
+
+        case 2:
+            tmp = new char[strlen("Username should have no more than 15 letters") + 1];
+            strcpy(tmp, "Username should have no more than 15 letters");
+            break;
+
+        case 3:
+            tmp = new char[strlen("Username mustn't have space") + 1];
+            strcpy(tmp, "Username mustn't have space");
+            break;
+        case 4, 5:
+            tmp = new char[strlen("Valid Username") + 1];
+            strcpy(tmp, "Valid Username");
+            break;
+    }
+
+    return tmp;
+}
 char *modifyCommandPassword (Account& account) {
+
     char *tmp;
     tmp = NULL;
     short check = checkValidPassWord(account);
@@ -708,7 +739,7 @@ Scene SignUpScene::draw (bool& isSigned, char*& username) {
         inputAccount(account);
         delete[] command.content;
         command.content = NULL;
-        command.content = modifyCommandUsername(account);
+        command.content = modifyCommandUsernameForSignUp(account);
     }
     else
         input[0].BorderColor = DarkCyanTrans;
@@ -848,7 +879,7 @@ Scene SignInScene::draw(bool &isSigned, char* &username)
         inputAccount(account);
         delete[] command.content;
         command.content = NULL;
-        command.content = modifyCommandUsername(account);
+        command.content = modifyCommandUsernameForSignIn(account);
     }
     else
         input[0].BorderColor = DarkCyanTrans;

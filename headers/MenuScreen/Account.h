@@ -59,7 +59,8 @@ short checkValidUsername(Account account); //Many invalid cases
 short checkValidPassWord(Account account);
    
 //Hàm chỉnh dòng Commnad
-char* modifyCommandUsername(Account& account);
+char* modifyCommandUsernameForSignUp(Account& account);
+char* modifyCommandUsernameForSignIn(Account& account);
 char* modifyCommandPassword(Account& account);
 char* modifyCommandForSignUp(Account& account);
 char* modifyCommandForSignIn(Account& account);
