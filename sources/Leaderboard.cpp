@@ -2,17 +2,13 @@
 
 void addHead (PlayerList& list, Player input) {
     PlayerNode* player = new PlayerNode(input);
+
+    if (list.head)
+        list.head -> prev = player;
+
     player -> next = list.head;
     list.head = player;
     if (!player -> next)
-        list.tail = player;
-}
-
-void addTail (PlayerList& list, Player input) {
-    PlayerNode* player = new PlayerNode(input);
-    player -> prev = list.tail;
-    list.tail = player;
-    if (!player -> prev)
         list.tail = player;
 }
 
@@ -73,42 +69,52 @@ void StageScene::getList(const Level& level) {
     fin.close();
 }
 
-void copyPlayer (Player& dest, Player source) {
-    dest.score = source.score;
-    dest.time.hour = source.time.hour;
-    dest.time.min = source.time.min;
-    dest.time.sec = source.time.sec;
-    strcpy (dest.name.content, source.name.content);
-    strcpy (dest.ScoreText.content, source.ScoreText.content);
-    //strcpy (dest.TimeText.content, source.TimeText.content);
+void swapPlayerNode(PlayerNode *a, PlayerNode *b) {
+    Player tempData = a->data;
+    a->data = b->data;
+    b->data = tempData;
+
+    // Swap the text fields as well
+    char tempName[100];
+    char tempScoreText[100];
+    char tempTimeText[100];
+
+    strcpy(tempName, a->data.name.content);
+    strcpy(tempScoreText, a->data.ScoreText.content);
+    strcpy(tempTimeText, a->data.TimeText.content);
+
+    strcpy(a->data.name.content, b->data.name.content);
+    strcpy(a->data.ScoreText.content, b->data.ScoreText.content);
+    strcpy(a->data.TimeText.content, b->data.TimeText.content);
+
+    strcpy(b->data.name.content, tempName);
+    strcpy(b->data.ScoreText.content, tempScoreText);
+    strcpy(b->data.TimeText.content, tempTimeText);
 }
 
-void sortList (PlayerList& list) {
-    if (!list.head || !list.head -> next)
-        return;
+void sortList(PlayerList *list) {
+    if (list == NULL || list->head == NULL || list->head->next == NULL) {
+        return; // List is empty or has only one node, no need to sort
+    }
 
-    PlayerNode *i = list.head -> next, *j;
-    Player key;
+    PlayerNode *current = list->head;
+    PlayerNode *nextNode = NULL;
 
-    while (i) {
-        j = i -> prev;
-        copyPlayer (key, i -> data);
-        
-        while (j) {
-            if (j -> data.score < key.score)
-                copyPlayer (j -> next -> data, j -> data);
-            else if (j -> data.score == key.score)
-                if (compareTime(j -> data.time, key.time) > 0)
-                    copyPlayer (j -> next -> data, j -> data);
-            else
-                copyPlayer (j -> next -> data, key);
-            
-            j = j -> prev;
+    // Bubble sort algorithm
+    while (current != list->tail) {
+        nextNode = current->next;
+
+        while (nextNode != NULL) {
+            if (current->data.score < nextNode->data.score) {
+                swapPlayerNode(current, nextNode);
+            }
+
+            nextNode = nextNode->next;
         }
 
-        i = i -> next;
+        current = current->next;
     }
-} 
+}
 
 void StageScene::setup(const Level& level) {
     short i, count;
@@ -124,7 +130,7 @@ void StageScene::setup(const Level& level) {
 
     //Get list players' results
     getList (level);
-    //sortList (list);
+    sortList (&list);
 
     //Category bar
     addText (constant[1].content, "Rank");
