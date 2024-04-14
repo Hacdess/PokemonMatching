@@ -628,6 +628,7 @@ Scene GameScene::draw(GameAction& action, Scene scene, Level& level, LevelScene&
         scoreboard.ScoreNum -= 4;
         gameboard.MatchType = makeHint (gameboard.pokemons, gameboard.row, gameboard.col, gameboard.hint1_1, gameboard.hint1_2, gameboard.path);
         gameboard.MatchingTime = GetTime();
+        scoreboard.updateMessage (gameboard.hint1_1, gameboard.hint1_2, gameboard.MatchType);
         gameboard.pokemons[gameboard.hint1_1.y][gameboard.hint1_1.x].unSeen();
         gameboard.pokemons[gameboard.hint1_2.y][gameboard.hint1_2.x].unSeen();
     }
