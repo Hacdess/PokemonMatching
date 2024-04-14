@@ -33,6 +33,7 @@ struct GameBoard {
     float MatchingTime = 0;
     MatchingType MatchType = None;
     Selector2D checkMatch1, checkMatch2;
+    Selector2D hint1_1, hint1_2, hint2_1, hint2_2;
 
     void createTable (const short& quantity);
     bool isEmpty();

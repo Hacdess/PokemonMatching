@@ -7,10 +7,8 @@ void addPath (Node*& path, const float& x, const float& y) {
 }
 
 void printNode (Node* path) {
-    if (! path) {
-        cout << "Empty\n";
+    if (! path)
         return;
-    }
     
     while (path) {
         cout << '(' << path -> x << " - " << path -> y << ')' << " ; ";
@@ -28,10 +26,8 @@ void removeHead(Node*& path) {
 }
 
 void removePath (Node*& path) {
-    if (! path) {
-        cout << "Empty\n";
+    if (! path)
         return;
-    }
 
     Node* cur;
     while (path) {

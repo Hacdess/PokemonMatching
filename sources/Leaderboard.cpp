@@ -3,13 +3,13 @@
 void addHead (PlayerList& list, Player input) {
     PlayerNode* player = new PlayerNode(input);
 
-    if (list.head)
-        list.head -> prev = player;
+    if (!list.head) {
+        list.head = list.tail = player;
+        return;
+    }
 
     player -> next = list.head;
     list.head = player;
-    if (!player -> next)
-        list.tail = player;
 }
 
 void StageScene::getList(const Level& level) {
@@ -69,50 +69,41 @@ void StageScene::getList(const Level& level) {
     fin.close();
 }
 
-void swapPlayerNode(PlayerNode *a, PlayerNode *b) {
-    Player tempData = a->data;
-    a->data = b->data;
-    b->data = tempData;
-
-    // Swap the text fields as well
-    char tempName[100];
-    char tempScoreText[100];
-    char tempTimeText[100];
-
-    strcpy(tempName, a->data.name.content);
-    strcpy(tempScoreText, a->data.ScoreText.content);
-    strcpy(tempTimeText, a->data.TimeText.content);
-
-    strcpy(a->data.name.content, b->data.name.content);
-    strcpy(a->data.ScoreText.content, b->data.ScoreText.content);
-    strcpy(a->data.TimeText.content, b->data.TimeText.content);
-
-    strcpy(b->data.name.content, tempName);
-    strcpy(b->data.ScoreText.content, tempScoreText);
-    strcpy(b->data.TimeText.content, tempTimeText);
+void swapPlayer (Player* player1, Player* player2) {
+    swap (player1 -> score, player2 -> score);
+    swap (player1 -> time, player2 -> time);
+    swap (player1 -> name.content, player2 -> name.content);
+    swap (player1 -> ScoreText.content, player2 -> ScoreText.content);
+    swap (player1 -> TimeText.content, player2 -> TimeText.content);
 }
 
-void sortList(PlayerList *list) {
-    if (list == NULL || list->head == NULL || list->head->next == NULL) {
-        return; // List is empty or has only one node, no need to sort
-    }
+//Based on bubble sort
+void sortList (PlayerList& list) {
+    if (!list.head || !list.head -> next)
+        return;
 
-    PlayerNode *current = list->head;
-    PlayerNode *nextNode = NULL;
+    bool swapped = 1; //Ensure the while loop below starts running
+    PlayerNode *i;
 
-    // Bubble sort algorithm
-    while (current != list->tail) {
-        nextNode = current->next;
-
-        while (nextNode != NULL) {
-            if (current->data.score < nextNode->data.score) {
-                swapPlayerNode(current, nextNode);
+    while (swapped) {
+        swapped = 0;
+        i = list.head;
+        while (i -> next) {
+            //Swap if the score of the player 1 < player 2 or player 1 == player 2 but is faster
+            if (
+                i -> data.score < i -> next -> data.score ||
+                (i -> data.score == i -> next -> data.score &&
+                compareTime (i -> data.time, i -> next -> data.time) > 0)
+            ) {
+                swapPlayer (&i -> data, &i -> next -> data);
+                swapped = 1;
             }
-
-            nextNode = nextNode->next;
+            i = i -> next;
         }
 
-        current = current->next;
+        //If not swapped means everything is in wanted order
+        if (!swapped)
+            return;
     }
 }
 
@@ -128,9 +119,9 @@ void StageScene::setup(const Level& level) {
     list.head = NULL;
     list.tail = NULL;
 
-    //Get list players' results
+    //Get list players' results and sort descending
     getList (level);
-    sortList (&list);
+    sortList (list);
 
     //Category bar
     addText (constant[1].content, "Rank");
@@ -145,7 +136,7 @@ void StageScene::setup(const Level& level) {
         constant[i].FontColor = BLUE;
         constant[i].BorderColor = DarkCyan;
         constant[i].border.y = constant[0].border.y + constant[0].border.height;
-        constant[i].border.height = constant[i].FontSize * 1.1f;
+        constant[i].border.height = constant[i].FontSize * 1.2f;
         constant[i].pos.y = constant[i].border.y + (constant[i].border.height - constant[i].FontSize) / 2;
         constant[i].ContentLength = MeasureText (constant[i].content, constant[i].FontSize);
         constant[i].border.x = startX;

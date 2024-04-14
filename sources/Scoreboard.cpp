@@ -1,7 +1,14 @@
 #include "../headers/GamePlay/Scoreboard.h"
 
 void ScoreBoard::setup(const char* username) {
-    showHint = 0;
+    //The box of scoreboard
+    border = {
+        float (WinWdith) / 3 * 2,
+        float (WinHeight) / 4,
+        float (WinHeight) / 2,
+        float (WinHeight) / 2
+    };
+
 
     //"Scoreboard" word on the top
     Title.content = new char[strlen("Scoreboard") + 1];
@@ -14,6 +21,18 @@ void ScoreBoard::setup(const char* username) {
         border.y + HealthUnit / 2
     };
 
+    //PlayTime strating (right below the Title)
+    PlayTime.hour = 0, PlayTime.min = 0, PlayTime.sec = 0;
+    TimeText.content = new char[strlen("00:00:00") + 1];
+    strcpy (TimeText.content, "00:00:00");
+    TimeText.FontSize = HealthUnit / 2;
+    TimeText.FontColor = CYAN;
+    TimeText.ContentLength = MeasureText (TimeText.content, TimeText.FontSize);
+    TimeText.pos = {
+        border.x + (border.width - TimeText.ContentLength) / 2,
+        Title.pos.y + Title.FontSize * 1.1f
+    };
+
     //At first, it's not login yet so the player name is "Guest"
     if (username == NULL) {
         Player.content = new char[strlen("Guest") + 1];
@@ -24,54 +43,70 @@ void ScoreBoard::setup(const char* username) {
         strcpy (Player.content, username);
     }
     Player.FontSize = HealthUnit * 0.75f;
-    Player.FontColor = YELLOW;
+    Player.FontColor = WHITE;
     Player.ContentLength = MeasureText (Player.content, Player.FontSize);
     Player.pos = {
         border.x + (border.width - Player.ContentLength) / 2,
-        Title.pos.y + Title.FontSize + HealthUnit / 3
-    };
-
-    //At first, the message is "Press 'h' for hint"
-    Message.content = new char[strlen("Press 'h' for hint") + 1];
-    strcpy (Message.content, "Press 'h' for hint");
-    Message.FontSize = HealthUnit / 2;
-    Message.FontColor = DarkCyan;
-    Message.ContentLength = MeasureText ("Press 'h' for hint", Message.FontSize);
-    Message.pos = {
-        border.x + (border.width - Message.ContentLength) / 2,
-        border.y + border.height - HealthUnit
+        TimeText.pos.y + TimeText.FontSize * 1.25f
     };
 
     //HP Bar
-    HP_Bar.y = Player.pos.y + Player.FontSize + HealthUnit / 4;
+    HP_Bar = {
+        border.x + (border.width - HealthFull) / 2,
+        HP_Bar.y = Player.pos.y + Player.FontSize * 1.1f,
+        HealthFull,
+        HealthUnit * 0.75f
+    };
     health = 5;
     HP.x = HP_Bar.x;
     HP.y = HP_Bar.y;
     HP.width = HealthUnit * health;
     HP.height = HP_Bar.height;
 
-    //PlayTime strating
-    PlayTime.hour = 0, PlayTime.min = 0, PlayTime.sec = 0;
-    TimeText.content = new char[strlen("00:00:00") + 1];
-    strcpy (TimeText.content, "00:00:00");
-    TimeText.FontSize = HealthUnit * 0.5;
-    TimeText.FontColor = RED;
-    TimeText.ContentLength = MeasureText (TimeText.content, TimeText.FontSize);
-    TimeText.pos = {
-        border.x + (border.width - TimeText.ContentLength) / 2,
-        HP.y + HP.height + HealthUnit / 4
-    };
-
     //At first, the score = 0
     ScoreNum = 0;
     ScoreText.content = new char[2];
     strcpy (ScoreText.content, "0");
-    ScoreText.FontSize = HealthUnit * 1.25f;
+    ScoreText.FontSize = HealthUnit * 0.75f;
     ScoreText.FontColor = WHITE;
     ScoreText.ContentLength = MeasureText (ScoreText.content, ScoreText.FontSize);
     ScoreText.pos = {
         border.x + (border.width - ScoreText.ContentLength) / 2,
-        TimeText.pos.y + HealthUnit
+        HP_Bar.y + HP_Bar.height * 1.2f
+    };
+
+    //There are 3 guides:
+    //Press '1' for hint
+    Guide[0].content = new char[strlen("Press '1' for hint") + 1];
+    strcpy (Guide[0].content, "Press '1' for hint");
+    //Press '0' for shuffle
+    Guide[1].content = new char[strlen("Press '0' for shuffle") + 1];
+    strcpy (Guide[1].content, "Press '0' for shuffle");
+    //-4 / hint, -2 / shuffle
+    Guide[2].content = new char[strlen("-4/hint, -2/shuffle") + 1];
+    strcpy (Guide[2].content, "-4/hint, -2/shuffle");
+
+    short i;
+    float startY = ScoreText.pos.y + ScoreText.FontSize * 1.1f;
+
+    for (i = 0; i < 3; i ++) {
+        Guide[i].FontSize = HealthUnit * 0.45f;
+        Guide[i].FontColor = YELLOW;
+        Guide[i].ContentLength = MeasureText (Guide[i].content, Guide[i].FontSize);
+        Guide[i].pos = {
+            border.x + (border.width - Guide[i].ContentLength) / 2,
+            startY
+        };
+        startY = startY + Guide[i].FontSize * 1.2f;
+    }
+
+    addText (Message.content, "Enjoy the game");
+    Message.FontSize = HealthUnit * 0.5f;
+    Message.FontColor = CYAN;
+    Message.ContentLength = MeasureText (Message.content, Message.FontSize);
+    Message.pos = {
+        border.x + (border.width - Message.ContentLength) / 2,
+        Guide[2].pos.y + Guide[2].FontSize * 1.2f
     };
 
     markTime = GetTime();
@@ -88,6 +123,7 @@ void ScoreBoard::updateHP() {
     HP.width = HealthUnit * health;
 }
 
+//The score changes so it must be updated
 void ScoreBoard::updateScoreText() {
     delete [] ScoreText.content;
     ScoreText.content = NULL;
@@ -105,14 +141,13 @@ void ScoreBoard::updateTimeText() {
         PlayTime.sec ++;
         PlayTime.formatTime();
         delete[] TimeText.content;
-        TimeText.content = NULL;
-        TimeText.content = StoA (TimeToString (PlayTime));
+        addText (TimeText.content, StoA (TimeToString (PlayTime)));
         TimeText.ContentLength = MeasureText (TimeText.content, TimeText.FontSize);
         TimeText.pos.x = border.x + (border.width - TimeText.ContentLength) / 2;
     }
 }
 
-void ScoreBoard::updateHint(const Selector2D& pokemon1, const Selector2D& pokemon2, const MatchingType& MatchType) {
+void ScoreBoard::updateMessage(const Selector2D& pokemon1, const Selector2D& pokemon2, const MatchingType& MatchType) {
     string temp = "";
     if (MatchType == I)
         temp += "I Matching: ";
@@ -123,8 +158,13 @@ void ScoreBoard::updateHint(const Selector2D& pokemon1, const Selector2D& pokemo
     if (MatchType == Z)
         temp += "Z Matching: ";
 
-    temp = '(' + to_string(pokemon1.x) + ',' + to_string(pokemon1.y) + ") - (" + to_string(pokemon2.x) + ',' + to_string(pokemon2.y) + ')';
+    temp = temp + '(' + to_string(pokemon1.x) + ',' + to_string(pokemon1.y) + ") - (" + to_string(pokemon2.x) + ',' + to_string(pokemon2.y) + ')';
 
+    delete[] Message.content;
+    addText (Message.content, StoA (temp));
+
+    Message.ContentLength = MeasureText (Message.content, Message.FontSize);
+    Message.pos.x = border.x + (border.width - Message.ContentLength) / 2;
 }
 
 void ScoreBoard::draw() {
@@ -163,6 +203,10 @@ void ScoreBoard::draw() {
     //Play time
     updateTimeText();
     DrawText (TimeText.content, TimeText.pos.x, TimeText.pos.y, TimeText.FontSize, TimeText.FontColor);
+    //Guides
+    short i;
+    for (i = 0; i < 3; i ++)
+        DrawText (Guide[i].content, Guide[i].pos.x, Guide[i].pos.y, Guide[i].FontSize, Guide[i].FontColor);
     //Message
     DrawText (Message.content, Message.pos.x, Message.pos.y, Message.FontSize, Message.FontColor);
 }

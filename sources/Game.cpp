@@ -332,6 +332,21 @@ bool GameBoard::checkMatchAble () {
     return 0;
 }
 
+MatchingType makeHint (Pokemon** pokemons, const short& row, const short& col, Selector2D& hint1, Selector2D& hint2, Node*& path) {
+    MatchingType res;
+
+    for (hint1.y = 1; hint1.y < row - 1; hint1.y ++)
+        for (hint1.x = 1; hint1.x < col - 1; hint1.x ++)
+            for (hint2.y = 1; hint2.y < row - 1; hint2.y ++)
+                for (hint2.x = 1; hint2.x < col - 1; hint2.x ++) {
+                    res = checkMatching (pokemons, hint1, hint2, row, col, path);
+                    if (res != None)
+                        return res;
+                }
+    
+    return res;
+}
+
 //Check if GameBoard is empty
 bool GameBoard::isEmpty() {
     short i, j;
@@ -549,7 +564,7 @@ Scene GameScene::draw(GameAction& action, Scene scene, Level& level, LevelScene&
     //Selector Dealing
     moveSelector2D (gameboard.selector, 1, 1, gameboard.col - 2, gameboard.row - 2);
 
-        //Selected Pokemons
+    //Selected Pokemons
     if (IsKeyPressed(KEY_ENTER)) {
         gameboard.pokemons[gameboard.selector.y][gameboard.selector.x].selected = 1;
         
@@ -571,7 +586,11 @@ Scene GameScene::draw(GameAction& action, Scene scene, Level& level, LevelScene&
                         scoreboard.ScoreNum += 6;
                         break;
                 }
+                //Mark the matching time to delay the disappearance of the path
                 gameboard.MatchingTime = GetTime();
+
+                scoreboard.updateMessage (gameboard.selector, gameboard.selected, gameboard.MatchType);
+
                 //Unshow pokemon == delete
                 gameboard.pokemons[gameboard.selector.y][gameboard.selector.x].unSeen();
                 gameboard.pokemons[gameboard.selected.y][gameboard.selected.x].unSeen();
@@ -598,6 +617,21 @@ Scene GameScene::draw(GameAction& action, Scene scene, Level& level, LevelScene&
         
     }
 
+    //Press '0'
+    if (IsKeyPressed(KEY_KP_0)) {
+        scoreboard.ScoreNum -= 2;
+        shuffle2D (gameboard.pokemons, gameboard.row, gameboard.col, gameboard.selector, gameboard.selected);
+    }
+
+    //Press '1'
+    if (IsKeyPressed(KEY_KP_1)) {
+        scoreboard.ScoreNum -= 4;
+        gameboard.MatchType = makeHint (gameboard.pokemons, gameboard.row, gameboard.col, gameboard.hint1_1, gameboard.hint1_2, gameboard.path);
+        gameboard.MatchingTime = GetTime();
+        gameboard.pokemons[gameboard.hint1_1.y][gameboard.hint1_1.x].unSeen();
+        gameboard.pokemons[gameboard.hint1_2.y][gameboard.hint1_2.x].unSeen();
+    }
+
     if (GetTime() - gameboard.MatchingTime < 0.5) {
         drawPath (gameboard.path, gameboard.pokemons[0][0]);
     }
@@ -605,6 +639,10 @@ Scene GameScene::draw(GameAction& action, Scene scene, Level& level, LevelScene&
     else {
         removePath (gameboard.path);
     }
+
+    //Draw Pokemons
+    gameboard.draw();
+    scoreboard.draw();
 
     //Player won
     if (gameboard.isEmpty()) {
@@ -625,10 +663,6 @@ Scene GameScene::draw(GameAction& action, Scene scene, Level& level, LevelScene&
 
         return PLAY;
     }
-
-    //Draw Pokemons
-    gameboard.draw();
-    scoreboard.draw();
 
     //Score < 0 or health back to 0 => Player lost
     if (scoreboard.ScoreNum < 0 || scoreboard.health <= 0) {

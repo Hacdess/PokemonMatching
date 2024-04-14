@@ -3,3 +3,15 @@ Easy,TKin2005,52,00:01:12
 Easy,TKin,52,00:00:58
 Easy,Guest,52,00:00:43
 Easy,Guest,50,00:00:29
+Medium,Guest,108,00:03:10
+Hard,Guest,184,00:09:18
+Easy,TKin,50,00:00:44
+Easy,TKin,48,00:00:31
+Easy,TKin,42,00:00:46
+Easy,Guest,50,00:01:04
+Easy,Guest,52,00:00:57
+Easy,Guest,32,00:00:39
+Easy,Guest,66,00:01:27
+Easy,Guest,50,00:01:12
+Easy,Guest,26,00:00:33
+Easy,Guest,34,00:00:35

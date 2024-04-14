@@ -64,9 +64,8 @@ void addText (char*& dest, const char* content) {
 //Update dest text with new content
 void updateText (char*& dest, const char* content) {
     delete[] dest;
-    dest = NULL;
+    addText (dest, content);
     dest = new char[strlen(content) + 1];
-    strcpy (dest, content);
 }
 
 char* StoA (const string& s) {
