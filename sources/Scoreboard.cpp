@@ -1,21 +1,30 @@
 #include "../headers/GamePlay/Scoreboard.h"
 
-void ScoreBoard::setup(const char* username) {
+void ScoreBoard::setup(const bool& isDual, const char* username) {
     //The box of scoreboard
-    border = {
-        float (WinWdith) / 3 * 2,
-        float (WinHeight) / 4,
-        float (WinHeight) / 2,
-        float (WinHeight) / 2
-    };
+    if (!isDual) {
+        border = {
+            float (WinWdith) / 3 * 2,
+            float (WinHeight) / 4,
+            float (WinHeight) / 2,
+            float (WinHeight) / 2
+        };
+    }
 
+    else {
+        border = {
+            float (WinWdith) / 3 * 2,
+            float (WinHeight) / 5,
+            float (WinHeight) / 2,
+            float (WinHeight) / 5 * 3
+        };
+    }
 
     //"Scoreboard" word on the top
-    Title.content = new char[strlen("Scoreboard") + 1];
-    strcpy (Title.content, "Scoreboard");
+    addText (Title.content, "Scoreboard");
     Title.FontSize = HealthUnit;
     Title.FontColor = RED;
-    Title.ContentLength = MeasureText ("Scoreboard", Title.FontSize);
+    Title.ContentLength = MeasureText (Title.content, Title.FontSize);
     Title.pos = {
         border.x + (border.width - Title.ContentLength) / 2,
         border.y + HealthUnit / 2

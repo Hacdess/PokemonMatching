@@ -100,7 +100,7 @@ Scene ResultScene::draw(GameAction& action) {
             delete[] time.content;
             delete[] score.content;
         }
-        action = ChooseLevel;
+        action = ChooseGameMode;
         return PLAY;
     }
 

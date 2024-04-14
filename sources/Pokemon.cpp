@@ -4,6 +4,7 @@
 
 void init(SceneManager& game) {
     game.MenuScreen.setup();
+    game.GameModeScreen.setup();
     game.LevelScreen.setup();
     game.GameScreen.gameboard.PokemonsImg = readImage(50);
 }
@@ -11,7 +12,8 @@ void init(SceneManager& game) {
 int main() {
     bool isSigned = 0;
     Scene scene = MENU;
-    GameAction action = ChooseLevel;
+    GameAction action = ChooseGameMode;
+    bool isDual;
     Level level;
 
     //Init Window
@@ -70,7 +72,7 @@ int main() {
                 break;
 
             case PLAY:
-                scene = game.GameScreen.draw(action, scene, level, game.LevelScreen, game.MenuScreen.username);
+                scene = game.GameScreen.draw (action, isDual, level, game.GameModeScreen, game.LevelScreen, game.MenuScreen.username);
                 break;
 
             case RANK:

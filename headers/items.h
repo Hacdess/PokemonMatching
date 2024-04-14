@@ -34,8 +34,8 @@ const Font GameFont = GetFontDefault();
 
 //Game Level
 enum Scene {MENU, SIGNUP, SIGNIN, PLAY, SETTING, RANK, EXIT};
-enum Level {EASY, MEDIUM, HARD, NOT_CHOSE};
-enum GameAction {ChooseLevel, LoadGame, PlayGame, ShowResult, End};
+enum Level {EASY, MEDIUM, HARD, NOT_CHOSE_LEVEL};
+enum GameAction {ChooseGameMode,ChooseLevel, LoadGame, PlayGame, ShowResult, End};
 enum MatchingType {None, I, L, U, Z};
 
 //General Structs

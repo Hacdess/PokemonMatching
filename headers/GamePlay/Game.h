@@ -27,7 +27,7 @@ struct GameBoard {
 
     short row, col;
     Pokemon** pokemons;
-    Selector2D selector = {1,1}, selected = {0, 0};
+    Selector2D selector = {1,1}, selected = {0, 0}, player2 = {1, 1};
 
     Node* path = NULL;
     float MatchingTime = 0;
@@ -48,5 +48,5 @@ struct GameScene {
     ResultScene ResultScreen;
 
     void setup();
-    Scene draw(GameAction& action, Scene scene, Level& level, LevelScene& LEVEL, const char* username);
+    Scene draw(GameAction& action, bool& isDual, Level& level, GameModeScene& GameModeScreen, LevelScene& LevelScreen, const char* username);
 };

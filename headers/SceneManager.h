@@ -6,6 +6,7 @@
 
 struct SceneManager {
     MenuScene MenuScreen;
+    GameModeScene GameModeScreen;
     LevelScene LevelScreen;
     GameScene GameScreen;
     SignUpScene SignUpScreen;

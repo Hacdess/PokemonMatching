@@ -505,12 +505,16 @@ void GameScene::setup() {
 }
 
 //Manage Game scene
-Scene GameScene::draw(GameAction& action, Scene scene, Level& level, LevelScene& LevelScreen, const char* username) {
+Scene GameScene::draw(GameAction& action, bool& isDual, Level& level, GameModeScene& GameModeScreen, LevelScene& LevelScreen, const char* username) {
     //Choose the Level before playing
     //Level Screen loaded already so just draw the scene for level choosing
+    if (action == ChooseGameMode) {
+        isDual = GameModeScreen.draw(action);
+        return PLAY; 
+    }
+    
     if (action == ChooseLevel) {
         level = LevelScreen.draw(action); 
-        
         return PLAY;
     }
 
@@ -532,14 +536,14 @@ Scene GameScene::draw(GameAction& action, Scene scene, Level& level, LevelScene&
         }
 
         setup();
-        scoreboard.setup(username);
+        scoreboard.setup(isDual, username);
 
         //Done choosing level and loading game, now play the game
         action = PlayGame;
         return PLAY;
     }
 
-    else if (action == ShowResult) {
+    if (action == ShowResult) {
         if (!ResultScreen.isSet)
             ResultScreen.setup();
         ResultScreen.draw (action);
@@ -547,10 +551,9 @@ Scene GameScene::draw(GameAction& action, Scene scene, Level& level, LevelScene&
     }
 
     //This happen when Back to menu was selected, back to the Menu screen
-    else if (action == End) {
-        //The next time, the player would be asked to choose level again
-        action = ChooseLevel;
-
+    if (action == End) {
+        //The next time, the player would be asked to choose Gamemode again
+        action = ChooseGameMode;
         return MENU;
     }
 

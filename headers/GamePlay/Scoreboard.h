@@ -29,7 +29,7 @@ struct ScoreBoard {
     float markTime = 0;
     void updateTimeText();
 
-    void setup(const char* username);
+    void setup (const bool& isDual, const char* username);
 
     bool isUpdatedPlayerName = 0;
     void updatePlayer(char* name);
