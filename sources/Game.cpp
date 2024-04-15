@@ -416,15 +416,23 @@ void GameBoard::createTable (const short& quantity) {
         startY = startY + sizePokemon + padding;
     }
 
+    selector = {1,1};
+    selected = {0,0};
+    player2 = {1,1};
+    selected2 = {0,0};
+
     delete[] temp;
 }
 
 //Draw the GameBoard
-void GameBoard::draw() {
+void GameBoard::draw(const bool& isDual) {
     short i, j;
     for (i = 0; i < row; i ++)
         for (j = 0; j < col; j ++) {
-            if (selector.y == i && selector.x == j) {
+            if (
+                (selector.y == i && selector.x == j) ||
+                (isDual && player2.y == i && player2.x == j)
+            ) {
                 pokemons[i][j].back = WHITE;
                 if (!pokemons[i][j].shown)
                     DrawRectangleRec (pokemons[i][j].border, SlightGrayTrans);
@@ -521,18 +529,18 @@ Scene GameScene::draw(GameAction& action, bool& isDual, Level& level, GameModeSc
     //Load gamne before playing
     if (action == LoadGame) {
         if (level == EASY) {
-            gameboard.row = 6;
-            gameboard.col = 8;
-        }
-
-        if (level == MEDIUM) {
             gameboard.row = 8;
             gameboard.col = 10;
         }
 
-        if (level == HARD) {
+        if (level == MEDIUM) {
             gameboard.row = 10;
             gameboard.col = 12;
+        }
+
+        if (level == HARD) {
+            gameboard.row = 12;
+            gameboard.col = 14;
         }
 
         setup();
@@ -622,20 +630,34 @@ Scene GameScene::draw(GameAction& action, bool& isDual, Level& level, GameModeSc
         
     }
 
-    //Press '0'
-    if (IsKeyPressed(KEY_KP_0)) {
+    //Press 'O'
+    if (IsKeyPressed(KEY_O)) {
         scoreboard.ScoreNum -= 2;
         shuffle2D (gameboard.pokemons, gameboard.row, gameboard.col, gameboard.selector, gameboard.selected);
     }
+    //Press 'R'
+    if (IsKeyPressed(KEY_R)) {
+        scoreboard.ScoreNum2 -= 2;
+        shuffle2D (gameboard.pokemons, gameboard.row, gameboard.col, gameboard.selector, gameboard.selected);
+    }
 
-    //Press '1'
-    if (IsKeyPressed(KEY_KP_1)) {
+    //Press 'P'
+    if (IsKeyPressed(KEY_P)) {
         scoreboard.ScoreNum -= 4;
         gameboard.MatchType = makeHint (gameboard.pokemons, gameboard.row, gameboard.col, gameboard.hint1_1, gameboard.hint1_2, gameboard.path);
         gameboard.MatchingTime = GetTime();
         scoreboard.updateMessage1 (gameboard.hint1_1, gameboard.hint1_2, gameboard.MatchType);
         gameboard.pokemons[gameboard.hint1_1.y][gameboard.hint1_1.x].unSeen();
         gameboard.pokemons[gameboard.hint1_2.y][gameboard.hint1_2.x].unSeen();
+    }
+    //Press 'H'
+    if (IsKeyPressed(KEY_H)) {
+        scoreboard.ScoreNum2 -= 4;
+        gameboard.MatchType = makeHint (gameboard.pokemons, gameboard.row, gameboard.col, gameboard.hint1_1, gameboard.hint1_2, gameboard.path);
+        gameboard.MatchingTime = GetTime();
+        scoreboard.updateMessage1 (gameboard.hint2_1, gameboard.hint2_2, gameboard.MatchType);
+        gameboard.pokemons[gameboard.hint2_1.y][gameboard.hint2_1.x].unSeen();
+        gameboard.pokemons[gameboard.hint2_2.y][gameboard.hint2_2.x].unSeen();
     }
 
     if (GetTime() - gameboard.MatchingTime < 0.5) {
@@ -647,7 +669,7 @@ Scene GameScene::draw(GameAction& action, bool& isDual, Level& level, GameModeSc
     }
 
     //Draw Pokemons
-    gameboard.draw();
+    gameboard.draw(isDual);
     scoreboard.draw(isDual);
 
     //Player won

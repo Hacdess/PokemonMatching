@@ -27,7 +27,7 @@ struct GameBoard {
 
     short row, col;
     Pokemon** pokemons;
-    Selector2D selector = {1,1}, selected = {0, 0}, player2 = {1, 1};
+    Selector2D selector, selected, player2, selected2;
 
     Node* path = NULL;
     float MatchingTime = 0;
@@ -38,7 +38,7 @@ struct GameBoard {
     void createTable (const short& quantity);
     bool isEmpty();
     bool checkMatchAble();
-    void draw();
+    void draw(const bool& isDual);
 };
 
 struct GameScene {
