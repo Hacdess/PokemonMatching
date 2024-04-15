@@ -4,7 +4,7 @@
 struct GameModeScene {
     float time;
     Color background;
-    TextBox TextBoxs[3];
+    TextBox TextBoxs[4];
     short selector;
 
     void setup();

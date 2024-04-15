@@ -480,7 +480,7 @@ void storeResult (const ScoreBoard& scoreboard, const Level& level) {
         return;
     }
 
-    fout << stage << ',' << scoreboard.Player.content << ',' << scoreboard.ScoreText.content << ',' << scoreboard.TimeText.content << endl;
+    fout << stage << ',' << scoreboard.Player[0].content << ',' << scoreboard.ScoreText[0].content << ',' << scoreboard.TimeText.content << endl;
 
     fout.close();
 }
@@ -566,6 +566,8 @@ Scene GameScene::draw(GameAction& action, bool& isDual, Level& level, GameModeSc
 
     //Selector Dealing
     moveSelector2D (gameboard.selector, 1, 1, gameboard.col - 2, gameboard.row - 2);
+    if (isDual)
+        moveSelector2DPlayer2 (gameboard.player2, 1, 1, gameboard.col - 2, gameboard.row - 2);
 
     //Selected Pokemons
     if (IsKeyPressed(KEY_ENTER)) {
@@ -592,7 +594,7 @@ Scene GameScene::draw(GameAction& action, bool& isDual, Level& level, GameModeSc
                 //Mark the matching time to delay the disappearance of the path
                 gameboard.MatchingTime = GetTime();
 
-                scoreboard.updateMessage (gameboard.selector, gameboard.selected, gameboard.MatchType);
+                scoreboard.updateMessage1 (gameboard.selector, gameboard.selected, gameboard.MatchType);
 
                 //Unshow pokemon == delete
                 gameboard.pokemons[gameboard.selector.y][gameboard.selector.x].unSeen();
@@ -631,7 +633,7 @@ Scene GameScene::draw(GameAction& action, bool& isDual, Level& level, GameModeSc
         scoreboard.ScoreNum -= 4;
         gameboard.MatchType = makeHint (gameboard.pokemons, gameboard.row, gameboard.col, gameboard.hint1_1, gameboard.hint1_2, gameboard.path);
         gameboard.MatchingTime = GetTime();
-        scoreboard.updateMessage (gameboard.hint1_1, gameboard.hint1_2, gameboard.MatchType);
+        scoreboard.updateMessage1 (gameboard.hint1_1, gameboard.hint1_2, gameboard.MatchType);
         gameboard.pokemons[gameboard.hint1_1.y][gameboard.hint1_1.x].unSeen();
         gameboard.pokemons[gameboard.hint1_2.y][gameboard.hint1_2.x].unSeen();
     }
@@ -646,7 +648,7 @@ Scene GameScene::draw(GameAction& action, bool& isDual, Level& level, GameModeSc
 
     //Draw Pokemons
     gameboard.draw();
-    scoreboard.draw();
+    scoreboard.draw(isDual);
 
     //Player won
     if (gameboard.isEmpty()) {
@@ -657,12 +659,17 @@ Scene GameScene::draw(GameAction& action, bool& isDual, Level& level, GameModeSc
             delete[] gameboard.pokemons;
             action = ShowResult;
 
+            if (isDual) {
+                action = ChooseGameMode;
+                return PLAY;
+            }
+
             storeResult (scoreboard, level);
             //Assign some information for the result scene
             ResultScreen.isVictory = 1;
-            ResultScreen.player.content = scoreboard.Player.content;
+            ResultScreen.player.content = scoreboard.Player[0].content;
             ResultScreen.time.content = scoreboard.TimeText.content;
-            ResultScreen.score.content = scoreboard.ScoreText.content; 
+            ResultScreen.score.content = scoreboard.ScoreText[0].content; 
         }
 
         return PLAY;

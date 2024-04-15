@@ -14,9 +14,9 @@ void ScoreBoard::setup(const bool& isDual, const char* username) {
     else {
         border = {
             float (WinWdith) / 3 * 2,
-            float (WinHeight) / 5,
+            float (WinHeight) / 12,
             float (WinHeight) / 2,
-            float (WinHeight) / 5 * 3
+            float (WinHeight) * 5 / 6
         };
     }
 
@@ -43,60 +43,59 @@ void ScoreBoard::setup(const bool& isDual, const char* username) {
     };
 
     //At first, it's not login yet so the player name is "Guest"
-    if (username == NULL) {
-        Player.content = new char[strlen("Guest") + 1];
-        strcpy (Player.content, "Guest");
+    if (isDual) {
+        addText (Player[0].content, "Player 1");
     }
     else {
-        Player.content = new char[strlen(username) + 1];
-        strcpy (Player.content, username);
+        if (username == NULL)
+            addText (Player[0].content, "Guest");
+        else 
+            addText (Player[0].content, username);
     }
-    Player.FontSize = HealthUnit * 0.75f;
-    Player.FontColor = WHITE;
-    Player.ContentLength = MeasureText (Player.content, Player.FontSize);
-    Player.pos = {
-        border.x + (border.width - Player.ContentLength) / 2,
-        TimeText.pos.y + TimeText.FontSize * 1.25f
+
+
+    Player[0].FontSize = HealthUnit * 0.75f;
+    Player[0].FontColor = RED;
+    Player[0].ContentLength = MeasureText (Player[0].content, Player[0].FontSize);
+    Player[0].pos = {
+        border.x + (border.width - Player[0].ContentLength) / 2,
+        TimeText.pos.y + TimeText.FontSize * 1.5f
     };
 
     //HP Bar
-    HP_Bar = {
+    HP_Bar[0] = {
         border.x + (border.width - HealthFull) / 2,
-        HP_Bar.y = Player.pos.y + Player.FontSize * 1.1f,
+        HP_Bar[0].y = Player[0].pos.y + Player[0].FontSize * 1.1f,
         HealthFull,
         HealthUnit * 0.75f
     };
     health = 5;
-    HP.x = HP_Bar.x;
-    HP.y = HP_Bar.y;
-    HP.width = HealthUnit * health;
-    HP.height = HP_Bar.height;
+    HP[0].x = HP_Bar[0].x;
+    HP[0].y = HP_Bar[0].y;
+    HP[0].width = HealthUnit * health;
+    HP[0].height = HP_Bar[0].height;
 
     //At first, the score = 0
     ScoreNum = 0;
-    ScoreText.content = new char[2];
-    strcpy (ScoreText.content, "0");
-    ScoreText.FontSize = HealthUnit * 0.75f;
-    ScoreText.FontColor = WHITE;
-    ScoreText.ContentLength = MeasureText (ScoreText.content, ScoreText.FontSize);
-    ScoreText.pos = {
-        border.x + (border.width - ScoreText.ContentLength) / 2,
-        HP_Bar.y + HP_Bar.height * 1.2f
+    addText (ScoreText[0].content, "0");
+    ScoreText[0].FontSize = HealthUnit * 0.75f;
+    ScoreText[0].FontColor = RED;
+    ScoreText[0].ContentLength = MeasureText (ScoreText[0].content, ScoreText[0].FontSize);
+    ScoreText[0].pos = {
+        border.x + (border.width - ScoreText[0].ContentLength) / 2,
+        HP_Bar[0].y + HP_Bar[0].height * 1.2f
     };
 
     //There are 3 guides:
-    //Press '1' for hint
-    Guide[0].content = new char[strlen("Press '1' for hint") + 1];
-    strcpy (Guide[0].content, "Press '1' for hint");
     //Press '0' for shuffle
-    Guide[1].content = new char[strlen("Press '0' for shuffle") + 1];
-    strcpy (Guide[1].content, "Press '0' for shuffle");
+    addText (Guide[0].content, "Press '0' for shuffle");
+    //Press '1' for hint
+    addText (Guide[1].content, "Press '1' for hint");
     //-4 / hint, -2 / shuffle
-    Guide[2].content = new char[strlen("-4/hint, -2/shuffle") + 1];
-    strcpy (Guide[2].content, "-4/hint, -2/shuffle");
+    addText (Guide[2].content, "-2 / shuffle, -4 / hint");
 
     short i;
-    float startY = ScoreText.pos.y + ScoreText.FontSize * 1.1f;
+    float startY = ScoreText[0].pos.y + ScoreText[0].FontSize * 1.1f;
 
     for (i = 0; i < 3; i ++) {
         Guide[i].FontSize = HealthUnit * 0.45f;
@@ -109,38 +108,116 @@ void ScoreBoard::setup(const bool& isDual, const char* username) {
         startY = startY + Guide[i].FontSize * 1.2f;
     }
 
-    addText (Message.content, "Enjoy the game");
-    Message.FontSize = HealthUnit * 0.5f;
-    Message.FontColor = CYAN;
-    Message.ContentLength = MeasureText (Message.content, Message.FontSize);
-    Message.pos = {
-        border.x + (border.width - Message.ContentLength) / 2,
+    addText (Message[0].content, "Enjoy the game");
+    Message[0].FontSize = HealthUnit * 0.5f;
+    Message[0].FontColor = CYAN;
+    Message[0].ContentLength = MeasureText (Message[0].content, Message[0].FontSize);
+    Message[0].pos = {
+        border.x + (border.width - Message[0].ContentLength) / 2,
         Guide[2].pos.y + Guide[2].FontSize * 1.2f
     };
+
+    if (isDual) {
+        startY = Message[0].pos.y + Message[0].FontSize * 1.9f;
+
+        addText (Player[1].content, "Player 2");
+
+        Player[1].FontSize = HealthUnit * 0.75f;
+        Player[1].FontColor = PURPLE;
+        Player[1].ContentLength = MeasureText (Player[1].content, Player[1].FontSize);
+        Player[1].pos = {
+            border.x + (border.width - Player[1].ContentLength) / 2,
+            startY
+        };
+
+        //HP Bar
+        HP_Bar[1] = {
+            border.x + (border.width - HealthFull) / 2,
+            HP_Bar[1].y = Player[1].pos.y + Player[1].FontSize * 1.1f,
+            HealthFull,
+            HealthUnit * 0.75f
+        };
+        health2 = 5;
+        HP[1].x = HP_Bar[1].x;
+        HP[1].y = HP_Bar[1].y;
+        HP[1].width = HealthUnit * health;
+        HP[1].height = HP_Bar[1].height;
+
+        //At first, the score = 0
+        ScoreNum2 = 0;
+        addText (ScoreText[1].content, "0");
+        ScoreText[1].FontSize = HealthUnit * 0.75f;
+        ScoreText[1].FontColor = PURPLE;
+        ScoreText[1].ContentLength = MeasureText (ScoreText[1].content, ScoreText[1].FontSize);
+        ScoreText[1].pos = {
+            border.x + (border.width - ScoreText[1].ContentLength) / 2,
+            HP_Bar[1].y + HP_Bar[1].height * 1.2f
+        };
+
+        //There are 3 guides:
+        //Press '0' for shuffle
+        addText (Guide[3].content, "Press 'g' for shuffle");
+        //Press '1' for hint
+        addText (Guide[4].content, "Press 'h' for hint");
+        //-4 / hint, -2 / shuffle
+        addText (Guide[5].content, "-2 / shuffle, -4 / hint");
+
+        short i;
+        float startY = ScoreText[1].pos.y + ScoreText[1].FontSize * 1.1f;
+
+        for (i = 3; i < 6; i ++) {
+            Guide[i].FontSize = HealthUnit * 0.45f;
+            Guide[i].FontColor = PINK;
+            Guide[i].ContentLength = MeasureText (Guide[i].content, Guide[i].FontSize);
+            Guide[i].pos = {
+                border.x + (border.width - Guide[i].ContentLength) / 2,
+                startY
+            };
+            startY = startY + Guide[i].FontSize * 1.2f;
+        }
+
+        addText (Message[1].content, "Enjoy the game");
+        Message[1].FontSize = HealthUnit * 0.5f;
+        Message[1].FontColor = CYAN;
+        Message[1].ContentLength = MeasureText (Message[1].content, Message[1].FontSize);
+        Message[1].pos = {
+            border.x + (border.width - Message[1].ContentLength) / 2,
+            Guide[5].pos.y + Guide[5].FontSize * 1.2f
+        };
+
+    }
 
     markTime = GetTime();
 }
 
 void ScoreBoard::updatePlayer(char* name) {
-    delete[] Player.content;
-    Player.content = new char[strlen(name) + 1];
-
-    strcpy (Player.content, name);
+    delete[] Player[0].content;
+    addText (Player[0].content, name);
 }
 
-void ScoreBoard::updateHP() {
-    HP.width = HealthUnit * health;
+void ScoreBoard::updateHP(const bool& isDual) {
+    HP[0].width = HealthUnit * health;
+    if (isDual)
+        HP[1].width = HealthUnit * health2;
 }
 
 //The score changes so it must be updated
-void ScoreBoard::updateScoreText() {
-    delete [] ScoreText.content;
-    ScoreText.content = NULL;
-
+void ScoreBoard::updateScoreText(const bool& isDual) {
+    delete [] ScoreText[0].content;
+    ScoreText[0].content = NULL;
     string s = to_string (ScoreNum);
-    ScoreText.content = StoA(s);
-    ScoreText.ContentLength = MeasureText (ScoreText.content, ScoreText.FontSize);
-    ScoreText.pos.x = border.x + (border.width - ScoreText.ContentLength) / 2;
+    addText (ScoreText[0].content, StoA(s));
+    ScoreText[0].ContentLength = MeasureText (ScoreText[0].content, ScoreText[0].FontSize);
+    ScoreText[0].pos.x = border.x + (border.width - ScoreText[0].ContentLength) / 2;
+
+    if (isDual) {
+        delete [] ScoreText[1].content;
+        ScoreText[1].content = NULL;
+        s = to_string (ScoreNum2);
+        addText (ScoreText[1].content, StoA(s));
+        ScoreText[1].ContentLength = MeasureText (ScoreText[1].content, ScoreText[0].FontSize);
+        ScoreText[1].pos.x = border.x + (border.width - ScoreText[1].ContentLength) / 2;
+    }
 }
 
 void ScoreBoard::updateTimeText() {
@@ -156,7 +233,7 @@ void ScoreBoard::updateTimeText() {
     }
 }
 
-void ScoreBoard::updateMessage(const Selector2D& pokemon1, const Selector2D& pokemon2, const MatchingType& MatchType) {
+void ScoreBoard::updateMessage1(const Selector2D& pokemon1, const Selector2D& pokemon2, const MatchingType& MatchType) {
     string temp = "";
     if (MatchType == I)
         temp += "I Matching: ";
@@ -169,14 +246,34 @@ void ScoreBoard::updateMessage(const Selector2D& pokemon1, const Selector2D& pok
 
     temp = temp + '(' + to_string(pokemon1.x) + ',' + to_string(pokemon1.y) + ") - (" + to_string(pokemon2.x) + ',' + to_string(pokemon2.y) + ')';
 
-    delete[] Message.content;
-    addText (Message.content, StoA (temp));
+    delete[] Message[0].content;
+    addText (Message[0].content, StoA (temp));
 
-    Message.ContentLength = MeasureText (Message.content, Message.FontSize);
-    Message.pos.x = border.x + (border.width - Message.ContentLength) / 2;
+    Message[0].ContentLength = MeasureText (Message[0].content, Message[0].FontSize);
+    Message[0].pos.x = border.x + (border.width - Message[0].ContentLength) / 2;
 }
 
-void ScoreBoard::draw() {
+void ScoreBoard::updateMessage2(const Selector2D& pokemon1, const Selector2D& pokemon2, const MatchingType& MatchType) {
+    string temp = "";
+    if (MatchType == I)
+        temp += "I Matching: ";
+    if (MatchType == L)
+        temp += "L Matching: ";
+    if (MatchType == U)
+        temp += "U Matching: ";
+    if (MatchType == Z)
+        temp += "Z Matching: ";
+
+    temp = temp + '(' + to_string(pokemon1.x) + ',' + to_string(pokemon1.y) + ") - (" + to_string(pokemon2.x) + ',' + to_string(pokemon2.y) + ')';
+
+    delete[] Message[1].content;
+    addText (Message[1].content, StoA (temp));
+
+    Message[1].ContentLength = MeasureText (Message[1].content, Message[1].FontSize);
+    Message[1].pos.x = border.x + (border.width - Message[1].ContentLength) / 2;
+}
+
+void ScoreBoard::draw(const bool& isDual) {
     //Draw the border of ScoreBoard
     DrawRectangleRec (border, background);
 
@@ -201,21 +298,42 @@ void ScoreBoard::draw() {
     }
     DrawText (Title.content, Title.pos.x, Title.pos.y, Title.FontSize, Title.FontColor);
     //Player name
-    DrawText (Player.content, Player.pos.x, Player.pos.y, Player.FontSize, Player.FontColor);
+    DrawText (Player[0].content, Player[0].pos.x, Player[0].pos.y, Player[0].FontSize, Player[0].FontColor);
     //HP bar
-    updateHP();
-    DrawRectangleRec (HP_Bar, HP_Bar_Color);
-    DrawRectangleRec (HP, HP_Color);
-    //Score
-    updateScoreText();
-    DrawText (ScoreText.content, ScoreText.pos.x, ScoreText.pos.y, ScoreText.FontSize, ScoreText.FontColor);
+    updateHP(isDual);
+    DrawRectangleRec (HP_Bar[0], HP_Bar_Color);
+    DrawRectangleRec (HP[0], HP_Color);
     //Play time
     updateTimeText();
     DrawText (TimeText.content, TimeText.pos.x, TimeText.pos.y, TimeText.FontSize, TimeText.FontColor);
+    //Score
+    updateScoreText(isDual);
+    DrawText (ScoreText[0].content, ScoreText[0].pos.x, ScoreText[0].pos.y, ScoreText[0].FontSize, ScoreText[0].FontColor);
     //Guides
     short i;
     for (i = 0; i < 3; i ++)
         DrawText (Guide[i].content, Guide[i].pos.x, Guide[i].pos.y, Guide[i].FontSize, Guide[i].FontColor);
     //Message
-    DrawText (Message.content, Message.pos.x, Message.pos.y, Message.FontSize, Message.FontColor);
+    DrawText (Message[0].content, Message[0].pos.x, Message[0].pos.y, Message[0].FontSize, Message[0].FontColor);
+
+    if (isDual) {
+        //Player name
+        DrawText (Player[1].content, Player[1].pos.x, Player[1].pos.y, Player[1].FontSize, Player[1].FontColor);
+        //HP bar
+        updateHP(isDual);
+        DrawRectangleRec (HP_Bar[1], HP_Bar_Color);
+        DrawRectangleRec (HP[1], HP_Color);
+        //Play time
+        updateTimeText();
+        DrawText (TimeText.content, TimeText.pos.x, TimeText.pos.y, TimeText.FontSize, TimeText.FontColor);
+        //Score
+        updateScoreText(isDual);
+        DrawText (ScoreText[1].content, ScoreText[1].pos.x, ScoreText[1].pos.y, ScoreText[1].FontSize, ScoreText[1].FontColor);
+        //Guides
+        short i;
+        for (i = 3; i < 6; i ++)
+            DrawText (Guide[i].content, Guide[i].pos.x, Guide[i].pos.y, Guide[i].FontSize, Guide[i].FontColor);
+        //Message
+        DrawText (Message[1].content, Message[1].pos.x, Message[1].pos.y, Message[1].FontSize, Message[1].FontColor);
+    }
 }

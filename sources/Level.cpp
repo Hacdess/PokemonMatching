@@ -15,6 +15,7 @@ void GameModeScene::setup() {
     //Choose Level Textboxs
     addText (TextBoxs[1].content, "SINGLE");
     addText (TextBoxs[2].content, "DUAL");
+    addText (TextBoxs[3].content, "GO BACK");
 
     float   startY = float(WinHeight) / 2,
             height = TextBoxs[0].FontSize,
@@ -22,7 +23,7 @@ void GameModeScene::setup() {
             spacing = FontSize / 5;
 
     short i;
-    for (i = 1; i < 3; i ++) {
+    for (i = 1; i < 4; i ++) {
         TextBoxs[i].FontColor = WHITE;
         TextBoxs[i].BorderColor = SlightGrayTrans;
         TextBoxs[i].FontSize = FontSize;
@@ -55,7 +56,7 @@ void LevelScene::setup() {
     addText (TextBoxs[1].content, "EASY GAME");
     addText (TextBoxs[2].content, "MEDIUM RARE");
     addText (TextBoxs[3].content, "HARDCORE");
-    addText (TextBoxs[4].content, "BACK TO MENU");
+    addText (TextBoxs[4].content, "GO BACK");
 
     float   startY = float(WinHeight) / 2,
             height = TextBoxs[0].FontSize,
@@ -89,10 +90,10 @@ bool GameModeScene::draw(GameAction& action) {
         time = GetTime();
     }
 
-    moveSelector1D (selector, 1, 2);
+    moveSelector1D (selector, 1, 3);
 
     short i;
-    for (i = 0; i < 3; i ++) {
+    for (i = 0; i < 4; i ++) {
         if (i != 0) {
             if (selector == i) {
                 TextBoxs[i].BorderColor = WHITE;
@@ -119,6 +120,11 @@ bool GameModeScene::draw(GameAction& action) {
             action = ChooseLevel;
             selector = 1;
             return 1;
+        }
+        if (selector == 3) {
+            action = End;
+            selector = 1;
+            return 0;
         }
     }
 
@@ -175,7 +181,7 @@ Level LevelScene::draw(GameAction& action) {
         }
         if (selector == 4) {
             selector = 1;
-            action = End; 
+            action = ChooseGameMode; 
         }
     }
     return NOT_CHOSE_LEVEL;
