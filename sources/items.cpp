@@ -23,13 +23,6 @@ void DeallocateTextbox1D (TextBox* textbox, const short& size) {
         delete[] textbox[i].content;
 }
 
-void DeallocateTextbox2D (TextBox** textbox, const short & row, const short& col) {
-    short i, j;
-    for (i = 0; i < row; i ++)
-        for (j = 0; j < col; j ++)
-            delete[] textbox[i][j].content;
-}
-
 void DeallocateDynamicTextbox1D (TextBox* textbox, const short& size) {
     short i;
     for (i = 0; i < size; i ++)

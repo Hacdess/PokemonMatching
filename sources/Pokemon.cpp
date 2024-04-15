@@ -6,7 +6,11 @@ void init(SceneManager& game) {
     game.MenuScreen.setup();
     game.GameModeScreen.setup();
     game.LevelScreen.setup();
-    game.GameScreen.gameboard.PokemonsImg = readImage(50);
+    game.GuideScreen.setup();
+    //Getting the backgrounds here makes it slow at the beginning but faster when starting playing
+    game.GameScreen.backgrounds = readImageBackground(11);
+    game.GameScreen.gameboard.PokemonsImg = readImagePokemon(50);
+    game.GameScreen.gameboard.Hiddens = readImageHidden(6);
 }
 
 int main() {
@@ -36,6 +40,12 @@ int main() {
                 scene = game.MenuScreen.draw(isSigned);
                 break;
 
+            case GUIDE:
+                if (!game.GuideScreen.set)
+                    game.GuideScreen.setup();
+                else
+                    scene = game.GuideScreen.draw ();
+                break;
 
             case SIGNUP:
                 if (!game.SignUpScreen.set)
@@ -86,12 +96,25 @@ int main() {
                 CloseWindow();
                 UnloadImage(icon);
                 UnloadFont(GameFont);
-                
+                UnloadTexture (game.GameScreen.background);
+                UnloadTexture (game.GameScreen.gameboard.HiddenBackground);
+                UnloadTexture (game.SignInScreen.background);
+                UnloadTexture (game.SignUpScreen.background);
+
                 //deadllocate
                 short i;
                 for (i = 0; i < 50; i ++)
                     UnloadTexture (game.GameScreen.gameboard.PokemonsImg[i]);
                 delete[] game.GameScreen.gameboard.PokemonsImg;
+
+                for (i = 0; i < 6; i ++)
+                    UnloadTexture (game.GameScreen.gameboard.Hiddens[i]);
+                delete[] game.GameScreen.gameboard.Hiddens;
+
+                for (i = 0; i < 11; i ++)
+                    UnloadTexture (game.GameScreen.backgrounds[i]);
+                delete[] game.GameScreen.backgrounds;
+
                 return 0;
         }
         

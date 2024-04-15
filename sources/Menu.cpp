@@ -7,14 +7,12 @@ void MenuScene::setup() {
     UnloadImage(img);
 
     //Store Title
-    title[0].content = new char [strlen("POKEMON") + 1];
+    addText (title[0].content, "POKEMON");
+    addText (title[1].content, "MATCHING");
     title[0].FontColor = RED;
-    strcpy(title[0].content, "POKEMON");
-    title[1].content = new char [strlen("MATCHING") + 1];
     title[1].FontColor = YELLOW;
-    strcpy(title[1].content, "MATCHING");
 
-    unsigned short int i, j;
+    short int i, j;
     float   startY = float(WinHeight) / 4,
             startX = float(WinWdith) / 5,
             FontSize = float(WinHeight) / 8,
@@ -32,23 +30,12 @@ void MenuScene::setup() {
     }
 
     //Buttons
-    buttons[0][0].content = new char[strlen("Sign up") + 1];
-    strcpy(buttons[0][0].content, "Sign up");
-
-    buttons[0][1].content = new char[strlen("Play Game") + 1];
-    strcpy(buttons[0][1].content, "Play Game");
-
-    buttons[0][2].content = new char[strlen("Setting") + 1];
-    strcpy(buttons[0][2].content, "Setting");
-
-    buttons[1][0].content = new char[strlen("Sign in") + 1];
-    strcpy(buttons[1][0].content, "Sign in");
-
-    buttons[1][1].content = new char[strlen("Leader Board") + 1];
-    strcpy(buttons[1][1].content, "Leader Board");
-
-    buttons[1][2].content = new char[strlen("Exit") + 1];
-    strcpy(buttons[1][2].content, "Exit");
+    addText (buttons[0][0].content, "Sign Up");
+    addText (buttons[0][1].content, "Play Game");
+    addText (buttons[0][2].content, "Guide");
+    addText (buttons[1][0].content, "Sign In");
+    addText (buttons[1][1].content, "Leader Board");
+    addText (buttons[1][2].content, "Exit");
 
     startY = startY + title[1].FontSize,
     startX = 0,
@@ -85,26 +72,22 @@ void updateStatus(const bool& isSigned, char*& content1, char*& content2, const 
     if (isSigned) {
         delete[] content1;
         content1 = NULL;
-        content1 = new char [strlen(newContent) + 1];
-        strcpy(content1, newContent);
+        addText (content1, newContent);
 
         delete[] content2;
         content2 = NULL;
-        content2 = new char [strlen("Sign out") + 1];
-        strcpy(content2, "Sign out");
+        addText (content2, "Sign Out");
     }
 
     //Not Signed
     else {
         delete[] content1;
         content1 = NULL;
-        content1 = new char [strlen("Sign up") + 1];
-        strcpy (content1, "Sign up");
+        addText (content1, "Sign Up");
 
         delete[] content2;
         content2 = NULL;
-        content2 = new char [strlen("Sign in") + 1];
-        strcpy (content2, "Sign in");
+        addText (content2, "Sign In");
     }
 }
 
@@ -154,10 +137,14 @@ Scene MenuScene::draw(bool& isSigned) {
 
             //Column: Setting and Exit
             if (selector.x == 2) {
-                if (selector.y == 0) {
-
-                }
+                if (selector.y == 0)
+                    return GUIDE;
                 if (selector.y == 1) {
+                    DeallocateTextbox1D (title, 2);
+                    short i, j;
+                    for (i = 0; i < 2; i ++)
+                        for (j = 0; j < 3; j ++)
+                            delete[] buttons[i][j].content;
                     UnloadTexture (background);
                     return EXIT;
                 }

@@ -12,4 +12,5 @@ struct SceneManager {
     SignUpScene SignUpScreen;
     SignInScene SignInScreen;
     LeaderboardSceen LeaderboardScreen;
+    GuideScene GuideScreen; 
 };

@@ -25,13 +25,13 @@ void moveSelector2D (Selector2D& selector, const short& startX, const short& sta
     if (selector.y > endY) selector.y = startY;
 }
 void moveSelector2DPlayer2(Selector2D &selector, const short &startX, const short &startY, const short &endX, const short &endY) {
-    if (IsKeyPressed(KEY_A))
+    if (IsKeyPressed(KEY_Z))
         selector.x --;
-    else if (IsKeyPressed(KEY_D))
+    else if (IsKeyPressed(KEY_C))
         selector.x ++;
-    else if (IsKeyPressed(KEY_W))
-        selector.y --;
     else if (IsKeyPressed(KEY_S))
+        selector.y --;
+    else if (IsKeyPressed(KEY_X))
         selector.y ++;
 
     if (selector.x < startX) selector.x = endX;

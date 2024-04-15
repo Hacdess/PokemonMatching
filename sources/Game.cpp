@@ -275,23 +275,60 @@ void Pokemon::unSeen() {
     shown = 0;
 }
 
-//Load images from folder
-Texture2D* readImage(const short int& quantity) {
-    //Location to img
-    string path = "resources/img/pokemon/pokemon";
+//Load images from folder to get backgrounds, then turn them into textures
+Texture2D* readImageBackground (const short int& quantity) {
+    //Location to image
+    string path;
     Texture2D *resTexture = new Texture2D[quantity];
 
     // Load image
     short int i;
-    for (i = 0; i < quantity; i++)
-    {
-        path = path + to_string(i) + ".png"; //picname
-
+    for (i = 0; i < quantity; i++) {
+        //path to pokemon
+        path = "resources/img/background/background" + to_string(i) + ".png";
         Image img = LoadImage(path.c_str());// load image
-        path = "resources/img/pokemon/pokemon";
         resTexture[i] = LoadTextureFromImage(img);// load texture from image
-        UnloadImage(img);// delete image after load
+        UnloadImage(img);// unload image after load
     }
+    
+    return resTexture;
+}
+
+//Load images from folder to get pokemons images, then turn them into textures
+Texture2D* readImagePokemon(const short int& quantity) {
+    //Location to image
+    string path;
+    Texture2D *resTexture = new Texture2D[quantity];
+
+    // Load image
+    short int i;
+    for (i = 0; i < quantity; i++) {
+        //path to pokemon
+        path = "resources/img/pokemon/pokemon" + to_string(i) + ".png";
+        Image img = LoadImage(path.c_str());// load image
+        resTexture[i] = LoadTextureFromImage(img);// load texture from image
+        UnloadImage(img);// unload image after load
+    }
+
+    return resTexture;
+}
+
+//Load images from folder to get hidden backgrounds of the gameboard, then turn them into textures
+Texture2D* readImageHidden(const short int& quantity) {
+    //Location to image
+    string path;
+    Texture2D *resTexture = new Texture2D[quantity];
+
+    // Load image
+    short int i;
+    for (i = 0; i < quantity; i++) {
+        //path to pokemon
+        path = "resources/img/hidden/hidden" + to_string(i) + ".png";
+        Image img = LoadImage(path.c_str());// load image
+        resTexture[i] = LoadTextureFromImage(img);// load texture from image
+        UnloadImage(img);// unload image after load
+    }
+
     return resTexture;
 }
 
@@ -306,14 +343,13 @@ void shuffle1D(Pokemon* Po1D, const short& size) {
 }
 
 //Shuffle the 2D pokemon array
-void shuffle2D(Pokemon** Po2D, const short& row, const short& col, Selector2D selector, Selector2D selected) {
+void shuffle2D(Pokemon** Po2D, const short& row, const short& col) {
     short i, j;
     for (i = 1; i < row - 1; i ++)
         for (j = 1; j < col - 1; j ++) {
             srand(time(0));
             swapPokemon(Po2D[i][j], Po2D[rand() % (row - 2) + 1][rand() % (col - 2) + 1]);
         }
-    selector = {1, 1}, selected = {0, 0};
 }
 
 bool GameBoard::checkMatchAble () {
@@ -496,20 +532,21 @@ void storeResult (const ScoreBoard& scoreboard, const Level& level) {
 //Set up required data for Game Play
 void GameScene::setup() {
     //Get Background
-    Image img = LoadImage("resources/img/background/background.png");
-    background = LoadTextureFromImage(img);
-    UnloadImage(img);
+    srand (time(0));
+    background = backgrounds[rand() % 11];
 
     //Get random Gameboard hidden background
     srand (time(0));
-    gameboard.HiddenBackground = gameboard.PokemonsImg[rand() % 50];
+    gameboard.HiddenBackground = gameboard.Hiddens[rand() % 6];
 
     //Get pokemons
     gameboard.createTable(50);
 
     //size of gameboard
-    gameboard.width = gameboard.pokemons[0][0].size * (gameboard.col - 2);
-    gameboard.height = gameboard.pokemons[0][0].size * (gameboard.row - 2);
+    gameboard.width = (gameboard.pokemons[0][0].size + gameboard.pokemons[0][0].size / 30) * (gameboard.col - 2);
+    gameboard.height = (gameboard.pokemons[0][0].size + gameboard.pokemons[0][0].size / 30) * (gameboard.row - 2);
+
+    EndTime = 0;
 }
 
 //Manage Game scene
@@ -529,18 +566,18 @@ Scene GameScene::draw(GameAction& action, bool& isDual, Level& level, GameModeSc
     //Load gamne before playing
     if (action == LoadGame) {
         if (level == EASY) {
+            gameboard.row = 6;
+            gameboard.col = 8;
+        }
+
+        if (level == MEDIUM) {
             gameboard.row = 8;
             gameboard.col = 10;
         }
 
-        if (level == MEDIUM) {
+        if (level == HARD) {
             gameboard.row = 10;
             gameboard.col = 12;
-        }
-
-        if (level == HARD) {
-            gameboard.row = 12;
-            gameboard.col = 14;
         }
 
         setup();
@@ -553,8 +590,8 @@ Scene GameScene::draw(GameAction& action, bool& isDual, Level& level, GameModeSc
 
     if (action == ShowResult) {
         if (!ResultScreen.isSet)
-            ResultScreen.setup();
-        ResultScreen.draw (action);
+            ResultScreen.setup(isDual);
+        ResultScreen.draw (action, isDual);
         return PLAY;
     }
 
@@ -574,10 +611,8 @@ Scene GameScene::draw(GameAction& action, bool& isDual, Level& level, GameModeSc
 
     //Selector Dealing
     moveSelector2D (gameboard.selector, 1, 1, gameboard.col - 2, gameboard.row - 2);
-    if (isDual)
-        moveSelector2DPlayer2 (gameboard.player2, 1, 1, gameboard.col - 2, gameboard.row - 2);
 
-    //Selected Pokemons
+    //Selected Pokemons player1
     if (IsKeyPressed(KEY_ENTER)) {
         gameboard.pokemons[gameboard.selector.y][gameboard.selector.x].selected = 1;
         
@@ -630,18 +665,13 @@ Scene GameScene::draw(GameAction& action, bool& isDual, Level& level, GameModeSc
         
     }
 
-    //Press 'O'
+    //Press 'O' to shuffe player 1
     if (IsKeyPressed(KEY_O)) {
         scoreboard.ScoreNum -= 2;
-        shuffle2D (gameboard.pokemons, gameboard.row, gameboard.col, gameboard.selector, gameboard.selected);
-    }
-    //Press 'R'
-    if (IsKeyPressed(KEY_R)) {
-        scoreboard.ScoreNum2 -= 2;
-        shuffle2D (gameboard.pokemons, gameboard.row, gameboard.col, gameboard.selector, gameboard.selected);
+        shuffle2D (gameboard.pokemons, gameboard.row, gameboard.col);
     }
 
-    //Press 'P'
+    //Press 'P' to makehint player 1
     if (IsKeyPressed(KEY_P)) {
         scoreboard.ScoreNum -= 4;
         gameboard.MatchType = makeHint (gameboard.pokemons, gameboard.row, gameboard.col, gameboard.hint1_1, gameboard.hint1_2, gameboard.path);
@@ -650,48 +680,148 @@ Scene GameScene::draw(GameAction& action, bool& isDual, Level& level, GameModeSc
         gameboard.pokemons[gameboard.hint1_1.y][gameboard.hint1_1.x].unSeen();
         gameboard.pokemons[gameboard.hint1_2.y][gameboard.hint1_2.x].unSeen();
     }
-    //Press 'H'
-    if (IsKeyPressed(KEY_H)) {
-        scoreboard.ScoreNum2 -= 4;
-        gameboard.MatchType = makeHint (gameboard.pokemons, gameboard.row, gameboard.col, gameboard.hint1_1, gameboard.hint1_2, gameboard.path);
-        gameboard.MatchingTime = GetTime();
-        scoreboard.updateMessage1 (gameboard.hint2_1, gameboard.hint2_2, gameboard.MatchType);
-        gameboard.pokemons[gameboard.hint2_1.y][gameboard.hint2_1.x].unSeen();
-        gameboard.pokemons[gameboard.hint2_2.y][gameboard.hint2_2.x].unSeen();
-    }
 
-    if (GetTime() - gameboard.MatchingTime < 0.5) {
+    //Draw path for 0.5 secs
+    if (GetTime() - gameboard.MatchingTime < 0.5)
         drawPath (gameboard.path, gameboard.pokemons[0][0]);
-    }
-
-    else {
+    else
         removePath (gameboard.path);
+
+    if (isDual) {
+        //Selector Dealing
+        moveSelector2DPlayer2 (gameboard.player2, 1, 1, gameboard.col - 2, gameboard.row - 2);
+
+        //Selected Pokemons player2
+        if (IsKeyPressed(KEY_SPACE)) {
+            gameboard.pokemons[gameboard.player2.y][gameboard.player2.x].selected = 1;
+            
+            //If one pokemon has been selected before
+            if (gameboard.selected2.x != 0) {
+                //Then check matching
+                gameboard.MatchType2 = checkMatching (gameboard.pokemons, gameboard.player2, gameboard.selected2, gameboard.row, gameboard.col, gameboard.path2);
+                //Correct Matching => add score
+                if (gameboard.MatchType2 != None) {
+                    switch (gameboard.MatchType2) {
+                        case I:
+                            scoreboard.ScoreNum2 += 2;
+                            break;
+                        case L:
+                            scoreboard.ScoreNum2 += 4;
+                            break;
+                        
+                        default:
+                            scoreboard.ScoreNum2 += 6;
+                            break;
+                    }
+                    //Mark the matching time to delay the disappearance of the path
+                    gameboard.MatchingTime2 = GetTime();
+
+                    scoreboard.updateMessage2 (gameboard.player2, gameboard.selected2, gameboard.MatchType2);
+
+                    //Unshow pokemon == delete
+                    gameboard.pokemons[gameboard.player2.y][gameboard.player2.x].unSeen();
+                    gameboard.pokemons[gameboard.selected2.y][gameboard.selected2.x].unSeen();
+                }
+
+                //Wrong matching => minus 2
+                else {
+                    scoreboard.ScoreNum2 -= 2;
+                    scoreboard.health2 --;
+                }
+                //After check matching, stop selecting
+                gameboard.pokemons[gameboard.player2.y][gameboard.player2.x].selected = 0;
+                gameboard.pokemons[gameboard.selected2.y][gameboard.selected2.x].selected = 0;
+
+                //Move Selection to the border => Mark that no pokemon is selected
+                gameboard.selected2.x = 0;
+            }
+
+            //Nếu trước đó chưa có cái nào được chọn thì Selection tạm (Selected) sẽ lưu vị trí Selector
+            else {
+                gameboard.selected2.x = gameboard.player2.x;
+                gameboard.selected2.y = gameboard.player2.y;
+            }
+            
+        }
+        
+        //Press 'R' to shuffle player 2
+        if (IsKeyPressed(KEY_R)) {
+            scoreboard.ScoreNum2 -= 2;
+            shuffle2D (gameboard.pokemons, gameboard.row, gameboard.col);
+        }
+
+        //Press 'H' to makehint player 2
+        if (IsKeyPressed(KEY_H)) {
+            scoreboard.ScoreNum2 -= 4;
+            gameboard.MatchType2 = makeHint (gameboard.pokemons, gameboard.row, gameboard.col, gameboard.hint2_1, gameboard.hint2_2, gameboard.path2);
+            gameboard.MatchingTime2 = GetTime();
+            scoreboard.updateMessage2 (gameboard.hint2_1, gameboard.hint2_2, gameboard.MatchType2);
+            gameboard.pokemons[gameboard.hint2_1.y][gameboard.hint2_1.x].unSeen();
+            gameboard.pokemons[gameboard.hint2_2.y][gameboard.hint2_2.x].unSeen();
+        }
+
+        //Draw path for 0.5 secs    
+        if (GetTime() - gameboard.MatchingTime2 < 0.5)
+            drawPath (gameboard.path2, gameboard.pokemons[0][0]);
+        else
+            removePath (gameboard.path2);
     }
 
     //Draw Pokemons
     gameboard.draw(isDual);
     scoreboard.draw(isDual);
 
-    //Player won
-    if (gameboard.isEmpty()) {
-        if (GetTime () - gameboard.MatchingTime > 0.5) {
+    if (isDual && 
+        (gameboard.isEmpty() ||
+        scoreboard.ScoreNum < 0 || scoreboard.health <= 0 ||
+        scoreboard.ScoreNum2 < 0 || scoreboard.health2 <= 0)
+    ) {
+        if (EndTime == 0)
+            EndTime = GetTime();
+
+        if (GetTime () - EndTime > 0.5) {
             short i;
             for (i = 0; i < gameboard.row; i ++)
                 delete[] gameboard.pokemons[i];
             delete[] gameboard.pokemons;
             action = ShowResult;
 
-            if (isDual) {
-                action = ChooseGameMode;
-                return PLAY;
-            }
-
-            storeResult (scoreboard, level);
-            //Assign some information for the result scene
-            ResultScreen.isVictory = 1;
-            ResultScreen.player.content = scoreboard.Player[0].content;
             ResultScreen.time.content = scoreboard.TimeText.content;
-            ResultScreen.score.content = scoreboard.ScoreText[0].content; 
+
+            if (scoreboard.ScoreNum > scoreboard.ScoreNum2)
+                addText (ResultScreen.result.content, "Player 1 won!");
+            else if (scoreboard.ScoreNum < scoreboard.ScoreNum2)
+                addText (ResultScreen.result.content, "Player 2 won!");
+            else
+                addText (ResultScreen.result.content, "DRAW!");
+
+            ResultScreen.player[0].content = scoreboard.Player[0].content;
+            ResultScreen.player[1].content = scoreboard.Player[1].content;
+
+            ResultScreen.score[0].content = scoreboard.ScoreText[0].content;
+            ResultScreen.score[1].content = scoreboard.ScoreText[1].content;
+        }
+
+        return PLAY;
+    }
+
+    //Player won
+    if (gameboard.isEmpty()) {
+        if (EndTime == 0)
+            EndTime = GetTime();
+
+        if (GetTime () - EndTime > 0.5) {
+            short i;
+            for (i = 0; i < gameboard.row; i ++)
+                delete[] gameboard.pokemons[i];
+            delete[] gameboard.pokemons;
+            action = ShowResult;
+
+            ResultScreen.time.content = scoreboard.TimeText.content;
+            ResultScreen.player[0].content = scoreboard.Player[0].content;
+            ResultScreen.score[0].content = scoreboard.ScoreText[0].content;
+            storeResult (scoreboard, level);
+            ResultScreen.isVictory = 1;
         }
 
         return PLAY;
@@ -711,7 +841,7 @@ Scene GameScene::draw(GameAction& action, bool& isDual, Level& level, GameModeSc
 
     //If it isn't matchable anymore, shuffle the gameboard
     if (!gameboard.checkMatchAble()) 
-        shuffle2D (gameboard.pokemons, gameboard.row, gameboard.col, gameboard.selector, gameboard.selected);
+        shuffle2D (gameboard.pokemons, gameboard.row, gameboard.col);
 
     return PLAY;
 }

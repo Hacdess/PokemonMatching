@@ -4,6 +4,7 @@
 #include "../GamePlay/Game.h"
 #include "Account.h"
 #include "Leaderboard.h"
+#include "Guide.h"
 
 struct MenuScene {
     bool isChanged = 0;

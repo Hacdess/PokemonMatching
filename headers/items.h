@@ -33,7 +33,7 @@ const Font GameFont = GetFontDefault();
 #define PokeBack (Color) {255, 205, 230, 255}
 
 //Game Level
-enum Scene {MENU, SIGNUP, SIGNIN, PLAY, SETTING, RANK, EXIT};
+enum Scene {MENU, SIGNUP, SIGNIN, PLAY, GUIDE, RANK, EXIT};
 enum Level {EASY, MEDIUM, HARD, NOT_CHOSE_LEVEL};
 enum GameAction {ChooseGameMode,ChooseLevel, LoadGame, PlayGame, ShowResult, End};
 enum MatchingType {None, I, L, U, Z};
@@ -60,7 +60,6 @@ struct Time {
 
 //Functions
 void DeallocateTextbox1D (TextBox* textbox, const short& size);
-void DeallocateTextbox2D (TextBox** textbox, const short & row, const short& col);
 void DeallocateDynamicTextbox1D (TextBox* textbox, const short& size);
 void DeallocateDynamicTextbox2D (TextBox** textbox, const short & row, const short& col);
 bool isSameColor (const Color& Color1, const Color& Color2);
