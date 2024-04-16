@@ -1,5 +1,6 @@
 #pragma once
 #include "../Moving.h"
+#include "Music.h"
 
 struct ResultScene {
     bool isSet = 0;
@@ -10,5 +11,5 @@ struct ResultScene {
     TextBox result, player[2], time, score[2], message;
 
     void setup(const bool& isDual);
-    Scene draw(GameAction& action, const bool& isDual);
+    Scene draw(GameAction& action, const bool& isDual, gameMusic& musicAndSound);
 };

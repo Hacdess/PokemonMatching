@@ -91,7 +91,7 @@ void updateStatus(const bool& isSigned, char*& content1, char*& content2, const 
     }
 }
 
-Scene MenuScene::draw(bool& isSigned) {
+Scene MenuScene::draw(bool& isSigned, gameMusic& musicAndSound) {
     //Draw Background image
     ClearBackground (BLACK);
     DrawTexturePro (background, {0, 0, float(background.width), float(background.height)}, {0, 0, float(WinWdith), float(WinHeight)}, {0, 0}, 0.0f, WHITE);
@@ -105,6 +105,7 @@ Scene MenuScene::draw(bool& isSigned) {
     }
 
         if (IsKeyPressed (KEY_ENTER)) {
+            PlaySound(musicAndSound.pressButton);
             //Column: Sign up / Sign in / Sign out / Account
             if (selector.x == 0) {
                 //When it is not signed, turn to Sign up or Sign in
@@ -161,7 +162,7 @@ Scene MenuScene::draw(bool& isSigned) {
     }
     
     //Handlde Selector
-    moveSelector2D (selector, 0, 0, 2, 1);
+    moveSelector2D (selector, 0, 0, 2, 1, musicAndSound);
 
     //Draw Buttons
     for (i = 0; i < 2; i ++)

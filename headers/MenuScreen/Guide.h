@@ -1,5 +1,5 @@
 #include "../Moving.h"
-
+#include "../GamePlay/Music.h"
 struct Page {
     TextBox title;
     TextBox text;
@@ -15,5 +15,5 @@ struct GuideScene {
     Page page[3];
     short selector;
     void setup();
-    Scene draw();
+    Scene draw(gameMusic& musicAndSound);
 };

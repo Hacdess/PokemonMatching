@@ -4,6 +4,7 @@
 #include "Path.h"
 #include "Scoreboard.h"
 #include "Result.h"
+#include "Music.h"
 
 struct Pokemon {
     bool shown = 0, selected = 0;
@@ -55,5 +56,5 @@ struct GameScene {
     float EndTime;
 
     void setup();
-    Scene draw(GameAction& action, bool& isDual, Level& level, GameModeScene& GameModeScreen, LevelScene& LevelScreen, const char* username);
+    Scene draw(GameAction& action, bool& isDual, Level& level, GameModeScene& GameModeScreen, LevelScene& LevelScreen, const char* username, gameMusic& musicAndSound);
 };

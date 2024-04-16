@@ -5,6 +5,7 @@
 #include "Account.h"
 #include "Leaderboard.h"
 #include "Guide.h"
+#include "../GamePlay/Music.h"
 
 struct MenuScene {
     bool isChanged = 0;
@@ -15,5 +16,5 @@ struct MenuScene {
     char* username;
 
     void setup();
-    Scene draw(bool& isSigned);
+    Scene draw(bool& isSigned, gameMusic& musicAndSound);
 };

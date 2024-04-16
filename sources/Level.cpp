@@ -79,7 +79,7 @@ void LevelScene::setup() {
     time = GetTime();
 }
 
-bool GameModeScene::draw(GameAction& action) {
+bool GameModeScene::draw(GameAction& action, gameMusic& musicAndSound) {
     ClearBackground(background);
 
     if (GetTime() - time > 0.5) {
@@ -90,7 +90,7 @@ bool GameModeScene::draw(GameAction& action) {
         time = GetTime();
     }
 
-    moveSelector1D (selector, 1, 3);
+    moveSelector1D (selector, 1, 3, musicAndSound);
 
     short i;
     for (i = 0; i < 4; i ++) {
@@ -111,6 +111,7 @@ bool GameModeScene::draw(GameAction& action) {
     }
 
     if (IsKeyPressed(KEY_ENTER)) {
+        PlaySound(musicAndSound.pressButton);
         if (selector == 1) {
             action = ChooseLevel;
             selector = 1;
@@ -132,7 +133,7 @@ bool GameModeScene::draw(GameAction& action) {
 }
 
 
-Level LevelScene::draw(GameAction& action) {
+Level LevelScene::draw(GameAction& action, gameMusic& musicAndSound) {
     ClearBackground(background);
 
     if (GetTime() - time > 0.5) {
@@ -143,7 +144,7 @@ Level LevelScene::draw(GameAction& action) {
         time = GetTime();
     }
 
-    moveSelector1D (selector, 1, 4);
+    moveSelector1D (selector, 1, 4, musicAndSound);
 
     short i;
     for (i = 0; i < 5; i ++) {
@@ -164,6 +165,7 @@ Level LevelScene::draw(GameAction& action) {
     }
 
     if (IsKeyPressed(KEY_ENTER)) {
+        PlaySound(musicAndSound.pressButton);
         if (selector == 1) {
             action = LoadGame;
             selector = 1;

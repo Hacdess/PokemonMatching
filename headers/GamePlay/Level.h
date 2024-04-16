@@ -1,5 +1,6 @@
 #pragma once
 #include "../Moving.h"
+#include "../GamePlay/Music.h"
 
 struct GameModeScene {
     float time;
@@ -8,7 +9,7 @@ struct GameModeScene {
     short selector;
 
     void setup();
-    bool draw(GameAction& action);
+    bool draw(GameAction& action, gameMusic& MusicAndSound);
 };
 
 struct LevelScene {
@@ -18,5 +19,5 @@ struct LevelScene {
     short selector;
 
     void setup();
-    Level draw(GameAction& action);
+    Level draw(GameAction& action, gameMusic& musicAndSound);
 };

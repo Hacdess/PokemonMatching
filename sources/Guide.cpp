@@ -56,11 +56,11 @@ void GuideScene::setup() {
     selector = 0;
 }
 
-Scene GuideScene::draw() {
+Scene GuideScene::draw(gameMusic& musicAndSound) {
     //Draw the background
     DrawTexturePro (background, {0, 0, float(background.width), float(background.height)}, {0, 0, float(WinWdith), float(WinHeight)}, {0, 0}, 0.0f, WHITE);
     //Movement dealing
-    moveSelector1D (selector, 0, 2);
+    moveSelector1D (selector, 0, 2, musicAndSound);
     //Write title
     DrawText (page[selector].title.content, page[selector].title.pos.x, page[selector].title.pos.y, page[selector].title.FontSize, page[selector].title.FontColor);
     //Write content
@@ -71,6 +71,7 @@ Scene GuideScene::draw() {
     DrawText (page[selector].message.content, page[selector].message.pos.x, page[selector].message.pos.y, page[selector].message.FontSize, page[selector].message.FontColor);
 
     if (IsKeyPressed(KEY_ENTER)) {
+        PlaySound(musicAndSound.pressButton);
         short i;
         for (i = 0; i < 3; i ++) {
             delete[] page[i].title.content;

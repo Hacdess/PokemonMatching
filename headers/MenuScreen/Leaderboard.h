@@ -1,7 +1,7 @@
 #pragma once
 #include "../Moving.h"
 #include "Account.h"
-
+#include "../GamePlay/Music.h"
 struct Player {
     short score;
     Time time;
@@ -42,5 +42,5 @@ struct LeaderboardSceen {
     StageScene stages[3];
     short selector;
     void setup();
-    Scene draw();
+    Scene draw(gameMusic& musicAndSound);
 };

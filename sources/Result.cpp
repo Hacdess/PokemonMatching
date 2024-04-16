@@ -73,7 +73,7 @@ void ResultScene::setup(const bool& isDual) {
     message.pos = {(float(WinWdith) - message.ContentLength) / 2, float(WinHeight) - message.FontSize * 1.25f};
 }
 
-Scene ResultScene::draw(GameAction& action, const bool& isDual) {
+Scene ResultScene::draw(GameAction& action, const bool& isDual, gameMusic& musicAndSound) {
     //Background
     DrawRectangleRec (background, BackgrounColor);
 
@@ -148,6 +148,7 @@ Scene ResultScene::draw(GameAction& action, const bool& isDual) {
     }
 
     if (IsKeyPressed(KEY_ENTER)) {
+        PlaySound(musicAndSound.pressButton);
         isSet = 0;
         delete[] result.content;
 

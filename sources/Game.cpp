@@ -550,16 +550,16 @@ void GameScene::setup() {
 }
 
 //Manage Game scene
-Scene GameScene::draw(GameAction& action, bool& isDual, Level& level, GameModeScene& GameModeScreen, LevelScene& LevelScreen, const char* username) {
+Scene GameScene::draw(GameAction& action, bool& isDual, Level& level, GameModeScene& GameModeScreen, LevelScene& LevelScreen, const char* username, gameMusic& musicAndSound) {
     //Choose the Level before playing
     //Level Screen loaded already so just draw the scene for level choosing
     if (action == ChooseGameMode) {
-        isDual = GameModeScreen.draw(action);
+        isDual = GameModeScreen.draw(action, musicAndSound);
         return PLAY; 
     }
     
     if (action == ChooseLevel) {
-        level = LevelScreen.draw(action); 
+        level = LevelScreen.draw(action, musicAndSound); 
         return PLAY;
     }
 
@@ -591,7 +591,7 @@ Scene GameScene::draw(GameAction& action, bool& isDual, Level& level, GameModeSc
     if (action == ShowResult) {
         if (!ResultScreen.isSet)
             ResultScreen.setup(isDual);
-        ResultScreen.draw (action, isDual);
+        ResultScreen.draw (action, isDual, musicAndSound);
         return PLAY;
     }
 
@@ -603,14 +603,14 @@ Scene GameScene::draw(GameAction& action, bool& isDual, Level& level, GameModeSc
     }
 
     //Now action == PlayGame
-
+    PauseMusicStream(musicAndSound.themeMusic);
     //Draw main background
     DrawTexturePro (background, {0, 0, float(background.width), float(background.height)}, {0, 0, float(WinWdith), float(WinHeight)}, {0, 0}, 0, WHITE);
     //Draw hidden background
     DrawTexturePro (gameboard.HiddenBackground, {0, 0, float(gameboard.HiddenBackground.width), float(gameboard.HiddenBackground.height)}, {gameboard.pokemons[1][1].pos.x - 2, gameboard.pokemons[1][1].pos.y, gameboard.width, gameboard.height}, {0, 0}, 0, WHITE);
 
     //Selector Dealing
-    moveSelector2D (gameboard.selector, 1, 1, gameboard.col - 2, gameboard.row - 2);
+    moveSelector2D (gameboard.selector, 1, 1, gameboard.col - 2, gameboard.row - 2, musicAndSound);
 
     //Selected Pokemons player1
     if (IsKeyPressed(KEY_ENTER)) {
@@ -622,6 +622,7 @@ Scene GameScene::draw(GameAction& action, bool& isDual, Level& level, GameModeSc
             gameboard.MatchType = checkMatching (gameboard.pokemons, gameboard.selector, gameboard.selected, gameboard.row, gameboard.col, gameboard.path);
             //Correct Matching => add score
             if (gameboard.MatchType != None) {
+                PlaySound(musicAndSound.correctMatching);
                 switch (gameboard.MatchType) {
                     case I:
                         scoreboard.ScoreNum += 2;
@@ -646,6 +647,7 @@ Scene GameScene::draw(GameAction& action, bool& isDual, Level& level, GameModeSc
 
             //Wrong matching => minus 2
             else {
+                PlaySound(musicAndSound.wrongMatching);
                 scoreboard.ScoreNum -= 2;
                 scoreboard.health --;
             }
@@ -667,12 +669,14 @@ Scene GameScene::draw(GameAction& action, bool& isDual, Level& level, GameModeSc
 
     //Press 'O' to shuffe player 1
     if (IsKeyPressed(KEY_O)) {
+        PlaySound(musicAndSound.pressButton);
         scoreboard.ScoreNum -= 2;
         shuffle2D (gameboard.pokemons, gameboard.row, gameboard.col);
     }
 
     //Press 'P' to makehint player 1
     if (IsKeyPressed(KEY_P)) {
+        PlaySound(musicAndSound.pressButton);
         scoreboard.ScoreNum -= 4;
         gameboard.MatchType = makeHint (gameboard.pokemons, gameboard.row, gameboard.col, gameboard.hint1_1, gameboard.hint1_2, gameboard.path);
         gameboard.MatchingTime = GetTime();
@@ -689,7 +693,7 @@ Scene GameScene::draw(GameAction& action, bool& isDual, Level& level, GameModeSc
 
     if (isDual) {
         //Selector Dealing
-        moveSelector2DPlayer2 (gameboard.player2, 1, 1, gameboard.col - 2, gameboard.row - 2);
+        moveSelector2DPlayer2 (gameboard.player2, 1, 1, gameboard.col - 2, gameboard.row - 2, musicAndSound);
 
         //Selected Pokemons player2
         if (IsKeyPressed(KEY_SPACE)) {
@@ -701,6 +705,7 @@ Scene GameScene::draw(GameAction& action, bool& isDual, Level& level, GameModeSc
                 gameboard.MatchType2 = checkMatching (gameboard.pokemons, gameboard.player2, gameboard.selected2, gameboard.row, gameboard.col, gameboard.path2);
                 //Correct Matching => add score
                 if (gameboard.MatchType2 != None) {
+                    PlaySound(musicAndSound.correctMatching);
                     switch (gameboard.MatchType2) {
                         case I:
                             scoreboard.ScoreNum2 += 2;
@@ -725,6 +730,7 @@ Scene GameScene::draw(GameAction& action, bool& isDual, Level& level, GameModeSc
 
                 //Wrong matching => minus 2
                 else {
+                    PlaySound(musicAndSound.wrongMatching);
                     scoreboard.ScoreNum2 -= 2;
                     scoreboard.health2 --;
                 }
@@ -746,12 +752,14 @@ Scene GameScene::draw(GameAction& action, bool& isDual, Level& level, GameModeSc
         
         //Press 'R' to shuffle player 2
         if (IsKeyPressed(KEY_R)) {
+            PlaySound(musicAndSound.pressButton);
             scoreboard.ScoreNum2 -= 2;
             shuffle2D (gameboard.pokemons, gameboard.row, gameboard.col);
         }
 
         //Press 'H' to makehint player 2
         if (IsKeyPressed(KEY_H)) {
+            PlaySound(musicAndSound.pressButton);
             scoreboard.ScoreNum2 -= 4;
             gameboard.MatchType2 = makeHint (gameboard.pokemons, gameboard.row, gameboard.col, gameboard.hint2_1, gameboard.hint2_2, gameboard.path2);
             gameboard.MatchingTime2 = GetTime();
@@ -776,6 +784,7 @@ Scene GameScene::draw(GameAction& action, bool& isDual, Level& level, GameModeSc
         scoreboard.ScoreNum < 0 || scoreboard.health <= 0 ||
         scoreboard.ScoreNum2 < 0 || scoreboard.health2 <= 0)
     ) {
+        PlaySound(musicAndSound.winning);
         if (EndTime == 0)
             EndTime = GetTime();
 
@@ -807,6 +816,7 @@ Scene GameScene::draw(GameAction& action, bool& isDual, Level& level, GameModeSc
 
     //Player won
     if (gameboard.isEmpty()) {
+        PlaySound(musicAndSound.winning);
         if (EndTime == 0)
             EndTime = GetTime();
 
@@ -829,6 +839,7 @@ Scene GameScene::draw(GameAction& action, bool& isDual, Level& level, GameModeSc
 
     //Score < 0 or health back to 0 => Player lost
     if (scoreboard.ScoreNum < 0 || scoreboard.health <= 0) {
+        PlaySound(musicAndSound.losing);
         short i;
         for (i = 0; i < gameboard.row; i ++)
             delete[] gameboard.pokemons[i];

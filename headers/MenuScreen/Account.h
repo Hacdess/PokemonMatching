@@ -1,6 +1,7 @@
 #pragma once
 #include "../Moving.h"
 #include "../GamePlay/Level.h"
+#include "../GamePlay/Music.h"
 
 #define MAX_INPUT_CHARS 21 //Max Length of input characters is 20 (21st for '\0')
 
@@ -25,7 +26,7 @@ struct SignUpScene {
     Selector2D selector = {0, 0};
 
     void setup();
-    Scene draw (bool& isSigned, char*& username);
+    Scene draw (bool& isSigned, char*& username, gameMusic& musicAndSound);
 };
 
 struct SignInScene {
@@ -40,7 +41,7 @@ struct SignInScene {
     Selector2D selector = {0, 0};
 
     void setup();
-    Scene draw(bool& isSigned, char* & username);
+    Scene draw(bool& isSigned, char* & username, gameMusic& musicAndSound);
 };
 
 //Input function
@@ -67,6 +68,3 @@ char* modifyCommandPasswordForSignIn(Account& account);
 char* modifyCommandForSignUp(Account& account);
 char* modifyCommandForSignIn(Account& account);
 
-//Some fuctions to work on Linked List
-void addHead(Account* &pHead, Account account);
-void deleteList(Account* &pHead);

@@ -1,5 +1,6 @@
 #include "../headers/MenuScreen/Account.h"
 
+
 void SignUpScene::setup() {
     set = 1;
     account.nameCount = 0;
@@ -693,51 +694,7 @@ char *modifyCommandForSignIn(Account &account) {
     return tmp;
 }
 
-void addHead(Account *&pHead, Account account) {
-    Account *tmp = new Account;
-
-    // Save Username first
-    strcpy(tmp->name, account.name);
-    tmp->nameCount = account.nameCount;
-
-    // Save PassWord
-    strcpy(tmp->pass, account.pass);
-    tmp->passCount = account.passCount;
-
-    tmp->next = NULL;
-
-    // Delete name and pass after delete
-    account.nameCount = 0;
-    account.passCount = 0;
-    account.name[0] = '\0';
-    account.pass[0] = '\0';
-
-    if (pHead == NULL)
-        pHead = tmp;
-    else {
-        tmp->next = pHead;
-        pHead = tmp;
-    }
-}
-
-void deleteList(Account *&pHead) {
-    Account *cur;
-    while (pHead != NULL) {
-        cur = pHead;
-        pHead = pHead->next;
-
-        cur->nameCount = 0;
-        cur->passCount = 0;
-
-        cur->name[0] = '\0';
-        cur->pass[0] = '\0';
-
-        delete cur;
-        cur = NULL;
-    }
-}
-
-Scene SignUpScene::draw(bool &isSigned, char *&username) {
+Scene SignUpScene::draw(bool &isSigned, char *&username, gameMusic& musicAndSound) {
     // Draw Background image
     ClearBackground(BLACK);
     DrawTexturePro(background, {0, 0, float(background.width), float(background.height)}, {0, 0, float(WinWdith), float(WinHeight)}, {0, 0}, 0.0f, WHITE);
@@ -750,14 +707,22 @@ Scene SignUpScene::draw(bool &isSigned, char *&username) {
     }
 
     //---Selector at this is different in movements---
-    if (IsKeyPressed(KEY_LEFT))
+    if (IsKeyPressed(KEY_LEFT)){
+        PlaySound(musicAndSound.moving);
         selector.x--;
-    else if (IsKeyPressed(KEY_RIGHT))
+    }
+    else if (IsKeyPressed(KEY_RIGHT)){
+        PlaySound(musicAndSound.moving);
         selector.x++;
-    else if (IsKeyPressed(KEY_UP))
+    }
+    else if (IsKeyPressed(KEY_UP)){
+        PlaySound(musicAndSound.moving);
         selector.y--;
-    else if (IsKeyPressed(KEY_DOWN))
+    }
+    else if (IsKeyPressed(KEY_DOWN)){
+        PlaySound(musicAndSound.moving);
         selector.y++;
+    }
 
     if (selector.y == 2) {
         if (selector.x < 0)
@@ -788,9 +753,10 @@ Scene SignUpScene::draw(bool &isSigned, char *&username) {
         input[0].BorderColor = WHITE;
         inputAccount(account);
         if (IsKeyPressed(KEY_ENTER)){
-        delete[] command.content;
-        command.content = NULL;
-        command.content = modifyCommandUsernameForSignUp(account);
+            PlaySound(musicAndSound.pressButton);
+            delete[] command.content;
+            command.content = NULL;
+            command.content = modifyCommandUsernameForSignUp(account);
         }
     }
     else
@@ -801,6 +767,7 @@ Scene SignUpScene::draw(bool &isSigned, char *&username) {
         inputPass(account);
 
         if (IsKeyPressed(KEY_ENTER)) {
+            PlaySound(musicAndSound.pressButton);
             delete[] command.content;
             command.content = NULL;
             command.content = modifyCommandPasswordForSignUp(account);
@@ -820,7 +787,9 @@ Scene SignUpScene::draw(bool &isSigned, char *&username) {
             command.content = modifyCommandForSignUp(account);
         }
 
-        if (IsKeyPressed(KEY_ENTER) && checkValidUsername(account) == 5 && checkValidPassWord(account) > 3 && !isExistedUsername(account)) {
+        if (IsKeyPressed(KEY_ENTER)) {
+            if (checkValidUsername(account) == 5 && checkValidPassWord(account) > 3 && !isExistedUsername(account)){
+            PlaySound(musicAndSound.correctMatching);
             username = new char[strlen(account.name) + 1];
             strcpy(username, account.name);
             storeAccount(account);
@@ -828,6 +797,8 @@ Scene SignUpScene::draw(bool &isSigned, char *&username) {
             set = 0;
             selector.x = 0, selector.y = 0;
             return SIGNUP;
+            }
+            else PlaySound(musicAndSound.wrongSign);
         }
     }
 
@@ -844,6 +815,7 @@ Scene SignUpScene::draw(bool &isSigned, char *&username) {
         confirm[1].FontColor = DarkCyanTrans;
         confirm[1].BorderColor = WHITE;
         if (IsKeyPressed(KEY_ENTER)) {
+            PlaySound(musicAndSound.pressButton);
             set = 0;
             isSigned = 0;
             selector.x = 0, selector.y = 0;
@@ -886,7 +858,7 @@ Scene SignUpScene::draw(bool &isSigned, char *&username) {
     return SIGNUP;
 }
 
-Scene SignInScene::draw(bool &isSigned, char *&username) {
+Scene SignInScene::draw(bool &isSigned, char *&username, gameMusic& musicAndSound) {
     // Draw Background image
     ClearBackground(BLACK);
     DrawTexturePro(background, {0, 0, float(background.width), float(background.height)}, {0, 0, float(WinWdith), float(WinHeight)}, {0, 0}, 0.0f, WHITE);
@@ -899,14 +871,22 @@ Scene SignInScene::draw(bool &isSigned, char *&username) {
     }
 
     //---Selector at this is different in movements---
-    if (IsKeyPressed(KEY_LEFT))
+    if (IsKeyPressed(KEY_LEFT)){
+        PlaySound(musicAndSound.moving);
         selector.x--;
-    else if (IsKeyPressed(KEY_RIGHT))
+    }
+    else if (IsKeyPressed(KEY_RIGHT)){
+        PlaySound(musicAndSound.moving);
         selector.x++;
-    else if (IsKeyPressed(KEY_UP))
+    }
+    else if (IsKeyPressed(KEY_UP)){
+        PlaySound(musicAndSound.moving);
         selector.y--;
-    else if (IsKeyPressed(KEY_DOWN))
+    }
+    else if (IsKeyPressed(KEY_DOWN)){
+        PlaySound(musicAndSound.moving);
         selector.y++;
+    }
 
     if (selector.y == 2) {
         if (selector.x < 0)
@@ -938,6 +918,7 @@ Scene SignInScene::draw(bool &isSigned, char *&username) {
         inputAccount(account);
 
         if (IsKeyPressed(KEY_ENTER)) {
+            PlaySound(musicAndSound.pressButton);
             delete[] command.content;
             command.content = NULL;
             command.content = modifyCommandUsernameForSignIn(account);
@@ -951,6 +932,7 @@ Scene SignInScene::draw(bool &isSigned, char *&username) {
         inputPass(account);
 
         if (IsKeyPressed(KEY_ENTER)){
+            PlaySound(musicAndSound.pressButton);
             delete[] command.content;
             command.content = NULL;
             command.content = modifyCommandPasswordForSignIn(account);
@@ -970,7 +952,9 @@ Scene SignInScene::draw(bool &isSigned, char *&username) {
             command.content = modifyCommandForSignIn(account);
         }
 
-        if (IsKeyPressed(KEY_ENTER) && (checkValidUsername(account) == 5 || checkValidUsername(account) == 4) && checkValidPassWord(account) == 5 && isCorrectSigIn(account) == 1) {
+        if (IsKeyPressed(KEY_ENTER)) {
+            if ((checkValidUsername(account) == 5 || checkValidUsername(account) == 4) && checkValidPassWord(account) == 5 && isCorrectSigIn(account) == 1){
+            PlaySound(musicAndSound.correctMatching);
             username = new char[strlen(account.name) + 1];
             strcpy(username, account.name);
             account.name[0] = '\0';
@@ -981,6 +965,8 @@ Scene SignInScene::draw(bool &isSigned, char *&username) {
             set = 0;
             selector.x = 0, selector.y = 0;
             return SIGNIN;
+            }
+            else PlaySound(musicAndSound.wrongSign);
         }
     }
 
@@ -997,6 +983,7 @@ Scene SignInScene::draw(bool &isSigned, char *&username) {
         confirm[1].FontColor = DarkCyanTrans;
         confirm[1].BorderColor = WHITE;
         if (IsKeyPressed(KEY_ENTER)) {
+            PlaySound(musicAndSound.pressButton);
             set = 0;
             isSigned = 0;
             selector.x = 0, selector.y = 0;

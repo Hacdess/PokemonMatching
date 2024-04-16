@@ -1,5 +1,5 @@
-#include "raylib.h"
 #include "../headers/SceneManager.h"
+#include "../headers/GamePlay/Music.h"
 #include <iostream>
 
 void init(SceneManager& game) {
@@ -31,27 +31,34 @@ int main() {
     SceneManager game;
     init(game);
 
+    //Add sound
+    gameMusic musicAndSound;
+    musicAndSound.initMusicAndSound();
+    float timePlayed = 0.0f;
+    PlayMusicStream(musicAndSound.themeMusic);
+
     while (!WindowShouldClose()) {
+        musicAndSound.updateMusicStream(musicAndSound.themeMusic, timePlayed);
         cout << GetFPS() << endl;
         BeginDrawing();
 
         switch (scene) {
             case MENU:
-                scene = game.MenuScreen.draw(isSigned);
+                scene = game.MenuScreen.draw(isSigned, musicAndSound);
                 break;
 
             case GUIDE:
                 if (!game.GuideScreen.set)
                     game.GuideScreen.setup();
                 else
-                    scene = game.GuideScreen.draw ();
+                    scene = game.GuideScreen.draw (musicAndSound);
                 break;
 
             case SIGNUP:
                 if (!game.SignUpScreen.set)
                     game.SignUpScreen.setup();
                 else {
-                    scene = game.SignUpScreen.draw (isSigned, game.MenuScreen.username);
+                    scene = game.SignUpScreen.draw (isSigned, game.MenuScreen.username, musicAndSound);
                     if (!game.SignUpScreen.set) {
                         //Refresh for the next Sign Up
                         DeallocateTextbox1D (game.SignUpScreen.title, 2);
@@ -68,7 +75,7 @@ int main() {
                 if (!game.SignInScreen.set)
                     game.SignInScreen.setup();
                 else {
-                    scene = game.SignInScreen.draw (isSigned, game.MenuScreen.username);
+                    scene = game.SignInScreen.draw (isSigned, game.MenuScreen.username, musicAndSound);
                     if (!game.SignInScreen.set) {
                         //Refresh for the next Sign Up
                         DeallocateTextbox1D (game.SignInScreen.title, 2);
@@ -82,18 +89,20 @@ int main() {
                 break;
 
             case PLAY:
-                scene = game.GameScreen.draw (action, isDual, level, game.GameModeScreen, game.LevelScreen, game.MenuScreen.username);
+                scene = game.GameScreen.draw (action, isDual, level, game.GameModeScreen, game.LevelScreen, game.MenuScreen.username, musicAndSound);
                 break;
 
             case RANK:
                 if (!game.LeaderboardScreen.isSet)
                     game.LeaderboardScreen.setup();
-                scene = game.LeaderboardScreen.draw();
+                scene = game.LeaderboardScreen.draw(musicAndSound);
                 break;
             
             //Exit the game
             default:
                 CloseWindow();
+
+                musicAndSound.deleteMusicAndSound();
                 UnloadImage(icon);
                 UnloadFont(GameFont);
                 UnloadTexture (game.GameScreen.background);

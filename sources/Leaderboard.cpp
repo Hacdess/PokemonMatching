@@ -246,13 +246,14 @@ void LeaderboardSceen::setup() {
     }
 }
 
-Scene LeaderboardSceen::draw() {
+Scene LeaderboardSceen::draw(gameMusic& musicAndSound) {
     ClearBackground(WHITE);
 
-    moveSelector1D (selector, 0, 2);
+    moveSelector1D (selector, 0, 2, musicAndSound);
     stages[selector].draw();
 
     if (IsKeyPressed(KEY_ENTER)) {
+        PlaySound(musicAndSound.pressButton);
         isSet = 0;
         return MENU;
     }
