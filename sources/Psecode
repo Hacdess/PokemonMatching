@@ -1,0 +1,100 @@
+FUNCTION setupMenuScene()
+    // Load and set background image
+    Load background image from "resources/img/background/background.png"
+    Convert image to texture and assign it to background
+
+    // Set up title text boxes
+    FOR i FROM 0 TO 1 DO
+        Set title content for title[i] to "POKEMON" if i is 0, else set it to "MATCHING"
+        Set title font color to RED if i is 0, else set it to YELLOW
+        Set title font size to a predefined value
+        Set title border color to BlackTrans
+        Calculate content length of title[i] based on its content and font size
+        Calculate title position and border dimensions
+
+    // Set up buttons
+    FOR j FROM 0 TO 2 DO
+        FOR i FROM 0 TO 1 DO
+            Set button content for buttons[i][j] based on button position
+            Set button font color to WHITE
+            Set button font size to a predefined value
+            Set button border color to DarkCyanTrans
+            Calculate content length of buttons[i][j] based on its content and font size
+            Calculate button position and border dimensions
+            If i is 1, adjust button position and border for the second row
+
+    // Initialize username variable
+    Set username to NULL
+
+    RETURN
+END FUNCTION
+
+PROCEDURE updateTitleColor()
+    IF (GetTime() - markTime >= 1) THEN
+        SWITCH (Title.FontColor)
+            CASE RED:
+                Set Title.FontColor to ORANGE
+            CASE ORANGE:
+                Set Title.FontColor to YELLOW
+            CASE YELLOW:
+                Set Title.FontColor to GREEN
+            CASE GREEN:
+                Set Title.FontColor to BLUE
+            CASE BLUE:
+                Set Title.FontColor to VIOLET
+            CASE VIOLET:
+                Set Title.FontColor to PINK
+            CASE PINK:
+                Set Title.FontColor to RED
+        END SWITCH
+        markTime = GetTime()
+    END IF
+END PROCEDURE
+
+FUNCTION loadBackgroundImages(quantity)
+    // Define variables
+    path = ""
+    textures = new Texture2D[quantity]
+
+    // Load images
+    FOR i = 0 TO quantity - 1
+        path = "resources/img/background/background" + toString(i) + ".png"
+        img = LoadImage(path)
+        textures[i] = LoadTextureFromImage(img)
+        UnloadImage(img)
+    END FOR
+
+    RETURN textures
+END FUNCTION
+
+FUNCTION loadPokemonImages(quantity)
+    // Define variables
+    path = ""
+    textures = new Texture2D[quantity]
+
+    // Load images
+    FOR i = 0 TO quantity - 1
+        path = "resources/img/pokemon/pokemon" + toString(i) + ".png"
+        img = LoadImage(path)
+        textures[i] = LoadTextureFromImage(img)
+        UnloadImage(img)
+    END FOR
+
+    RETURN textures
+END FUNCTION
+
+FUNCTION loadHiddenImages(quantity)
+    // Define variables
+    path = ""
+    textures = new Texture2D[quantity]
+
+    // Load images
+    FOR i = 0 TO quantity - 1
+        path = "resources/img/hidden/hidden" + toString(i) + ".png"
+        img = LoadImage(path)
+        textures[i] = LoadTextureFromImage(img)
+        UnloadImage(img)
+    END FOR
+
+    RETURN textures
+END FUNCTION

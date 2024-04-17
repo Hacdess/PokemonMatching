@@ -88,9 +88,9 @@ void ScoreBoard::setup(const bool& isDual, const char* username) {
 
     //There are 3 guides:
     //Press 'O' for shuffle
-    addText (Guide[0].content, "Press 'O' for shuffle");
+    addText (Guide[0].content, "Press 'o' for shuffle");
     //Press 'P' for hint
-    addText (Guide[1].content, "Press 'P' for hint");
+    addText (Guide[1].content, "Press 'p' for hint");
     //-4 / hint, -2 / shuffle
     addText (Guide[2].content, "-2 / shuffle, -4 / hint");
 

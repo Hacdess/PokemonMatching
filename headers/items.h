@@ -10,6 +10,7 @@
 
 using namespace std;
 
+//Game Name
 const char GameName[] = "Pokemon Matching";
 
 //Define GameFPS
@@ -19,8 +20,8 @@ const char GameName[] = "Pokemon Matching";
 const Font GameFont = GetFontDefault();
 
 //Define Window size
-#define WinWdith 1920
-#define WinHeight 1080
+#define WinWdith 2560
+#define WinHeight 1440
 
 //Define colors
 #define CYAN (Color)  {0, 255, 255, 255}

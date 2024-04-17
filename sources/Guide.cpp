@@ -11,9 +11,9 @@ void GuideScene::setup() {
     addText (page[1].title.content, "GameMode And Level");
     addText (page[2].title.content, "How To Play");
 
-    addText (page[0].text.content, "Pokemon Matching is a small\n\n\n\nproject for the subject\n\n\n\nAdvance Programming techniques\n\n\n\nand practises of HCMUS.\n\n\n\n\n\n- This game was created\n\n\n\nby Le Trung Kien\n\n\n\nand Nguyen Huu Anh Tri.");
-    addText (page[1].text.content, "- There are 2 gamemodes: Single\n\n\n\nand Dual.\n\n\n\n- Furthermore, there are 3 levels\n\n\n\nare waiting for you to compete,\n\n\n\nwhich are: Easy, Medium and Hard.");
-    addText (page[2].text.content, "- Player 1:\n\n\n\n+ Use the Left, Right, Up, Down\n\n\n\nkey for moving.\n\n\n\n+ Use Enter key for selecting.\n\n\n\n\n\n\n- If in Dual gamemode: Player 2:\n\n\n\n+ Use the S, Z, X, C keys for\n\n\n\nmoving.\n\n\n\n+ Use Space key for selecting.");
+    addText (page[0].text.content, "Pokemon Matching is a small\n\n\n\n\nproject for the subject\n\n\n\n\nAdvance Programming techniques\n\n\n\n\nand practises of HCMUS.\n\n\n\n\n\n\n- This game was created\n\n\n\n\nby Le Trung Kien\n\n\n\n\nand Nguyen Huu Anh Tri.");
+    addText (page[1].text.content, "- There are 2 gamemodes: Single\n\n\n\n\nand Dual.\n\n\n\n\n- Furthermore, there are 3 levels\n\n\n\n\nare waiting for you to compete,\n\n\n\n\nwhich are: Easy, Medium and Hard.");
+    addText (page[2].text.content, "- Player 1:\n\n\n\n\n+ Use the Left, Right, Up, Down\n\n\n\n\nkey for moving.\n\n\n\n\n+ Use Enter key for selecting.\n\n\n\n\n\n\n\n- If in Dual gamemode: Player 2:\n\n\n\n\n+ Use the S, Z, X, C keys for\n\n\n\n\nmoving.\n\n\n\n\n+ Use Space key for selecting.");
 
     short i;
     for (i = 0; i < 3; i ++) {

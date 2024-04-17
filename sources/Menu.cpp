@@ -12,7 +12,7 @@ void MenuScene::setup() {
     title[0].FontColor = RED;
     title[1].FontColor = YELLOW;
 
-    short int i, j;
+    short i, j;
     float   startY = float(WinHeight) / 4,
             startX = float(WinWdith) / 5,
             FontSize = float(WinHeight) / 8,
