@@ -6,17 +6,6 @@ void addPath (Node*& path, const float& x, const float& y) {
     path = node;
 }
 
-void printNode (Node* path) {
-    if (! path)
-        return;
-    
-    while (path) {
-        cout << '(' << path -> x << " - " << path -> y << ')' << " ; ";
-        path = path -> next;
-    }
-    cout << endl;
-}
-
 void removeHead(Node*& path) {
     if (!path)
         return;

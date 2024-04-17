@@ -7,7 +7,7 @@
 #include "Music.h"
 
 struct Pokemon {
-    bool shown = 0, selected = 0;   //Check if the Pokemon is shown, is selected or not
+    bool shown = 0, selected = 0;           //Check if the Pokemon is shown, is selected or not
     short ID;                       //The ID for matching
     Rectangle border;               //Border of the Pokemon cell
     Texture2D img;                  //Pokemon image

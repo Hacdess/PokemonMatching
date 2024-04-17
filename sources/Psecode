@@ -98,3 +98,246 @@ FUNCTION loadHiddenImages(quantity)
 
     RETURN textures
 END FUNCTION
+
+//Account 
+
+FUNCTION SignUpScene::setup
+    Initialize set to 1
+    Initialize account name and password counters and set their first characters to null
+
+    Load an image from a file and convert it into a texture
+    Release the loaded image from memory
+
+    Initialize two title elements with text "POKEMON" and "MATCHING"
+    Set the font colors of these titles to RED and YELLOW respectively
+
+    Set initial coordinates and sizes for drawing:
+        startY is set to one-fourth of the window height
+        startX is set to one-fifth of the window width
+        FontSize is set to one-eighth of the window height
+        spacing is set to one-fifth of the FontSize
+
+    FOR each title element from 0 to 1
+        Set the FontSize and BorderColor
+        Calculate the content length of the title
+        Set the position of the title centered on the screen
+        Set the border dimensions around the title
+        Increment startY by the height of the title plus extra spacing
+    END FOR
+
+    Define text constants for "Username" and "Password"
+    Set hints for input boxes to "Input username here" and "Input password here"
+    Define button texts "Sign Up" and "Back"
+    Set a warning message "Please input username and password"
+
+    Adjust FontSize for smaller text elements
+    Increment startY to position elements below the titles
+
+    Define new dimensions for FontSize and spacing
+    Calculate the dimensions and positions for username and password labels and input boxes
+    FOR each label and input box from 0 to 1
+        Set FontSize, BorderColor, and FontColor
+        Calculate the content length
+        Set the border dimensions and position
+        For input boxes, adjust startX to align next to the labels
+    END FOR
+
+    Reset startX to initial value
+    Increase startY to position the command text
+    Set the command text properties and calculate its position
+
+    Increase startY to position the confirm buttons
+    Reset startX to a new position for button alignment
+    FOR each confirm button from 0 to 1
+        Set FontSize, BorderColor, and FontColor
+        Calculate the content length
+        Set the border dimensions and position
+        Adjust startX for the next button
+    END FOR
+END FUNCTION
+
+FUNCTION SignInScene::setup
+    Initialize set to 1
+    Initialize account name and password counters and set their first characters to null
+
+    Load an image from a file and convert it into a texture
+    Release the loaded image from memory
+
+    Initialize two title elements with text "POKEMON" and "MATCHING"
+    Set the font colors of these titles to RED and YELLOW respectively
+
+    Set initial coordinates and sizes for drawing:
+        startY is set to one-fourth of the window height
+        startX is set to one-fifth of the window width
+        FontSize is set to one-eighth of the window height
+        spacing is set to one-fifth of the FontSize
+
+    FOR each title element from 0 to 1
+        Set the FontSize and BorderColor
+        Calculate the content length of the title
+        Set the position of the title centered on the screen
+        Set the border dimensions around the title
+        Increment startY by the height of the title plus extra spacing
+    END FOR
+
+    Define text constants for "Username" and "Password"
+    Set hints for input boxes to "Input username here" and "Input password here"
+    Define button texts "Sign In" and "Back"
+    Set a warning message "Please input username and password"
+
+    Adjust FontSize for smaller text elements
+    Increment startY to position elements below the titles
+
+    Define new dimensions for FontSize and spacing
+    Calculate the dimensions and positions for username and password labels and input boxes
+    FOR each label and input box from 0 to 1
+        Set FontSize, BorderColor, and FontColor
+        Calculate the content length
+        Set the border dimensions and position
+        For input boxes, adjust startX to align next to the labels
+    END FOR
+
+    Reset startX to initial value
+    Increase startY to position the command text
+    Set the command text properties and calculate its position
+
+    Increase startY to position the confirm buttons
+    Reset startX to a new position for button alignment
+    FOR each confirm button from 0 to 1
+        Set FontSize, BorderColor, and FontColor
+        Calculate the content length
+        Set the border dimensions and position
+        Adjust startX for the next button
+    END FOR
+END FUNCTION
+
+FUNCTION inputAccount(account)
+    INITIALIZE key with the first character entered by the user
+
+    WHILE key is greater than 0
+        IF key is a printable character (between space and tilde on the ASCII table)
+            APPEND character to account.name at the current position (account.nameCount)
+            INCREMENT account.nameCount
+            IF account.nameCount exceeds 20
+                SET account.nameCount to 20 to prevent overflow
+            SET the next position in account.name to null character to terminate the string
+        END IF
+        GET the next character entered by the user
+    END WHILE
+
+    IF the backspace key was pressed
+        DECREMENT account.nameCount to remove the last character
+        IF account.nameCount becomes negative
+            RESET account.nameCount to 0
+        SET the current position in account.name to null character to adjust the string
+    END IF
+END FUNCTION
+
+FUNCTION inputPass(account)
+    INITIALIZE key with the first character entered by the user
+
+    WHILE key is greater than 0
+        IF key is a printable character (between space and tilde on the ASCII table)
+            APPEND character to account.pass at the current position (account.passCount)
+            INCREMENT account.passCount
+            IF account.passCount exceeds 20
+                SET account.passCount to 20 to prevent overflow
+            SET the next position in account.pass to null character to terminate the string
+        END IF
+        GET the next character entered by the user
+    END WHILE
+
+    IF the backspace key was pressed
+        DECREMENT account.passCount to remove the last character
+        IF account.passCount becomes negative
+            RESET account.passCount to 0
+        SET the current position in account.pass to null character to adjust the string
+    END IF
+END FUNCTION
+
+FUNCTION storeAccount(account)
+    CREATE or OPEN a file named "Account.txt" in append mode
+    WRITE account.name, a separator '|', and account.pass to the file, followed by a newline
+    CLOSE the file
+END FUNCTION
+
+FUNCTION isExistedUsername(account)
+    OPEN file "Account.txt" in read mode
+
+    DECLARE variables:
+        s (character for delimiter),
+        name (array of 20 characters),
+        pass (array of 20 characters),
+        t (string for storing file lines)
+
+    READ the first line from the file and ignore it (not necessary for username check)
+
+    WHILE not end of file
+        READ a line from the file into t
+        PARSE the line using a stringstream to extract name, delimiter, and password
+
+        IF first character of name and password are not null
+            IF name matches account.name
+                CLOSE the file
+                RETURN True (username exists)
+            END IF
+        END IF
+    END WHILE
+
+    CLOSE the file
+    RETURN False (username does not exist)
+END FUNCTION
+
+FUNCTION isExistedUsername(account)
+    OPEN file "Account.txt" in read mode
+
+    DECLARE variables:
+        s (character for delimiter),
+        name (array of 20 characters),
+        pass (array of 20 characters),
+        t (string for storing file lines)
+
+    READ the first line from the file and ignore it (not necessary for username check)
+
+    WHILE not end of file
+        READ a line from the file into t
+        PARSE the line using a stringstream to extract name, delimiter, and password
+
+        IF first character of name and password are not null
+            IF name matches account.name
+                CLOSE the file
+                RETURN True (username exists)
+            END IF
+        END IF
+    END WHILE
+
+    CLOSE the file
+    RETURN False (username does not exist)
+END FUNCTION
+
+FUNCTION checkCorrectPassword(account)
+    OPEN file "Account.txt" in read mode
+
+    DECLARE variables:
+        s (character for delimiter),
+        name (array of 20 characters),
+        pass (array of 20 characters),
+        t (string for storing file lines)
+
+    READ the first line from the file and ignore it (considered unnecessary)
+
+    WHILE not end of file
+        READ a line from the file into t
+        PARSE the line using a stringstream to extract name, delimiter, and password
+
+        IF first character of name and password are not null
+            IF name matches account.name AND password does not match account.pass
+                CLOSE the file
+                RETURN False (indicates password is incorrect for given username)
+            END IF
+        END IF
+    END WHILE
+
+    CLOSE the file
+    RETURN True (indicates either no matching username found, or password is correct)
+END FUNCTION

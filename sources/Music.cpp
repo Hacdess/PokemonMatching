@@ -3,7 +3,10 @@
 
 void gameMusic::initMusicAndSound()
 {
+    //Open the audio of the device
     InitAudioDevice();
+
+    //Upload file mp3 and file wav
     themeMusic = LoadMusicStream("resources/Sound/themeMusic.mp3");
     correctMatching = LoadSound("resources/Sound/correctMatching.wav");
     wrongMatching = LoadSound("resources/Sound/WrongMatching.wav");
@@ -16,6 +19,7 @@ void gameMusic::initMusicAndSound()
 
 void gameMusic::deleteMusicAndSound()
 {
+    //Unload file mp3 and file wav
     UnloadMusicStream(themeMusic);
     UnloadSound(correctMatching);
     UnloadSound(wrongMatching);

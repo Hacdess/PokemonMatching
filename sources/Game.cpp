@@ -369,7 +369,7 @@ bool GameBoard::checkMatchAble () {
 }
 
 MatchingType makeHint (Pokemon** pokemons, const short& row, const short& col, Selector2D& hint1, Selector2D& hint2, Node*& path) {
-    MatchingType res;
+    MatchingType res = None;
 
     for (hint1.y = 1; hint1.y < row - 1; hint1.y ++)
         for (hint1.x = 1; hint1.x < col - 1; hint1.x ++)

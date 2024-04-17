@@ -11,6 +11,8 @@
 	"C_Cpp.errorSquiggles": "disabled",
 	"files.associations": {
 		"new": "cpp",
-		"*.m": "cpp"
+		"*.m": "cpp",
+		"istream": "cpp",
+		"ostream": "cpp"
 	}
 }

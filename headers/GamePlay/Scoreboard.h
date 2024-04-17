@@ -30,18 +30,19 @@ struct ScoreBoard {
     Rectangle HP[2];
     Color HP_Color = GREEN;
 
-    void updateTimeText();
+    void updateTimeText();  //Update the time to make it run correctly like a real clock
 
-    void setup (const bool& isDual, const char* username);
+    void setup (const bool& isDual, const char* username); //Get all the neccessay contents and the locations of the textboxes
 
-    bool isUpdatedPlayerName = 0;
-    void updatePlayer(char* name);
+    bool isUpdatedPlayerName = 0;   //Update the players' username if they use accounts to play
+    void updatePlayer(char* name);  //Update the players' username after chosing challenges (Only in Single mode)
 
-    void updateHP(const bool& isDual);
-    void updateScoreText(const bool& isDual);
+    void updateHP(const bool& isDual); //Update the players' HP whenever they do wrong matching
+    void updateScoreText(const bool& isDual); //Update the players' score whenever they match or use hints
 
-    void updateMessage1(const Selector2D& pokemon1, const Selector2D& pokemon2, const MatchingType& MatchType);
+    //Adjust the verifying message for the four types of matching 
+    void updateMessage1(const Selector2D& pokemon1, const Selector2D& pokemon2, const MatchingType& MatchType);   
     void updateMessage2(const Selector2D& pokemon1, const Selector2D& pokemon2, const MatchingType& MatchType);
     
-    void draw(const bool& isDual);
+    void draw(const bool& isDual); //Draw the shape of the textbox, draw the words and fill colors to all of them
 };

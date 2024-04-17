@@ -6,8 +6,8 @@
 #define MAX_INPUT_CHARS 21 //Max Length of input characters is 20 (21st for '\0')
 
 struct Account {
-    char name[MAX_INPUT_CHARS] = "\0";
-    char pass[MAX_INPUT_CHARS] = "\0";
+    char name[MAX_INPUT_CHARS] = "\0"; //A variable to contain username
+    char pass[MAX_INPUT_CHARS] = "\0"; //A variable to contain password
     short nameCount = 0; //Name length
     short passCount = 0; //Pass length
 
@@ -23,10 +23,12 @@ struct SignUpScene {
     TextBox input[2]; // The box for input
     TextBox confirm[2]; // Login and Exit
     TextBox command; // the warning that input wrong or already have the account
-    Selector2D selector = {0, 0};
+    Selector2D selector = {0, 0}; //A tool to move and control cursor
 
-    void setup();
-    Scene draw (bool& isSigned, char*& username, gameMusic& musicAndSound);
+    void setup(); //Get all the neccessay contents and the locations of the textboxes
+
+    //Draw the shape of the textboxes, draw the words, fill colors to all of them and add music and sounds
+    Scene draw (bool& isSigned, char*& username, gameMusic& musicAndSound); 
 };
 
 struct SignInScene {
@@ -40,15 +42,17 @@ struct SignInScene {
     TextBox command; // the warning that input wrong or already have the account
     Selector2D selector = {0, 0};
 
-    void setup();
-    Scene draw(bool& isSigned, char* & username, gameMusic& musicAndSound);
+    void setup(); //Get all the neccessay contents and the locations of the textboxes
+
+    //Draw the shape of the textboxes, draw the words, fill colors to all of them and add music and sounds
+    Scene draw(bool& isSigned, char* & username, gameMusic& musicAndSound); 
 };
 
 //Input function
 void inputAccount(Account& account);
 void inputPass(Account &account);
 
-//Hàm xử lý File
+//Working with file Account.txt
 void storeAccount (Account &account);
 bool isExistedUsername (Account account);
 bool checkCorrectPassword(Account account);
@@ -60,7 +64,7 @@ char* modifyPass(Account& account);
 short checkValidUsername(Account account); //Many invalid cases
 short checkValidPassWord(Account account);
    
-//Hàm chỉnh dòng Commnad
+//Functions adjust the messages 
 char* modifyCommandUsernameForSignUp(Account& account);
 char* modifyCommandUsernameForSignIn(Account& account);
 char* modifyCommandPasswordForSignUp(Account& account);

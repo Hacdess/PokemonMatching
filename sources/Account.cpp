@@ -3,6 +3,8 @@
 
 void SignUpScene::setup() {
     set = 1;
+
+    //Set the username and password
     account.nameCount = 0;
     account.name[account.nameCount] = '\0';
     account.passCount = 0;
@@ -111,6 +113,8 @@ void SignUpScene::setup() {
 
 void SignInScene::setup() {
     set = 1;
+
+    //Set the username and password
     account.nameCount = 0;
     account.name[account.nameCount] = '\0';
     account.passCount = 0;
@@ -218,8 +222,13 @@ void SignInScene::setup() {
     }
 }
 
+//A function that allows player to input username
 void inputAccount(Account &account) {
+    
+    //Allow player to input from the keyboard
     short key = GetCharPressed();
+
+    //Get the key until the player don't press anymore or press the keys that are not allowed
     while (key > 0)
     {
         if (32 <= key && key <= 126)
@@ -233,6 +242,7 @@ void inputAccount(Account &account) {
         key = GetCharPressed();
     }
 
+    //Check if player press KEY_BACKSPACE to delete one key that is nereast to the input cursor
     if (IsKeyPressed(KEY_BACKSPACE))
     {
         account.nameCount--;
@@ -242,8 +252,12 @@ void inputAccount(Account &account) {
     }
 }
 
+//A function that allows player to input password
 void inputPass(Account &account) {
+    //Allow player to input from the keyboard
     short key = GetCharPressed();
+
+    //Get the key until the player don't press anymore or press the keys that are not allowed
     while (key > 0)
     {
         if (32 <= key && key <= 126)
@@ -257,6 +271,7 @@ void inputPass(Account &account) {
         key = GetCharPressed();
     }
 
+    //Check if player press KEY_BACKSPACE to delete one key that is nereast to the input cursor
     if (IsKeyPressed(KEY_BACKSPACE))
     {
         account.passCount--;
@@ -266,15 +281,25 @@ void inputPass(Account &account) {
     }
 }
 
+//A function that stores account to the Account.txt
 void storeAccount(Account &account) {
     fstream f;
+
+    //Open file Account.txt
     f.open("resources/file/Account.txt", ios::out | ios::app);
+
+    //Get the account 
     f << account.name << " " << '|' << " " << account.pass << '\n';
+
+    //Close the file
     f.close();
 }
 
+//A function that checks whether the username is existed in the Account.txt
 bool isExistedUsername(Account account) {
     fstream f;
+
+    //Open file Account.txt
     f.open("resources/file/Account.txt", ios::in);
 
     char s, name[20], pass[20];
@@ -289,6 +314,7 @@ bool isExistedUsername(Account account) {
 
     while (!f.eof())
     {
+        //Get each line that contain one existed account
         getline(f, t, '\n');
         stringstream ss(t);
 
@@ -296,6 +322,7 @@ bool isExistedUsername(Account account) {
         ss >> s;
         ss >> pass;
 
+        //Compare the usernames in the file Account.txt with the input username
         if (name[0] != '\0' && pass[0] != '\0')
             if (strcmp(name, account.name) == 0)
             {
@@ -304,13 +331,16 @@ bool isExistedUsername(Account account) {
             }
     }
 
+    //Close the file
     f.close();
     return 0;
 }
  
-//return 0 if same username, different password
+//A function that checks whether the password is correct with an existed account
 bool checkCorrectPassword(Account account) {
     fstream f;
+
+    //Opne the file Account.txt
     f.open("resources/file/Account.txt", ios::in);
 
     char s, name[20], pass[20];
@@ -324,6 +354,8 @@ bool checkCorrectPassword(Account account) {
     ss >> pass;
 
     while (!f.eof()) {
+
+        //Get each line that contain one existed account
         getline(f, t, '\n');
         stringstream ss(t);
 
@@ -331,6 +363,7 @@ bool checkCorrectPassword(Account account) {
         ss >> s;
         ss >> pass;
 
+        //Compare the input username and the input password with these in the Account.txt
         if (name[0] != '\0' && pass[0] != '\0')
             if (strcmp(name, account.name) == 0 && strcmp(pass, account.pass) != 0) {
                 f.close();
@@ -338,12 +371,16 @@ bool checkCorrectPassword(Account account) {
             }
     }
 
+    //Close the file
     f.close();
     return 1;
 }
 
+//A function that check whether the input account is existed in file Account.txt
 bool isCorrectSigIn(Account account) {
     fstream f;
+
+    //Open the file Account.txt
     f.open("resources/file/Account.txt", ios::in);
 
     char s, name[20], pass[20];
@@ -357,6 +394,8 @@ bool isCorrectSigIn(Account account) {
     ss >> pass;
 
     while (!f.eof()) {
+
+        //Get each line that contain one existed account
         getline(f, t, '\n');
 
         stringstream ss(t);
@@ -365,6 +404,7 @@ bool isCorrectSigIn(Account account) {
         ss >> s;
         ss >> pass;
 
+        //Compare the input account with the existed account in file Account.txt
         if (name[0] != '\0' && pass[0] != '\0')
             if (strcmp(name, account.name) == 0 && strcmp(pass, account.pass) == 0) {
                 f.close();
@@ -376,11 +416,15 @@ bool isCorrectSigIn(Account account) {
     return 0;
 }
 
+//A function that adjust the username if it has no character or has more than 15 characters
 char *modifyName(Account &account) {
     char *tmp;
     tmp = NULL;
 
+    //Check if the username have nothing
     if (account.nameCount != 0) {
+
+        //Check if the username has more than 15 letters
         if (account.nameCount > 15) {
             short i;
             for (i = 11; i < 14; i++)
@@ -400,11 +444,15 @@ char *modifyName(Account &account) {
     return tmp;
 }
 
+//A function that adjust the password if it has no character or more than 15 characters
 char *modifyPass(Account &account) {
     char *tmp;
     tmp = NULL;
 
+    //Check if password has nothing
     if (account.passCount != 0) {
+
+        //Check if the username has more than 15 letters
         if (account.passCount > 15) {
             short i;
             for (i = 11; i < 14; i++)
@@ -424,6 +472,7 @@ char *modifyPass(Account &account) {
     return tmp;
 }
 
+//A function that check whether the username is right or wrong
 short checkValidUsername(Account account) {
     short i;
 
@@ -432,7 +481,7 @@ short checkValidUsername(Account account) {
         return 1;
 
     // Check if more than 16 letters
-    if (account.nameCount > 16)
+    if (account.nameCount > 15)
         return 2;
 
     // Check if there is any space
@@ -440,12 +489,14 @@ short checkValidUsername(Account account) {
         if (account.name[i] == ' ')
             return 3;
 
+    //Check if the username is existed in file Account.txt
     if (isExistedUsername(account))
         return 4;
 
     return 5;
 }
 
+//A function to check whether the password is right or wrong
 short checkValidPassWord(Account account) {
     short i;
 
@@ -468,6 +519,7 @@ short checkValidPassWord(Account account) {
     return 5;
 }
 
+//A function that adjust the message whenever the username is right or wrong and how to correct it in Sign up screen
 char *modifyCommandUsernameForSignUp(Account &account) {
     char *tmp;
     tmp = NULL;
@@ -480,21 +532,25 @@ char *modifyCommandUsernameForSignUp(Account &account) {
             strcpy(tmp, "Username should have at least one letter alphabet");
             break;
 
+        //Username have more than 15 characters
         case 2:
             tmp = new char[strlen("Username should have no more than 15 letters") + 1];
             strcpy(tmp, "Username should have no more than 15 letters");
             break;
 
+        //Username have at least one space
         case 3:
             tmp = new char[strlen("Username mustn't have space") + 1];
             strcpy(tmp, "Username mustn't have space");
             break;
 
+        //Username has been used
         case 4:
             tmp = new char[strlen("Existed Username") + 1];
             strcpy(tmp, "Existed Username");
             break;
 
+        //Username is right
         case 5:
             tmp = new char[strlen("Valid Username") + 1];
             strcpy(tmp, "Valid Username");
@@ -504,6 +560,7 @@ char *modifyCommandUsernameForSignUp(Account &account) {
     return tmp;
 }
 
+//A function that adjust the message whenever the username is right or wrong and how to correct it in Sign in screen
 char *modifyCommandUsernameForSignIn(Account &account) {
     char *tmp;
     tmp = NULL;
@@ -516,19 +573,25 @@ char *modifyCommandUsernameForSignIn(Account &account) {
             strcpy(tmp, "Username should have at least one letter alphabet");
             break;
 
+        //Username have more than 15 characters
         case 2:
             tmp = new char[strlen("Username should have no more than 15 letters") + 1];
             strcpy(tmp, "Username should have no more than 15 letters");
             break;
 
+        //Username have at least one spaces
         case 3:
             tmp = new char[strlen("Username mustn't have space") + 1];
             strcpy(tmp, "Username mustn't have space");
             break;
+
+        //Username has been used but it is valid in Sign in screen
         case 4:
         tmp = new char[strlen("Valid Username") + 1];
             strcpy(tmp, "Valid Username");
             break;
+        
+        //Username has right format but it doesn't exist in the Account.txt
         case 5:
             tmp = new char[strlen("Username didn't exist") + 1];
             strcpy(tmp, "Username didn't exist");
@@ -538,27 +601,33 @@ char *modifyCommandUsernameForSignIn(Account &account) {
     return tmp;
 }
 
+//A function that adjust the message whenever the password is right or wrong and how to correct it in Sign up screen
 char *modifyCommandPasswordForSignUp(Account &account) {
     char *tmp;
     tmp = NULL;
     short check = checkValidPassWord(account);
 
     switch (check) {
+
+        //No input
         case 1:
             tmp = new char[strlen("Password should have at least one letter alphabet") + 1];
             strcpy(tmp, "Passowrd should have at least one letter alphabet");
             break;
 
+        //Password have more than 15 characters
         case 2:
             tmp = new char[strlen("Password should have no more than 15 letters") + 1];
             strcpy(tmp, "Password should have no more than 15 letters");
             break;
 
+        //Password has at least one space
         case 3:
             tmp = new char[strlen("Password mustn't have space") + 1];
             strcpy(tmp, "Password mustn't have space");
             break;
 
+        //Password is correct in Sign up screen
         case 4: case 5:
             tmp = new char[strlen("Valid Password") + 1];
             strcpy(tmp, "Valid Password");
@@ -568,31 +637,39 @@ char *modifyCommandPasswordForSignUp(Account &account) {
     return tmp;
 }
 
+//A function that adjust the message whenever the password is right or wrong and how to correct it in Sign in screen
 char *modifyCommandPasswordForSignIn(Account &account) {
     char *tmp;
     tmp = NULL;
     short check = checkValidPassWord(account);
 
     switch (check) {
+
+        //No input
         case 1:
             tmp = new char[strlen("Password should have at least one letter alphabet") + 1];
             strcpy(tmp, "Passowrd should have at least one letter alphabet");
             break;
 
+        //Password have more than 15 characters
         case 2:
             tmp = new char[strlen("Password should have no more than 15 letters") + 1];
             strcpy(tmp, "Password should have no more than 15 letters");
             break;
 
+        //Password have at least one space
         case 3:
             tmp = new char[strlen("Password mustn't have space") + 1];
             strcpy(tmp, "Password mustn't have space");
             break;
 
+        //Correct input username but wrong password
         case 4:
             tmp = new char[strlen("Wrong password") + 1];
             strcpy(tmp, "Wrong password");
             break;
+
+        //The password is correct
         case 5:
             tmp = new char[strlen("Valid Password") + 1];
             strcpy(tmp, "Valid Password");
@@ -602,43 +679,52 @@ char *modifyCommandPasswordForSignIn(Account &account) {
     return tmp;
 }
 
+//A function that adjust the message whether the account is right or wrong in the Sign up screen
 char *modifyCommandForSignUp(Account &account) {
     char *tmp;
     tmp = NULL;
 
+    //Check whether the username and password are right or wrong
     short checkName = checkValidUsername(account);
     short checkPass = checkValidPassWord(account);
 
+    //Check if the username is existed in the file Account.txt
     if (checkName == 4) {
         tmp = new char[strlen("Existed Account") + 1];
         strcpy(tmp, "Existed Account");
     }
 
+    //Check if there is no username and password input
     else if (checkName == 1 && checkPass == 1) {
         tmp = new char[strlen("Please input username and password") + 1];
         strcpy(tmp, "Please input username and password");
     }
 
+    //Check if there is no username input
     else if (checkName == 1) {
         tmp = new char[strlen("Remember to input username") + 1];
         strcpy(tmp, "Remember to input username");
     }
 
+    //Check if there is no password input
     else if (checkPass == 1) {
         tmp = new char[strlen("Remember to input password") + 1];
         strcpy(tmp, "Remember to input password");
     }
 
+    //Check if the password has wrong format
     else if (checkName == 5 && checkPass <= 3) {
         tmp = new char[strlen("Invalid password") + 1];
         strcpy(tmp, "Invalid password");
     }
 
+    //Check if the password has wrong format
     else if (checkPass > 3 && checkName != 5) {
         tmp = new char[strlen("Invalid username") + 1];
         strcpy(tmp, "Invalid username");
     }
 
+    //Check if both username and password have wrong formats
     else if (checkName <= 4 && checkPass <= 3) {
         tmp = new char[strlen("Invalid account") + 1];
         strcpy(tmp, "Invalid account");
@@ -647,45 +733,54 @@ char *modifyCommandForSignUp(Account &account) {
     return tmp;
 }
 
+//A function that adjust the message whether the account is right or wrong in the Sign in screen
 char *modifyCommandForSignIn(Account &account) {
     char *tmp;
     tmp = NULL;
 
+    //Check if the username and password are right or wrong
     int checkName = checkValidUsername(account);
     int checkPass = checkValidPassWord(account);
 
+    //Check if there is no input username and no input password
     if (checkName == 1 && checkPass == 1) {
         tmp = new char[strlen("Please input username and password") + 1];
         strcpy(tmp, "Please input username and password");
     }
 
+    //Check if there is no input username
     else if (checkName == 1) {
         tmp = new char[strlen("Remember to input username") + 1];
         strcpy(tmp, "Remember to input username");
     }
 
+    //Check if there is no input password
     else if (checkPass == 1) {
         tmp = new char[strlen("Remember to input password") + 1];
         strcpy(tmp, "Remember to input password");
     }
 
+    //Check if the username or password is incorrect
     else if ((checkName > 3) && checkPass > 3) {
         if (!isCorrectSigIn(account)) {
             tmp = new char[strlen("Wrong password or username") + 1];
             strcpy(tmp, "Wrong password or username");
         }
     }
-    
+
+    //Check if the password has wrong format 
     else if (checkName > 3) {
         tmp = new char[strlen("Invalid password") + 1];
         strcpy(tmp, "Invalid password");
     }
 
+    //Check if the username has wrong format
     else if (checkPass > 3) {
         tmp = new char[strlen("Invalid username") + 1];
         strcpy(tmp, "Invalid username");
     }
 
+    //Check if both username and password have wrong formats
     else {
         tmp = new char[strlen("Invalid account") + 1];
         strcpy(tmp, "Invalid account");
@@ -694,6 +789,7 @@ char *modifyCommandForSignIn(Account &account) {
     return tmp;
 }
 
+//Draw the Sign up screen
 Scene SignUpScene::draw(bool &isSigned, char *&username, gameMusic& musicAndSound) {
     // Draw Background image
     ClearBackground(BLACK);
@@ -749,34 +845,48 @@ Scene SignUpScene::draw(bool &isSigned, char *&username, gameMusic& musicAndSoun
             selector.y = 0;
     }
 
+    //When the cursor at the username column
     if (selector.x == 1 && selector.y == 0) {
         input[0].BorderColor = WHITE;
+
+        //Input username from keyboard
         inputAccount(account);
         if (IsKeyPressed(KEY_ENTER)){
+
+            //Play press-button sound
             PlaySound(musicAndSound.pressButton);
             delete[] command.content;
             command.content = NULL;
+
+            //Adjust the message
             command.content = modifyCommandUsernameForSignUp(account);
         }
     }
     else
         input[0].BorderColor = DarkCyanTrans;
 
+    //When the cursor at the password column
     if (selector.x == 1 && selector.y == 1) {
         input[1].BorderColor = WHITE;
+
+        //Input password from keyboard
         inputPass(account);
 
         if (IsKeyPressed(KEY_ENTER)) {
+
+            //Play press-button sound
             PlaySound(musicAndSound.pressButton);
             delete[] command.content;
             command.content = NULL;
+
+            //Adjust the message
             command.content = modifyCommandPasswordForSignUp(account);
         }
     }
     else
         input[1].BorderColor = DarkCyanTrans;
 
-    // Sign Up button
+    //When the cursor at the Sign up button
     if (selector.y == 2 && selector.x == 0) {
         confirm[0].FontColor = DarkCyanTrans;
         confirm[0].BorderColor = WHITE;
@@ -784,21 +894,30 @@ Scene SignUpScene::draw(bool &isSigned, char *&username, gameMusic& musicAndSoun
         if (IsKeyPressed(KEY_ENTER)){
             delete[] command.content;
             command.content = NULL;
+
+            //Adjust the message
             command.content = modifyCommandForSignUp(account);
         }
 
         if (IsKeyPressed(KEY_ENTER)) {
+
+            //Check if the account is right
             if (checkValidUsername(account) == 5 && checkValidPassWord(account) > 3 && !isExistedUsername(account)){
+            
+            //Play correct-matching sound
             PlaySound(musicAndSound.correctMatching);
+
             username = new char[strlen(account.name) + 1];
             strcpy(username, account.name);
+
+            //Save account in the file Account.txt
             storeAccount(account);
             isSigned = 1;
             set = 0;
             selector.x = 0, selector.y = 0;
             return SIGNUP;
             }
-            else PlaySound(musicAndSound.wrongSign);
+            else PlaySound(musicAndSound.wrongSign); //Play wrong-sign sound
         }
     }
 
@@ -815,6 +934,8 @@ Scene SignUpScene::draw(bool &isSigned, char *&username, gameMusic& musicAndSoun
         confirm[1].FontColor = DarkCyanTrans;
         confirm[1].BorderColor = WHITE;
         if (IsKeyPressed(KEY_ENTER)) {
+
+            //Play press-button sound
             PlaySound(musicAndSound.pressButton);
             set = 0;
             isSigned = 0;
@@ -839,17 +960,21 @@ Scene SignUpScene::draw(bool &isSigned, char *&username, gameMusic& musicAndSoun
         input[i].content = NULL;
     }
 
-    input[0].content = modifyName(account);
-    input[1].content = modifyPass(account);
+    input[0].content = modifyName(account);  //Adjust the username
+    input[1].content = modifyPass(account);  //Adjust the password
+
+    //Draw the textbox for input
     for (i = 0; i < 2; i++) {
         DrawRectangleRec(input[i].border, input[i].BorderColor);
         DrawText(input[i].content, input[i].pos.x, input[i].pos.y, input[i].FontSize, input[i].FontColor);
     }
 
+    //Draw the textbox contains messages
     command.ContentLength = float(MeasureText(command.content, command.FontSize));
     command.pos.x = (float(WinWdith) - command.ContentLength) / 2;
     DrawText(command.content, command.pos.x, command.pos.y, command.FontSize, command.FontColor);
 
+    //Draw the Sign up button and Back button
     for (i = 0; i < 2; i++) {
         DrawRectangleRec(confirm[i].border, confirm[i].BorderColor);
         DrawText(confirm[i].content, confirm[i].pos.x, confirm[i].pos.y, confirm[i].FontSize, confirm[i].FontColor);
@@ -858,6 +983,7 @@ Scene SignUpScene::draw(bool &isSigned, char *&username, gameMusic& musicAndSoun
     return SIGNUP;
 }
 
+//Draw the Sign in screen
 Scene SignInScene::draw(bool &isSigned, char *&username, gameMusic& musicAndSound) {
     // Draw Background image
     ClearBackground(BLACK);
@@ -913,28 +1039,42 @@ Scene SignInScene::draw(bool &isSigned, char *&username, gameMusic& musicAndSoun
             selector.y = 0;
     }
 
+    //When the cursor at the username column
     if (selector.x == 1 && selector.y == 0) {
         input[0].BorderColor = WHITE;
+
+        //Input username from keyboard
         inputAccount(account);
 
         if (IsKeyPressed(KEY_ENTER)) {
+
+            //Play press-button sound
             PlaySound(musicAndSound.pressButton);
             delete[] command.content;
             command.content = NULL;
+
+            //Adjust message
             command.content = modifyCommandUsernameForSignIn(account);
         }
     }
     else
         input[0].BorderColor = DarkCyanTrans;
 
+    //When the cursor at the password column
     if (selector.x == 1 && selector.y == 1) {
         input[1].BorderColor = WHITE;
+
+        //Input password from keyboard
         inputPass(account);
 
         if (IsKeyPressed(KEY_ENTER)){
+
+            //Play press-button sound
             PlaySound(musicAndSound.pressButton);
             delete[] command.content;
             command.content = NULL;
+
+            //Adjust message
             command.content = modifyCommandPasswordForSignIn(account);
         }
     }
@@ -949,11 +1089,17 @@ Scene SignInScene::draw(bool &isSigned, char *&username, gameMusic& musicAndSoun
         if (IsKeyPressed(KEY_ENTER)){
             delete[] command.content;
             command.content = NULL;
+
+            //Adjust message
             command.content = modifyCommandForSignIn(account);
         }
 
         if (IsKeyPressed(KEY_ENTER)) {
+
+            //Check if the account is correct
             if ((checkValidUsername(account) == 5 || checkValidUsername(account) == 4) && checkValidPassWord(account) == 5 && isCorrectSigIn(account) == 1){
+            
+            //Play the correct-matching sound
             PlaySound(musicAndSound.correctMatching);
             username = new char[strlen(account.name) + 1];
             strcpy(username, account.name);
@@ -966,7 +1112,7 @@ Scene SignInScene::draw(bool &isSigned, char *&username, gameMusic& musicAndSoun
             selector.x = 0, selector.y = 0;
             return SIGNIN;
             }
-            else PlaySound(musicAndSound.wrongSign);
+            else PlaySound(musicAndSound.wrongSign); //play the wrong-sign sound
         }
     }
 
@@ -983,6 +1129,8 @@ Scene SignInScene::draw(bool &isSigned, char *&username, gameMusic& musicAndSoun
         confirm[1].FontColor = DarkCyanTrans;
         confirm[1].BorderColor = WHITE;
         if (IsKeyPressed(KEY_ENTER)) {
+
+            //Play the press-button sound
             PlaySound(musicAndSound.pressButton);
             set = 0;
             isSigned = 0;
@@ -1007,17 +1155,21 @@ Scene SignInScene::draw(bool &isSigned, char *&username, gameMusic& musicAndSoun
         input[i].content = NULL;
     }
 
-    input[0].content = modifyName(account);
-    input[1].content = modifyPass(account);
+    input[0].content = modifyName(account); //Adjust the username
+    input[1].content = modifyPass(account); //Adjust the password
+    
+    //Draw the input username and input password columns
     for (i = 0; i < 2; i++) {
         DrawRectangleRec(input[i].border, input[i].BorderColor);
         DrawText(input[i].content, input[i].pos.x, input[i].pos.y, input[i].FontSize, input[i].FontColor);
     }
 
+    //Draw the textboxes for messages
     command.ContentLength = float(MeasureText(command.content, command.FontSize));
     command.pos.x = (float(WinWdith) - command.ContentLength) / 2;
     DrawText(command.content, command.pos.x, command.pos.y, command.FontSize, command.FontColor);
 
+    //Draw the Sign in button and the Back button
     for (i = 0; i < 2; i++) {
         DrawRectangleRec(confirm[i].border, confirm[i].BorderColor);
         DrawText(confirm[i].content, confirm[i].pos.x, confirm[i].pos.y, confirm[i].FontSize, confirm[i].FontColor);

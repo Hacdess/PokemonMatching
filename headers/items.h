@@ -1,5 +1,5 @@
 #pragma once // include once to prevent from struct redefinition
-#include "raylib.h"
+#include "raylib.h" 
 #include <cstring>
 #include <string>
 #include <iostream>
@@ -20,8 +20,8 @@ const char GameName[] = "Pokemon Matching";
 const Font GameFont = GetFontDefault();
 
 //Define Window size
-#define WinWdith 2560
-#define WinHeight 1440
+#define WinWdith 1920
+#define WinHeight 1080
 
 //Define colors
 #define CYAN (Color)  {0, 255, 255, 255}
@@ -41,31 +41,30 @@ enum MatchingType {None, I, L, U, Z};
 
 //General Structs
 struct TextBox {
-    char* content;
-    float FontSize;
-    Color FontColor;
-    Color BorderColor;
-    float ContentLength;
-    Vector2 pos; //position of words
-    Rectangle border;
+    char* content;       //Word that the textbox contains
+    float FontSize;      //The height of the words
+    Color FontColor;     //Color of the words
+    Color BorderColor;   //Color of the textbox
+    float ContentLength; // length of the words
+    Vector2 pos;         //position of words
+    Rectangle border;    //The coordinates of four important points to draw the rectangle
 };
 
 struct Selector2D {
-    short x, y;
+    short x, y;          //The position of the cursor in 2-dimension arrray
 };
 
 struct Time {
-    short hour, min, sec;
-    void formatTime();
+    short hour, min, sec; //The time
+    void formatTime();    //Format the time like normal (Example: 10:04:09 means 10 hours 4 minutes 9 seconds)
 };
 
 //Functions
-void DeallocateTextbox1D (TextBox* textbox, const short& size);
-void DeallocateDynamicTextbox1D (TextBox* textbox, const short& size);
-void DeallocateDynamicTextbox2D (TextBox** textbox, const short & row, const short& col);
-bool isSameColor (const Color& Color1, const Color& Color2);
-void addText (char*& dest, const char* content);
-void updateText (char*& dest, const char* content);
-char* StoA (const string& s);
-string TimeToString (Time time);
-short compareTime (const Time& time1, const Time& time2);
+void DeallocateTextbox1D (TextBox* textbox, const short& size);     //Deallocate the Text box
+
+bool isSameColor (const Color& Color1, const Color& Color2);        //Check whether two colors are the same
+void addText (char*& dest, const char* content);                    //Add text to the dynamic variable
+void updateText (char*& dest, const char* content);                 //Adjust text
+char* StoA (const string& s);                                       //Convert string to dynamicchar array
+string TimeToString (Time time);                                    //Cobert time to string
+short compareTime (const Time& time1, const Time& time2);           //A function to comapre the time

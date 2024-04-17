@@ -38,8 +38,8 @@ int main() {
     //Add sound
     gameMusic musicAndSound;
     musicAndSound.initMusicAndSound();
-    float timePlayed = 0.0f;
-    PlayMusicStream(musicAndSound.themeMusic);
+    float timePlayed = 0.0f;                   //The variable is used to update the music stream after being paused
+    PlayMusicStream(musicAndSound.themeMusic); //Start playing the background music
 
     //The loop to draw the Game
     while (!WindowShouldClose()) {
