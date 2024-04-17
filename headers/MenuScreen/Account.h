@@ -10,8 +10,6 @@ struct Account {
     char pass[MAX_INPUT_CHARS] = "\0"; //A variable to contain password
     short nameCount = 0; //Name length
     short passCount = 0; //Pass length
-
-    Account * next;  //Create singly linked list
 };
 
 struct SignUpScene {

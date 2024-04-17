@@ -1,11 +1,13 @@
 #include "../headers/GamePlay/Path.h"
 
+//Get Pokemon's coordinates
 void addPath (Node*& path, const float& x, const float& y) {
     Node* node = new Node (x, y);
     node -> next = path;
     path = node;
 }
 
+//Remove the first Node
 void removeHead(Node*& path) {
     if (!path)
         return;
@@ -14,6 +16,7 @@ void removeHead(Node*& path) {
     delete cur;
 }
 
+//Remove the list
 void removePath (Node*& path) {
     if (! path)
         return;

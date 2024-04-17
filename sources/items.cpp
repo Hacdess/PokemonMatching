@@ -1,5 +1,6 @@
 #include "../headers/items.h"
 
+//Format again the time
 void Time::formatTime() {
     if (sec > 59) {
         min = min + short (sec / 60);
@@ -17,29 +18,14 @@ void Time::formatTime() {
     }
 }
 
+//Deallocate the dynamic memory
 void DeallocateTextbox1D (TextBox* textbox, const short& size) {
     short i;
     for (i = 0; i < size; i ++)
         delete[] textbox[i].content;
 }
 
-// void DeallocateDynamicTextbox1D (TextBox* textbox, const short& size) {
-//     short i;
-//     for (i = 0; i < size; i ++)
-//         delete[] textbox[i].content;
-//     delete[] textbox;
-// }
-
-// void DeallocateDynamicTextbox2D (TextBox** textbox, const short & row, const short& col) {
-//     short i, j;
-//     for (i = 0; i < row; i ++) {
-//         for (j = 0; j < col; j ++)
-//             delete[] textbox[i][j].content;
-//         delete[] textbox[i];
-//     }
-//     delete[] textbox;
-// }
-
+//Checking two colors whether they are the same
 bool isSameColor (const Color& Color1, const Color& Color2) {
     if (Color1.a != Color2.a) return 0;
     if (Color1.r != Color2.r) return 0;
@@ -49,6 +35,7 @@ bool isSameColor (const Color& Color1, const Color& Color2) {
     return 1;
 }
 
+//Add text to the dynamic char array
 void addText (char*& dest, const char* content) {
     dest = new char[strlen(content) + 1];
     strcpy (dest, content);
@@ -61,6 +48,7 @@ void updateText (char*& dest, const char* content) {
     dest = new char[strlen(content) + 1];
 }
 
+//Convert string to dynamic char array
 char* StoA (const string& s) {
     short len = s.length();
     char* arr = new char[len + 1];
@@ -71,6 +59,7 @@ char* StoA (const string& s) {
     return arr;
 }
 
+//Convert time to string
 string TimeToString (Time time) {
     time.formatTime();
     string res = "";
@@ -90,6 +79,7 @@ string TimeToString (Time time) {
     return res;
 }
 
+//Compare two times for ranking
 short compareTime (const Time& time1, const Time& time2) {
     if (time1.hour < time2.hour)
         return -1;

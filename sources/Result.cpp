@@ -1,9 +1,11 @@
 #include "../headers/GamePlay/Result.h"
 
+//Set up the Result screen
 void ResultScene::setup(const bool& isDual) {
     isSet = 1;
     markTime = GetTime();
-
+    
+    //Set up for Dual mode
     if (isDual) {
         result.FontSize = float(WinHeight) / 4;
         result.ContentLength = MeasureText (result.content, result.FontSize);
@@ -33,6 +35,7 @@ void ResultScene::setup(const bool& isDual) {
         }
     }
 
+    //Set up for Single mode
     else {
         if (isVictory) {
             addText (result.content, "YOU WON!");
@@ -64,6 +67,7 @@ void ResultScene::setup(const bool& isDual) {
         }
     }
 
+    //Set up the mutual parts between two modes
     result.FontColor = RED;
     
     addText (message.content, "Press Enter to get back to Choose Level");
@@ -73,6 +77,7 @@ void ResultScene::setup(const bool& isDual) {
     message.pos = {(float(WinWdith) - message.ContentLength) / 2, float(WinHeight) - message.FontSize * 1.25f};
 }
 
+//Draw the Result screen
 Scene ResultScene::draw(GameAction& action, const bool& isDual, gameMusic& musicAndSound) {
     //Background
     DrawRectangleRec (background, BackgrounColor);
@@ -110,6 +115,7 @@ Scene ResultScene::draw(GameAction& action, const bool& isDual, gameMusic& music
             score[0].FontColor = RED;
         markTime = GetTime();
 
+        //Draw Result screen for Dual mode
         if (isDual) {
             if (isSameColor(score[1].FontColor, RED))
                 score[1].FontColor = ORANGE;
@@ -141,6 +147,7 @@ Scene ResultScene::draw(GameAction& action, const bool& isDual, gameMusic& music
         }
     }
 
+    //Draw Result screen for Single mode
     else if (isVictory) {
         DrawText (player[0].content, player[0].pos.x, player[0].pos.y, player[0].FontSize, player[0].FontColor);
         DrawText (time.content, time.pos.x, time.pos.y, time.FontSize, time.FontColor);

@@ -64,6 +64,8 @@ void LevelScene::setup() {
             spacing = FontSize / 5;
 
     short i;
+
+    //Set up the textboxes
     for (i = 1; i < 5; i ++) {
         TextBoxs[i].FontColor = WHITE;
         TextBoxs[i].BorderColor = SlightGrayTrans;
@@ -79,6 +81,7 @@ void LevelScene::setup() {
     time = GetTime();
 }
 
+//Draw the Game mode screen
 bool GameModeScene::draw(GameAction& action, gameMusic& musicAndSound) {
     ClearBackground(background);
 
@@ -132,7 +135,7 @@ bool GameModeScene::draw(GameAction& action, gameMusic& musicAndSound) {
     return 0;
 }
 
-
+//Draw the Level screen
 Level LevelScene::draw(GameAction& action, gameMusic& musicAndSound) {
     ClearBackground(background);
 

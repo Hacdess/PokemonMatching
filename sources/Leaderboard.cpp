@@ -1,5 +1,6 @@
 #include "../headers/MenuScreen/Leaderboard.h"
 
+//Insert new node to head of the Player list
 void addHead (PlayerList& list, Player input) {
     PlayerNode* player = new PlayerNode(input);
 
@@ -12,6 +13,7 @@ void addHead (PlayerList& list, Player input) {
     list.head = player;
 }
 
+//Get the level that the Player has chosen
 void StageScene::getList(const Level& level) {
     string checkLevel;
     if (level == EASY)
@@ -69,6 +71,7 @@ void StageScene::getList(const Level& level) {
     fin.close();
 }
 
+//Swap the node contains the player information for sorting
 void swapPlayer (Player* player1, Player* player2) {
     swap (player1 -> score, player2 -> score);
     swap (player1 -> time, player2 -> time);
@@ -107,6 +110,7 @@ void sortList (PlayerList& list) {
     }
 }
 
+//Set up the Stage Screen
 void StageScene::setup(const Level& level) {
     short i, count;
     //Constant[0] is the level
@@ -223,6 +227,7 @@ void StageScene::draw() {
     }
 }
 
+//Set up the Leaderboard
 void LeaderboardSceen::setup() {
     isSet = 1;
     selector = 0;
@@ -246,6 +251,7 @@ void LeaderboardSceen::setup() {
     }
 }
 
+//Draw the Leaderboard Screen
 Scene LeaderboardSceen::draw(gameMusic& musicAndSound) {
     ClearBackground(WHITE);
 
