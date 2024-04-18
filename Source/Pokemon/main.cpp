@@ -8,7 +8,6 @@ void init(SceneManager& game) {
     game.MenuScreen.setup();
     game.GameModeScreen.setup();
     game.LevelScreen.setup();
-    game.GuideScreen.setup();
     game.GameScreen.backgrounds = readImageBackground(11);
     game.GameScreen.gameboard.PokemonsImg = readImagePokemon(50);
     game.GameScreen.gameboard.Hiddens = readImageHidden(6);
