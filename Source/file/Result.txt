@@ -1,2 +1,3 @@
 Stage,Player,Score,Time
 Easy,Guest,40,00:01:44
+Easy,TKin,54,00:00:29

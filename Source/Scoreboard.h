@@ -34,7 +34,6 @@ struct ScoreBoard {
 
     void setup (const bool& isDual, const char* username); //Get all the neccessay contents and the locations of the textboxes
 
-    bool isUpdatedPlayerName = 0;   //Update the players' username if they use accounts to play
     void updatePlayer(char* name);  //Update the players' username after chosing challenges (Only in Single mode)
 
     void updateHP(const bool& isDual); //Update the players' HP whenever they do wrong matching
