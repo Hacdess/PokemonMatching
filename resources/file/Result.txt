@@ -1,2 +1,0 @@
-Stage,Player,Score,Time
-Easy,Guest,40,00:01:44
